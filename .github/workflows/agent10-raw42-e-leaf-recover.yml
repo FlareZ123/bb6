@@ -19,7 +19,7 @@ on:
         description: 'Heavy certificate representation to row-split'
         required: true
         type: choice
-        options: [run, ngram, compact_ngram, compact_run, diagnose]
+        options: [run, ngram, compact_ngram, compact_run, compact_part, diagnose]
         default: run
       leaf:
         description: 'Exact generated leaf number(s), comma-separated for NGram repair, or 0 in diagnose mode'
@@ -48,8 +48,8 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
-          [[ "$PROOF_KIND" =~ ^(run|ngram|compact_ngram|compact_run|diagnose)$ ]]
-          if [[ "$PROOF_KIND" == "diagnose" ]]; then
+          [[ "$PROOF_KIND" =~ ^(run|ngram|compact_ngram|compact_run|compact_part|diagnose)$ ]]
+          if [[ "$PROOF_KIND" == "diagnose" || "$PROOF_KIND" == "compact_part" ]]; then
             [[ "$LEAF" == "0" ]]
           else
             [[ "$LEAF" =~ ^[0-9]+(,[0-9]+)*$ ]]
@@ -94,7 +94,9 @@ jobs:
           set -euo pipefail
           d=im-results/agent32-raw42
           g="$d/generated-assembly"
-          if [[ "$PROOF_KIND" == "run" ]]; then
+          if [[ "$PROOF_KIND" == "compact_part" ]]; then
+            python "$d/repair_exact_part.py" "$g" "$BRANCH" "$PART"
+          elif [[ "$PROOF_KIND" == "run" ]]; then
             IFS=',' read -ra leaves <<< "$LEAF"
             for leaf in "${leaves[@]}"; do
               stem="Raw42${BRANCH}Run${leaf}"
