@@ -150,6 +150,78 @@ theorem checker_permanent_dense_all_admissible_affines
        exact False.elim (hnot (hcover t ho'))
   exact excluded_monotone_le n c hnc p hbase
 
+/-- Every signed even-left-step / odd-right-step affine ray corresponds
+    exactly to one admissible mass/numerator affine family. -/
+def signedRayAffine (x y a b:Int):Affine :=
+  ⟨signedS x y,-2*a-2*b,signedZ x y,-a⟩
+
+theorem signedRay_coords (x y a b t:Int):
+    signedS (x+2*a*t) (y+b*t)=
+        mass (signedRayAffine x y a b) t ∧
+    signedZ (x+2*a*t) (y+b*t)=
+        norm (signedRayAffine x y a b) t := by
+  have hs : signedS (x+2*a*t) (y+b*t) =
+      signedS x y+(-2*a-2*b)*t := by
+    unfold signedS
+    rw [Int.mul_add,Int.sub_mul]
+    simp only [Int.mul_assoc]
+    omega
+  have hsig : (-2*a-2*b)*t=2*((-a-b)*t) := by
+    have hc : -2*a-2*b=2*(-a-b) := by omega
+    calc
+      (-2*a-2*b)*t=(2*(-a-b))*t :=
+        congrArg (fun v:Int => v*t) hc
+      _=2*((-a-b)*t) := by rw [Int.mul_assoc]
+  have hp : parity (signedS (x+2*a*t) (y+b*t))=
+      parity (signedS x y) := by
+    rw [hs,hsig]
+    unfold parity
+    omega
+  have hz0:=signed_twice_Z x y
+  have hz1:=signed_twice_Z (x+2*a*t) (y+b*t)
+  rw [hp] at hz1
+  constructor
+  · exact hs
+  · dsimp [norm,signedRayAffine]
+    have hm : 2*a*t=2*(a*t) := by rw [Int.mul_assoc]
+    rw [hm] at hz1 ⊢
+    rw [Int.neg_mul]
+    omega
+
+theorem signedRay_admissible (x y a b:Int)
+    (hb:b%2=1):Admissible (signedRayAffine x y a b) := by
+  change (-2*a-2*b)%2=0 ∧ (-a+(-2*a-2*b)/2)%2=1
+  have he:(-2*a-2*b)/2=-a-b:=by omega
+  rw [he]
+  omega
+
+/-- Every signed two-counter affine ray with an even left increment and
+    an odd right increment is accepted by the executable checker outside
+    at most a 1/d fraction of parameter residues, at all precision levels
+    beyond one uniform n. Both slope directions may be negative; no
+    physical reachability assumption is used in this theorem. -/
+theorem checker_permanent_dense_all_signed_odd_rays
+    (d:Nat) (hd:0<d):
+    ∃ n:Nat,∀ x y a b:Int, b%2=1→∃R:List Int,
+      d*R.length≤2^n ∧
+      ∀ c:Nat,∀ t:Int,n≤c→t%BB6.Agent21Dyadic.P n∉R→
+        excluded c ⟨x+2*a*t,y+b*t⟩=true := by
+  obtain ⟨n,hn⟩ := checker_permanent_dense_all_admissible_affines d hd
+  refine ⟨n,?_⟩
+  intro x y a b hb
+  obtain ⟨R,hR,hkeep⟩ := hn (signedRayAffine x y a b)
+    (signedRay_admissible x y a b hb)
+  refine ⟨R,hR,?_⟩
+  intro c t hnc hnot
+  have hc := hkeep c t hnc hnot
+  have hh := signedRay_coords x y a b t
+  rw [←hh.1,←hh.2] at hc
+  rwa [pairOfMassNorm_left] at hc
+
+#print axioms signedRay_coords
+#print axioms signedRay_admissible
+#print axioms checker_permanent_dense_all_signed_odd_rays
+
 #print axioms pairOfMassNorm_coords
 #print axioms checker_permanent_dense_all_admissible_affines
 end BB6.Agent21Duality
