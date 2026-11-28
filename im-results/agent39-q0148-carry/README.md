@@ -110,3 +110,31 @@ For the original stable boundary `g=(a,g1,...,g_(m-1),4)`, the parameters after 
 
 **Validation boundary:** The full Lean chain remains a proof **candidate**, not an accepted `NeverHalts` theorem. Direct literal partial-machine execution checked 120 nonterminal and 140 terminal arbitrary-gap source configurations (both with nontrivial external tails), all matching their exact source durations and left/right outputs; finite regression is not universal proof. Source CI initially exposed and then repaired five errors in the shared imported `Q0148BoundarySweep.lean`; subsequent jobs are checking the new all-length lemmas. Most important remaining integration: prove the exact boundary-word/first-E1 parameter-list splice, then connect the high/low final stack to `F(g)` and to the 147-step blank base. The exceptional base is **not** a 293-step boundary epoch: from `(3,4)` its first next E1 is at 293, three marked hops add 57+85+113, and the first next **boundary** is `(3,3,3,4)` after **548** source steps.
 
+
+## Exact physical boundary encoding — no assumed tape grammar
+
+The all-length carry proofs above must apply to the **actual physical boundary tape**, not only to syntactically convenient source chunk words. The link is a simple algebraic bit identity, valid for every number of interior gaps, and is the correct bridge from the boundary invariant P to the input of the original-table sweep theorem.
+
+Let the *physical* left-to-right tape word at right-boundary E1 be
+```
+ W(a;u₁,...,u_k) =
+   (10)^a 110 (10)^(2u₁+1) 110 ... 110
+   (10)^(2u_k+1) 110 (10)^4,
+```
+with E reading the third (zero-based index two) `1` of the final `(10)^4`. Here `a∈{1,3}` and each `u_i≥1` encodes an odd old interior gap `g_i=2u_i+1≥3`; k may be zero (the exceptional base). Let `physLeft` be the bits from the head *towards the left*, inclusive, so it is the reverse of the physical left-to-right prefix ending at the head. Set `v=[1,u_k,...,u₁]` (the *head-side* gap source exponents).
+
+**Exact physical-to-source identity:**
+```
+  physLeft ++ 0
+    = 10 ++ inputBits(evenBlocks(v) ++ A^(a−1)).
+```
+The right-side bits after E1 begin with `01` and are zero otherwise. Thus `Q0148BoundarySweep.twoBlankTurns` applies literally, with enough explicit untouched zero padding; its source chunks are not a heuristic recognition grammar. In particular, for base `(3,4)` one obtains the actual 147-step blank checkpoint `qE1,l=10965,r=2` (left-stack integer read low-bit-first), since `10 A² M A²` is exactly the nearest-first left stack plus one exterior zero.
+
+The identity has a short elementary proof by reversing each fixed bit block. Put `A=10`, `B=110`, `M=11010`, and `Ā=01`, `B̄=011`. For every natural r,
+```
+  (01)^r 0           = 0 (10)^r,
+  (01)^(r+1) 011     = 010 (10)^r 11.
+```
+The first identity is induction on r; the second follows immediately. For `a=1` or `3`, `(01)^a 0 = 010 (10)^(a−1)`. Reversing the physical left-of-head word produces the fixed initial prefix `1 (01)^2 011`, then in turn the blocks `(01)^(2u_k+1)011,...,(01)^(2u₁+1)011`, and finally `(01)^a`. Each reversed interior block is `010 (10)^(2u) 11`. Its final `11` followed by the next block's leading `010` gives precisely the source marker `M=11010`. The trailing reversed `(01)^a 0` closes the last marker and leaves exactly `(10)^(a−1)`; the initial fixed prefix plus its first `010` equals `10 (10)^2 M`. Concatenation gives the displayed source identity for **any k**.
+
+I independently checked the complete original physical reversal against the chunk encoding on 500 deterministic example vectors, including k=0 and both a values; all matched, but the above two string equalities and list induction are the *actual all-length argument*. A dedicated Lean version can be added when the deeper source-return modules have passed their checks.
