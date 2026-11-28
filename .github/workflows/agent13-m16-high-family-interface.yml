@@ -82,6 +82,7 @@ on:
           - sourceH5EvenStopCoset
           - sourceModularHighStopCriterion
           - sourceModularStrictness
+          - sourceM8ModConeStrict
           - sourceModularLowStop
           - sourceModularStopsCriterion
           - sourceModularFullCriterion
@@ -373,6 +374,9 @@ jobs:
               ;;
             sourceModularStrictness)
               target=im-results/agent11-modular-cone-strictness/Agent11ModularConeStrictness.lean
+              ;;
+            sourceM8ModConeStrict)
+              target=im-results/agent15-c-halting/M8ModularConeStrict.lean
               ;;
             sourceModularLowStop)
               target=im-results/agent42-modular-cone/ModularConeLowStop.lean
