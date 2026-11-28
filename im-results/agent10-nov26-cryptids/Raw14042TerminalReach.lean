@@ -141,9 +141,10 @@ theorem terminal_reach_c (p n s : Nat) (hp : 24≤p) (he : p%2=0)
     · have G := dRR (p+1) 8 _ (by omega) (Raw14042DTerminals.c0r1 p he)
       simpa [encode,cTail,Raw14042CGeneral.cCfg,Raw14042Counter.T,
         Raw14042Counter.cword,terminal] using G
-    · have G := dRR (p+2) 1 _ (by omega) (Raw14042DTerminals.c0r2 p he)
+    · have G := dRROdd (p+2) 1 .s6221 _ (by omega)
+        (Raw14042DTerminals.c0r2 p he)
       simpa [encode,cTail,Raw14042CGeneral.cCfg,Raw14042Counter.T,
-        Raw14042Counter.cword,Raw14042ArithmeticInvariant.d,terminal] using G
+        Raw14042Counter.cword,Raw140Double.rank,terminal] using G
     · have G := bsRR (p+11-4) 0 3 .t152 _ (by omega)
         (Raw14042BTerminals.c0r3 p hp he)
       simpa [encode,cTail,Raw14042CGeneral.cCfg,Raw14042Counter.T,
