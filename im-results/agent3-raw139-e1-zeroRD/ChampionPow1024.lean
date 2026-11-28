@@ -54,6 +54,14 @@ private theorem source_firstCost_le (n m a b : Nat) :
   simp only [sectionResult]
   exact Nat.le_add_right _ _
 
+/-- One symbolic section of the arithmetic cost recurrence, with the
+    recursive tail left opaque even when the next exponent is enormous. -/
+private theorem sectionResult_succ_cost (n m a b : Nat) :
+    (sectionResult (n+1) m a b).cost =
+      proposedIncrementCost (m%3) (n+1) a b +
+      (sectionResult n (nextMarker m) (nextExponent m a b) (nextRight b)).cost := by
+  rfl
+
 
 private theorem second_increment_general (b e : Nat)
     (h64 : 64 ≤ b) (he : e ≤ b) (hsmall : 9*b ≤ 2^128) :
@@ -76,21 +84,36 @@ theorem second_increment_ge_pow1024 :
   exact second_increment_general secondRight 1024
     (by decide) (by decide) (by decide)
 
+/-- Source arithmetic: the second increment is a nonnegative summand of
+    the first section. Prove this *for symbolic b*, only then instantiate
+    b=63. Instantiating first makes Lean attempt kernel evaluation of
+    4^(2^63−1), which is invalid and unnecessary. -/
+private theorem second_layer_lower_bound (b : Nat) :
+    proposedIncrementCost 1 6 (nextExponent 2 6 b) (nextRight b) ≤
+      (sectionResult 7 2 6 b).cost := by
+  have hr : proposedIncrementCost 1 6 (nextExponent 2 6 b) (nextRight b) ≤
+      (sectionResult 6 1 (nextExponent 2 6 b) (nextRight b)).cost :=
+    source_firstCost_le 5 1 _ _
+  have hs := sectionResult_succ_cost 6 2 6 b
+  have hm : nextMarker 2 = 1 := by decide
+  have he : (sectionResult 6 (nextMarker 2) (nextExponent 2 6 b) (nextRight b)).cost =
+      (sectionResult 6 1 (nextExponent 2 6 b) (nextRight b)).cost := by
+    rw [hm]
+  calc
+    proposedIncrementCost 1 6 (nextExponent 2 6 b) (nextRight b) ≤
+      (sectionResult 6 1 (nextExponent 2 6 b) (nextRight b)).cost := hr
+    _ ≤ proposedIncrementCost 2 7 6 b +
+      (sectionResult 6 1 (nextExponent 2 6 b) (nextRight b)).cost := Nat.le_add_left _ _
+    _ = (sectionResult 7 2 6 b).cost := by
+      rw [← he]
+      exact hs.symm
+
 theorem second_increment_le_first_section :
     proposedIncrementCost 1 6 71 secondRight ≤
       (sectionResult 7 2 6 63).cost := by
-  have hr : proposedIncrementCost 1 6 71 secondRight ≤
-      (sectionResult 6 1 71 secondRight).cost := by
-    simpa using
-      (source_firstCost_le
-        5 1 71 secondRight)
-  have hstep :
-      (sectionResult 7 2 6 63).cost =
-        proposedIncrementCost 2 7 6 63 +
-        (sectionResult 6 1 71 secondRight).cost := by
-    rfl
-  rw [hstep]
-  omega
+  have he : nextExponent 2 6 63 = 71 := by decide
+  have hb : nextRight 63 = secondRight := by decide
+  simpa only [he, hb] using second_layer_lower_bound 63
 
 theorem champion_score_ge_pow1024 :
     2^1024 ≤ proposedTM63Moves + 7 := by
