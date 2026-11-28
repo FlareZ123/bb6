@@ -1,0 +1,162 @@
+name: Agent32 Raw42 E-child exact split acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      assembly_branch:
+        type: choice
+        options: [0LE, 1LE, 1RE]
+        default: 0LE
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      parts: ${{ steps.plan.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select frozen original-source producer
+        id: pin
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          case "$BRANCH" in
+            0LE) run=46142039950;;
+            1LE) run=46142043725;;
+            1RE) run=46142047495;;
+            *) exit 2;;
+          esac
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pin.outputs.run }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pin.outputs.run }}
+          name: raw42-assembly-core
+          path: /tmp/original-core
+      - name: Partition exact eight-shard root set without changing certificates
+        id: plan
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          python im-results/agent32-raw42/split_all_assembly42.py "$g" "$BRANCH" "$g/split-plan.json" --parts-per-group 4
+          echo "parts=$(python -c 'import json,sys;print(json.dumps(list(json.load(open(sys.argv[1]))["groups"])))' "$g/split-plan.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly/
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-split-core
+          path: /tmp/original-core/
+          retention-days: 30
+          if-no-files-found: error
+
+  shards:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        part: ${{ fromJSON(needs.prepare.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct original coverage source
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-split-core
+          path: /tmp/core
+      - name: Kernel-check all roots assigned to one source-closed part
+        env:
+          PART: ${{ matrix.part }}
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          mapfile -t roots < <(python -c 'import json,sys;print("\\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$g/split-plan.json" "$PART")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          mkdir -p /tmp/part
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/part --jobs 1 --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core --manifest /tmp/part/manifest.json --artifact-name "raw42-split-$BRANCH-$PART" "${roots[@]}" | tee /tmp/part/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/part/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-split-${{ inputs.assembly_branch }}-${{ matrix.part }}
+          path: /tmp/part/
+          retention-days: 30
+          if-no-files-found: error
+
+  consume:
+    needs: [prepare, shards]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct original coverage source
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-split-${{ inputs.assembly_branch }}-g*
+          path: /tmp/parts
+      - name: Authenticate exact partition and prove whole child Cover
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py /tmp/parts /tmp/merged "$g/split-plan.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH" --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" --weighted-bound 100006 "$g/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-${{ inputs.assembly_branch }}
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: error
