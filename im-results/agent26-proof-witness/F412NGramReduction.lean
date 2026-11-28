@@ -4,7 +4,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412NGram
-open BB6Coverage BB6.Agent26F412Graft
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft
 
 /-- Four previously unclassified long-running first-hole siblings, each
 covered for *every* completion by a source-checkable N-gram invariant.
