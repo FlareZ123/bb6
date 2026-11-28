@@ -71,3 +71,40 @@ Once a source-accepted 37-representative consumer exists, every one of the
 score unless independently discharged. Keep this dossier conditional until
 the original-source run and exact parent transport pass. Do not extrapolate
 a whole-machine nonhalting or an exact BB(6) value from the quotient count.
+
+## 2026-11-28 checkpoint recovery
+
+The conditional 38-to-37 source theorem is already accepted in the Raw112-first
+Canonical38 environment. Two full-consumer attempts, [46155256842](https://github.com/FlareZ123/bb6/actions/runs/46155256842)
+and [46156390048](https://github.com/FlareZ123/bb6/actions/runs/46156390048),
+both reached the trust-level-zero Raw47 replay and passed respectively 31 and
+28 `A50Raw47SliceChunk` stages. Both were cancelled before the final
+bridge/consumer theorem. Their uploaded artifacts contain evidence and logs but
+**not** the `raw47-kernel-replay/objects` directory, so neither is resumable.
+These are interrupted computations, not failed mathematical checks; they do
+not establish Canonical37.
+
+The existing manual
+`.github/workflows/agent10-raw112-after-raw39.yml` now supports a durable
+checkpoint protocol:
+
+1. Dispatch with `raw47_full=true`, the accepted Raw112 run `46146501930`,
+   and the accepted Raw39 1LE run `46114235329`. Leave `resume_run_id` empty
+   for a fresh replay.
+2. On every job exit (including cancellation), artifact
+   `raw47-after-raw112-checkpoint` stores `report.json` and the checked
+   `objects/*.olean` stages.
+3. If the run is interrupted, dispatch the same workflow with
+   `resume_run_id` set to that prior run ID. `full.py --resume-from` delegates
+   to `relocate_chunked`, which reconstructs the import plan and verifies each
+   prior stage's source-module list and SHA-256 before reusing it. A mismatch
+   fails closed; it never trusts an unverified checkpoint.
+4. A successful final run must still compile the original-source
+   `Raw47Canonical37AfterRaw112.lean`, export the fixed-score theorem, and
+   pass the complete transitive axiom gate. Only then may the public boundary
+   move from 38 to 37.
+
+The timeout was raised to 240 minutes so a single uninterrupted attempt can
+finish the measured ~39-stage replay. The checkpoint is retained as a recovery
+path, not as a weaker acceptance criterion. No new theorem or roster decrement
+is claimed by this infrastructure change.

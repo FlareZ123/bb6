@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: false
+      resume_run_id:
+        description: 'Optional prior run containing a raw47-after-raw112-checkpoint artifact'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -31,7 +36,7 @@ permissions:
 jobs:
   consume:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -68,17 +73,56 @@ jobs:
             --work /tmp/a10-raw112-after-raw39 \
             | tee /tmp/a29-raw47-conditional-after-raw112.log
           test -s /tmp/a10-raw112-after-raw39/evidence/raw47-conditional-after-raw112-canonical37.json
+      - name: Restore prior Raw47 kernel replay checkpoint
+        if: ${{ inputs.raw47_full && inputs.resume_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: raw47-after-raw112-checkpoint
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw47-resume
+      - name: Validate Raw47 replay checkpoint
+        if: ${{ inputs.raw47_full && inputs.resume_run_id != '' }}
+        run: |
+          set -euo pipefail
+          test -s /tmp/raw47-resume/report.json
+          test -d /tmp/raw47-resume/objects
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/raw47-resume/report.json").read_text())
+          chunks = report.get("chunks", [])
+          assert chunks, "checkpoint contains no completed kernel chunks"
+          assert len(chunks) == len(list(Path("/tmp/raw47-resume/objects").glob("*.olean")))
+          print(f"Authenticated replay checkpoint: {len(chunks)} chunks, "
+                f"{report['affected_modules']} affected modules")
+          PY
       - name: Source-accept complete Raw47 Cover on the Raw112 Canonical38 lineage
         if: ${{ inputs.raw47_full }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          resume_args=()
+          if [[ -d /tmp/raw47-resume ]]; then
+            resume_args+=(--resume-from /tmp/raw47-resume)
+          fi
           python im-results/agent29-raw47-after-raw112/full.py \
             --work /tmp/a10-raw112-after-raw39 \
             --raw47-run-id 46068688341 \
+            "${resume_args[@]}" \
             | tee /tmp/a29-raw47-after-raw112.log
           test -s /tmp/a10-raw112-after-raw39/evidence/raw47-after-raw112-canonical37.json
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.raw47_full
+        with:
+          name: raw47-after-raw112-checkpoint
+          path: |
+            /tmp/a10-raw112-after-raw39/raw47-kernel-replay/report.json
+            /tmp/a10-raw112-after-raw39/raw47-kernel-replay/objects/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         if: always()
         with:

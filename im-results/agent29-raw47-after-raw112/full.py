@@ -33,7 +33,15 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--work", required=True, type=Path)
     p.add_argument("--raw47-run-id", type=int, default=46068688341)
+    p.add_argument(
+        "--resume-from", type=Path,
+        help="authenticated raw47-kernel-replay checkpoint from a prior workflow run",
+    )
     a = p.parse_args()
+    if a.resume_from is not None:
+        a.resume_from = a.resume_from.resolve()
+        assert (a.resume_from / "report.json").is_file(), a.resume_from
+        assert (a.resume_from / "objects").is_dir(), a.resume_from
     work = a.work.resolve()
     evidence = work / "evidence"
     assert a.raw47_run_id == 46068688341, "pin the exact accepted Raw47 run"
@@ -59,7 +67,8 @@ def main():
     audit = {}
     copied = []
     raw47.kernel_replay_raw47(
-        spec, dirs, linked, copied, audit, work, evidence, chunked=True)
+        spec, dirs, linked, copied, audit, work, evidence,
+        chunked=True, resume_from=a.resume_from)
     assert (linked / "Raw47KernelBridge.olean").is_file()
     # All kernel-reached producer roots and their import paths were checked.
     # The final source lemma also establishes definitionally exact parent
