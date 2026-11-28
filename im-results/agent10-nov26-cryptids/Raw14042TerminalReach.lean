@@ -6,6 +6,14 @@ open Raw14042ArithmeticInvariant Raw14042SourceReach
 set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 attribute [local irreducible] run boundary
+attribute [local simp] Raw14042Right.T Raw140Double.tailWord
+  Raw140ERSuffix.tailWord Raw140VariantTransfer.trip
+  Raw14042BGeneral.aCfg Raw14042BGeneral.TA Raw14042BGeneral.aword
+  Raw14042Bank.T Raw14042CGeneral.cCfg Raw14042Counter.T Raw14042Counter.cword
+  Raw14042BTerminals.A Raw14042BTerminals.Braw
+  Raw14042CTerminals.A Raw14042CTerminals.Braw
+  Raw14042DTerminals.A Raw14042DTerminals.Braw
+  Raw14042MixedTerminals.A Raw14042MixedTerminals.Braw
 
 abbrev R := Reach M42
 
