@@ -23,7 +23,7 @@ theorem pairRun_rank_delta {typ : Bool} {j u D v d' : Nat}
 theorem pairRun_input_rank_mod4 {typ : Bool} {j u D v d' : Nat}
     (h : PairRun typ j u D v d') :
     (6*u+D)%4=(if typ then 2 else 0) := by
-  cases h <;> omega
+  cases h <;> simp_all <;> omega
 
 /-- Source guards force E/S pair type to change iff j is odd.
     This is a consequence of exact rank increments, not a heuristic
