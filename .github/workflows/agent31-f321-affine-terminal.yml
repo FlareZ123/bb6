@@ -151,7 +151,6 @@ jobs:
           LEAN_PATH="$e" lean -o "$e/TerminalWordOneFarGeneral.olean" "$e/TerminalWordOneFarGeneral.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e" lean -o "$e/TerminalWordLastFar.olean" "$e/TerminalWordLastFar.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$e/TerminalAnchorShape.olean" "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-anchor-epoch.log
-          LEAN_PATH="$e:$a2" lean -o "$e/TerminalAnchorShape.olean" "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-anchor-epoch.log
           o=im-results/agent2-f321-4093
           LEAN_PATH="$e:$a2" lean -o "$a2/BulkRuns.olean" "$a2/BulkRuns.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/ResetHigh.olean" "$a2/ResetHigh.lean" | tee -a /tmp/f321-anchor-epoch.log
