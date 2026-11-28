@@ -658,3 +658,27 @@ Research source: \`im-results/agent27-623-gap-two-three-step/ThreeStepStripSourc
 I also wrote two *uncompiled* source compositions reusing existing independent blank-root mass-gap exclusion: \`ThreeStepStripN11Source.lean\` removes depth n=10 using \`RootMassGapAllN10\`; \`ThreeStepStripN13Source.lean\` additionally imports Agent48's previously uncompiled \`RootMassGapN11N12.lean\` to remove n=11 and 12. The existing manual workflow \`.github/workflows/agent27-623-n10-mass-gap.yml\` target \`three-step-strip\` was extended to build the import closure and these modules **after** the original \`ThreeStepStripSource\`. Once the first run finishes, dispatch the new workflow head and fix the first actual compiler error. In particular Agent48's 47..55 checkpoints use direct \`by decide\`, not \`native_decide\`, and have not previously passed the source checker. Distinguish these candidate compositions from proofs.
 
 No claim that the authentic root avoids any n>=13 strip. Establishing the full all-time avoidance invariant remains the #623 mathematical frontier. Generic terminal-budget safety is refuted by Agent48's synthetic three-step counterexample; never infer nontermination from the current strip theorem alone.
+
+
+### 2026-11-28 00:38Z: weighted / ultra proof program
+
+**Accepted at original source:** CI #46087395455 succeeded for new \`thinStrip\`, with root halting necessity \`|L-13m| <= 35n+89 OR |4L-7m| <=23n+51\`, n>=10. README has been updated to reflect this fact.
+
+**Further files now committed; NOT yet source accepted:**
+- \`ThreeStepStripWeightedSource.lean\`: bootstraps the exact ternaryOnes budget from the already accepted coarse root strip and scale m>=3^(n-1)-3. Exact Agent22 depth-weighted drain plus Agent49 first-counter log bounds yield source previous-step errors 17n+75 (left), 8n+39 (right); with 9n+38 terminal-parent window gives weighted necessary \`26n+118 /17n+78\`. CI workflow \`weighted-strip\` dispatched as run 46088110538.
+- \`ThreeStepStripTerminalSharpSource.lean\`: original source terminal-parent case split preserves left window 6n+44 instead of common9n+38.
+- \`ThreeStepStripTerminalUltraSource.lean\`: crucial new mass-sensitive evenNear terminal-parent proof. Earlier root q has min(q)>=100n+300, strictly growing mass gives p=x+y>=200n+600. Existing source right-window |4x-y|<=9n+38 forces x>=20n+100 and y+1-x>=n+3; source B-drain bundle with a=y+1-x, b=x+1, d=0 therefore satisfies exact ternary budget at n+2, and weighted depth gives |4x-y|<=6n+27. Combined terminal-parent windows: left6n+44 or right6n+27. This file is **uncompiled**.
+- \`ThreeStepStripWeightedUltraSource.lean\`: combines weighted q->p errors with mass-aware p->h terminal windows, producing necessary \`|L-13m|<=23n+124 OR |4L-7m|<=14n+67\`. Source build target \`weighted-ultra\` added in \`.github/workflows/agent27-623-n10-mass-gap.yml\`; dispatched at head SHA b935eed... (get actual run ID via Actions after rate limit clears). **Not yet accepted**.
+- \`ThreeStepStripN11Source.lean\` and \`ThreeStepStripN13Source.lean\` reuse source Agent8 n10 root ratios and previously uncompiled Agent48 n11/n12 source root ratios. Run 46087952805 was in progress as of 00:33, now source Actions rate limited for another ~2m. If succeeds, integrate ultraStrip→thinStrip (true arithmetically for n>=10) to eliminate all bands n10-12 and obtain n>=13 sharpened gate.
+
+**Additional exact signed refinement worth formalizing after ultra acceptance:** With D=a−x in [-n,n+1] and outer drain r in [0,n], each ordinary sector has
+- left residual \`(x-4y-5)−A = C−9D−8r\` with C=-66,-39,-1,-16 for oddFar/evenFar/oddNear/evenNear, A=L−13m.
+- right residual \`(y-4x-1)−B = c+6D+2r\` with c=33,15,-17,-2, B=7m−4L.
+Combining source terminal-parent left6n+44, right6n+27 gives asymmetric necessary intervals:
+\`-(15n+48) <= L−13m <=23n+114\`
+or
+\`-(12n+43) <= 4L−7m <=14n+67\`.
+These are algebraic derivations not yet Lean checked. For standalone asym proof, reuse the four sector cases of \`ordinary_previous_ultra_strip\`, destructure exact \`drain_weighted_package\` and use \`omega\` directly per case instead of coarse signed error helpers.
+
+The central mathematical obstacle remains proving root orbit avoidance **for every n**, not only finite prefix or a conditional transition. Do not misreport any of the above uncompiled files as accepted. Need debug actual CI failures by GitHub Actions MCP failed tail, not guess.
+
