@@ -69,6 +69,11 @@ const withExtendedLong=process.argv.includes("--include-extended-long");
 const withDepth6Tranche=process.argv.includes("--include-depth6-tranche");
 const withDepth6Halts=process.argv.includes("--include-depth6-halts");
 const withWindow5MaskBank=process.argv.includes("--include-window5-mask-bank");
+const withWindow7MaskBank=process.argv.includes("--include-window7-mask-bank");
+const window7Families=withWindow7MaskBank
+  ? JSON.parse(readFileSync(join(dir,"../agent50-raw34-window7/mask-bank-128.json"),"utf8"))
+      .ranked.map(x=>x.domainMasks)
+  : [];
 const window5Families=withWindow5MaskBank
   ? [
     ...JSON.parse(readFileSync(join(dir,"../agent50-raw34-window5/mask-bank-128.json"),"utf8"))
@@ -378,11 +383,16 @@ for(const f of families)nonhaltRoot=union(nonhaltRoot,familyBDD(f));
 const nonhaltWithoutWindow5=nonhaltRoot;
 if(withWindow5MaskBank)
  for(const domain of window5Families)nonhaltRoot=union(nonhaltRoot,domainBDD(domain));
+const nonhaltWithoutWindow7=nonhaltRoot;
+if(withWindow7MaskBank)
+ for(const domain of window7Families)nonhaltRoot=union(nonhaltRoot,domainBDD(domain));
 const haltRoot=compileCubes(bank.slice(haltStart));
 assert.equal(intersect(nonhaltRoot,haltRoot),0,"halting/nonhalting proof-bank overlap");
 const coverageRoot=union(nonhaltRoot,haltRoot);
 const coverageWithoutWindow5=withWindow5MaskBank
   ? union(nonhaltWithoutWindow5,haltRoot) : null;
+const coverageWithoutWindow7=withWindow7MaskBank
+  ? union(nonhaltWithoutWindow7,haltRoot) : null;
 const countMemo=new Map();
 function coveredCount(id,at){
  if(id===0)return 0n;if(id===1)return pow[8-at];
@@ -416,7 +426,7 @@ for(let d=1;d<=25;d++){
   }
  }
 }
-if(!withRay&&!withWindow5MaskBank)assert.equal(grand,5471912359n,
+if(!withRay&&!withWindow5MaskBank&&!withWindow7MaskBank)assert.equal(grand,5471912359n,
  "Raw34 non-D1 residual does not match independent source union subtraction");
 if(withRay)assert(grand<5471912359n,"new F-ray sources did not reduce complement");
 let residualBeforeWindow5=0n;
@@ -427,6 +437,15 @@ if(withWindow5MaskBank){
   residualBeforeWindow5+=pow[7]-coveredCount(id,1);
  }
  assert(residualBeforeWindow5>=grand);
+}
+let residualBeforeWindow7=0n;
+if(withWindow7MaskBank){
+ for(let d=1;d<=25;d++){
+  if(alphabet[d-1]==="1RD")continue;
+  const id=restrictAt(coverageWithoutWindow7,0,d);
+  residualBeforeWindow7+=pow[7]-coveredCount(id,1);
+ }
+ assert(residualBeforeWindow7>=grand);
 }
 totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
   BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
@@ -452,6 +471,9 @@ console.log(JSON.stringify({
   additionalLateHaltPatterns:nAdditionalLate,
   depth6DirectHaltPatterns:nDepth6Halts,graphMasks:maskNames,
   window5DomainFamilies:window5Families.length,
+  window7DomainFamilies:window7Families.length,
+  window7FreshNonD1Physical:withWindow7MaskBank?String(residualBeforeWindow7-grand):"0",
+  window7BaselineNonD1Physical:withWindow7MaskBank?String(residualBeforeWindow7):"not requested",
   window5FreshNonD1Physical:withWindow5MaskBank?String(residualBeforeWindow5-grand):"0",
   window5BaselineNonD1Physical:withWindow5MaskBank?String(residualBeforeWindow5):"not requested",
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
