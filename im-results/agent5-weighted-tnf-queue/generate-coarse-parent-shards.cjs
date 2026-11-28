@@ -28,6 +28,8 @@ const regionCuts=new Map([
  ['1RB1LC1RC0LC0LA0RD1RF1RE0RB---1LB1RE', {root:149,mod:'Q0149Block8',ns:'BB6.Agent50Q0149Block8'}],
  ['1RB1LC1RC0RC0LA0RD1RB1RE0RF---1LC0LC', {root:149,mod:'Q0149Block10',ns:'BB6.Agent50Q0149Block10'}],
  ['1RB1LC1RC---0LA0RD1RF1RE0RD0RB1LA0LC', {root:149,mod:'Raw11Q0LongSweep2',ns:'BB6.Raw11Q0LongSweep2',minBound:195836}],
+ ['1RB1LC1RC1RF0LA1LD0LE0RB1LA---1RA0LA', {root:150,mod:'Raw11Q0LongSweep0',ns:'BB6.Raw11Q0LongSweep0',minBound:1102626}],
+ ['1RB1LC1RC1RF0LA1LD0LB0RE0LC1RD1RA---', {root:150,mod:'Raw11Q0LongSweep1',ns:'BB6.Raw11Q0LongSweep1',minBound:13007752}],
  ['1RB1LC1RC0RE0LA1LD1LA1RE---0RF1LC1RD', {root:150,mod:'Raw11Q0Double150',ns:'BB6Coverage.Agent31Pump.Raw11Q0Double150'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LA1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M0'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M1'}],
