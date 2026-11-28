@@ -1,0 +1,1 @@
+Two new nonhalting Raw10 literal siblings source-accepted via D3Variant.never 0 and 2 in CI 46113903832. Raw10 short frontier ancestor indices 4197 and 1106. See communications/broadcast/20261128T0556Z_agent19-modified-D-all-starts-source-accepted.md for exact tables; only consume if retained in actual current local roster.
