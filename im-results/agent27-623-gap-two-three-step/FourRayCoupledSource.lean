@@ -47,6 +47,7 @@ c is the branch constant and belongs to {4,5,8}. -/
 theorem ordinary_step_coupled_envelope (N u v x y : Nat)
     (hhi : min u v+3<3^N)
     (hsep : min u v+N+10≤max u v)
+    (hu : 0<u)
     (hord : OrdinaryStep u v x y) :
     ∃ r c : Nat, r≤N ∧ 4≤c ∧ c≤8 ∧
       x+min u v≤max u v+r+4 ∧
@@ -138,11 +139,12 @@ shared-r and c∈[4,8] envelope by linear integer arithmetic. -/
 theorem tight_successor_coupled_four_ray (N n u v x y : Nat)
     (hhi : min u v+3<3^N)
     (hsep : min u v+N+10≤max u v)
+    (hu : 0<u)
     (hord : OrdinaryStep u v x y)
     (ht : tightSkew x y n) :
     coupledFourRayCone N n u v := by
   obtain ⟨r,c,hr,hcLo,hcHi,hfirst,hsecond,hpot⟩ :=
-    ordinary_step_coupled_envelope N u v x y hhi hsep hord
+    ordinary_step_coupled_envelope N u v x y hhi hsep hu hord
   unfold coupledFourRayCone
   dsimp at *
   unfold tightSkew at ht
@@ -187,7 +189,7 @@ theorem root_large_coupled_four_ray (N n t u v x y : Nat)
     have hminU := Nat.min_le_left u v
     have hminV := Nat.min_le_right u v
     omega
-  exact tight_successor_coupled_four_ray N n u v x y hhi hsep hord ht
+  exact tight_successor_coupled_four_ray N n u v x y hhi hsep hu hord ht
 
 /-- Authenticated reachable fourth-predecessor gate at n>=13,
 with improved one-sided widths and no other orbit hypotheses. -/
