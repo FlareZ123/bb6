@@ -64,7 +64,9 @@ theorem conditional_sound (hp : Cover (WeightedBound 6766859) p47) :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
         ∃ e ∈ roster38, TNFQuotientCompatible e.2 m :=
-  removeParents_sound
+by
+  apply removeParents_sound (parents := removedParents)
+    (roster := baseRoster)
     BB6.Agent11Raw39Canonical39Successor.sound_integrated
     parents_root (parents_cover hp)
 
