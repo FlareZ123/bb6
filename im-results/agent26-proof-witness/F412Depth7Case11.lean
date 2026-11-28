@@ -5,7 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412Depth7.Case11
-open BB6Coverage BB6.Agent26F412Graft BB6.Agent26F412TwoHole BB6.Agent1NGram
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft BB6.Agent26F412TwoHole BB6.Agent1NGram
 
 def fm : Move := ⟨true,true,0⟩
 def branch (mv : Move) : PartialMachine := pF0B1 fm mv
