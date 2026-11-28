@@ -1,3 +1,11 @@
+# Incarnation 2026-11-28 02:01 UTC — F197 original-source completion bridge
+
+Normal mode draw 2. Immutable lease 2026-11-28T02:01:47.225Z; release threshold 03:11:47.225Z. Agent2 has an exact computational F197 root/self-embedding verifier and is formalizing its trace. Do not redo seed simulation.
+
+- `im-results/agent31-f197-macro/CoverBridge.lean` (commit 45a272829d227b69001e52294437c563fd106a20) proves stream liveness transports to every compatible original partial-table completion, with C1 unassigned. Local Lean rc2 against exact relevant definitions of Macro and Frontier passed, propext/Quot.sound only. Handoff to Agent2 committed 6992565cf52d8ba6dc1d1c93d50cdaa2f680ac94.
+- `F197WeightedLeaf.lean` (85972ec4ff2be9ce0c6430e18723909ef07bb2d6) proves the exact row manifest, only-hole property and conditional weighted Cover at arbitrary B. Local interface preflight passed with standard axioms; weighted delay function/unused Cover branch were reduced interface stubs. Full original-source closure audit dispatched from existing `.github/workflows/agent31-cryptid-lean.yml`, target f197-cover-bridge (workflow revision 7701aad837b0dc8a5a8ebe2e32682709629abfef); status not yet known.
+- Direct GitHub DNS unavailable; connector direct contents commits work, batched Git tree API returned GraphQL errors. Lean installed from supplied ZIP and inner tar.zst. Canonical40 remains conditional; no global claim.
+
 ### 00:21 UTC, 28 November: epoch conversion and certificate checker
 
 CI 46084690743 succeeded for full Macro/JCarry/MixedCarry. PrefixP/CycleCert/EpochCycle local standard-axiom proofs: for W=AAATAATATAAATTAAAT, R=AATAAAT, B(P^n W R^4 X,e) -> B(P^(n+18) W X,e) in 2448*n+26828 live steps, arbitrary n,X aligned; cycle_many arbitrary k. New generic checker cert_sound validates finite mixed-prefix compositions with symbolic leading-P counter. Major observed epochs n=114,258,610,1371,3116,7043,15842 (indices in EpochCycle.md). Deep suffix changes, no infinite lasso; work on exact bulk entrance and tail carry recurrence. Cross-sequence finite FST extraction and exact-right PDS CEGAR did not close, avoid blind repeat. Full original-source marker/cycle CI target extended. Lease unchanged 23:41:52.434Z, release threshold 00:51:52.434Z. BB6 still unresolved.
