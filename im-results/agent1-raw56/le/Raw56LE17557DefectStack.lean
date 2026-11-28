@@ -104,6 +104,35 @@ theorem carry_weighted_transition (ell w : Nat)
     exact carry_regular_preserves ell w h1 h7
       (by simpa [carryNextWeight, h7] using hbound)
 
+/-- The abstract B-side bound is exactly the semantic runway condition:
+    the high front zero-run has at least fifteen cells for the BBA block. -/
+theorem b_safe_iff (ell w : Nat) (h7 : 7 ≤ ell) :
+    15 ≤ weightedZero ell w ↔
+      8 * bNextWeight ell w ≤ rhoZero (ell - 7) := by
+  unfold weightedZero bNextWeight rhoZero
+  by_cases h6 : ell % 8 = 6
+  · simp [h6]
+    split <;> omega
+  · simp [h6]
+    split <;> split <;> omega
+
+/-- With the necessary residue-7 positivity guard, the abstract carry bound is
+    exactly the semantic condition that the high front zero-run is nonempty. -/
+theorem carry_safe_iff (ell w : Nat) (h1 : 1 ≤ ell)
+    (hpositive : ell % 8 = 7 → 1 ≤ w) :
+    1 ≤ weightedZero ell w ↔
+      8 * carryNextWeight ell w ≤ rhoZero (ell - 1) := by
+  by_cases h7 : ell % 8 = 7
+  · have hw := hpositive h7
+    have hr := rho_c_exception ell h1 h7
+    simp [carryNextWeight, h7]
+    unfold weightedZero
+    omega
+  · have hr := rho_c_regular ell h1 h7
+    simp [carryNextWeight, h7]
+    unfold weightedZero
+    omega
+
 /-- Whole-stack B transition at the exceptional residue: only the front
     weight changes, while every deeper zero-run/weight pair is untouched. -/
 theorem b_exception_stack {low weights high : List Nat} (ell w : Nat)
@@ -166,6 +195,8 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
 #print axioms carry_regular_preserves
 #print axioms b_weighted_transition
 #print axioms carry_weighted_transition
+#print axioms b_safe_iff
+#print axioms carry_safe_iff
 #print axioms b_exception_stack
 #print axioms b_regular_stack
 #print axioms carry_exception_stack
