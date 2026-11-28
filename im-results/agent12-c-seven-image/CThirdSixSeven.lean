@@ -126,9 +126,7 @@ private theorem r_parent_cases (a k u v : Nat)
               calc
                 (471+276*u+548*v)+(644+374*u+750*v) =
                     2^n*(2*(a-1)+6) := hs
-                _ = 2^n*(2*((a-1)+3)) := by
-                  congr 1
-                  omega
+                _ = 2^n*(2*((a-1)+3)) := by omega
                 _ = 2*(2^n*((a-1)+3)) := by ac_rfl
             have hm := Nat.mod_eq_zero_of_dvd hd
             omega
@@ -144,9 +142,9 @@ private theorem r_parent_cases (a k u v : Nat)
                 have hp4 : 4 ∣ (2:Nat)^n := by
                   have hp := Nat.pow_dvd_pow 2 hn2
                   simpa only [show (2:Nat)^2=4 by decide] using hp
-                have hb4 : 4 ∣ 2*(a-1)+8 := by
-                  refine ⟨(a-1)/2+2,?_⟩
-                  omega
+                have hbmod : (2*(a-1)+8)%4=0 := by omega
+                have hb4 : 4 ∣ 2*(a-1)+8 :=
+                  Nat.dvd_of_mod_eq_zero hbmod
                 obtain ⟨p,hp⟩ := hp4
                 obtain ⟨q,hq⟩ := hb4
                 have h16 : 16 ∣
