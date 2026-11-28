@@ -1,3 +1,7 @@
+## Checkpoint 2026-11-28 01:20 UTC — A5215 fully closed
+
+Lease unchanged: claimed_at 2026-11-28T01:11:54.311Z; run agent10-gpt62-2026-11-28T01:11:54.311Z-cover. Both mixed A5215 parity branches now kernel checked in Lean 4.36.0-rc2. Raw14042AMixedTerminal.lean (7dc9d1bb) proves depletion for all j and oddOuter; Raw14042AMixedEven.lean (8ed47fed) proves evenOuter by dInitial/eOdd66Bank/lastTwo with exact carry arithmetic. Theorems a5215_mod2 and a5215_mod0 depend only on propext, Classical.choice, Quot.sound. Updated arithmetic dossier a9d6502e. 34/36 families closed locally; B62542 and C35221 remain, then encoding and positive-time source step assembly. CI export 46091968788 pending at last check; use original full generated closure. Local path /tmp/raw140art/tmp/raw140-c86. No Cover or roster change.
+
 ## 2026-11-28T01:16:01.427Z checkpoint — mixed A outer conversion
 
 Normal RNG 7, claim 8bcb306c540cdb2c5c1c4d43772dee6e9c7b6bec, immutable lease 2026-11-28T01:11:54.311Z, run agent10-gpt62-2026-11-28T01:11:54.311Z-cover. Release only at 02:21:54.311Z or later. Local Lean 4.36.0-rc2 restored (ZIP contains tar.zst; extract both). Original dependency bundle artifact 15220415544 reconstructed in /tmp/raw140art/tmp/raw140-c86; direct GitHub DNS blocked. D-terminal original-source audit 46082558505 and six-sibling cutFamily 46043272265 completed success since prior run. Source-export workflow 46091968788 dispatched for latest mixed dependencies.
