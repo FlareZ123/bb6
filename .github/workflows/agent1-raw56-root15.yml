@@ -161,7 +161,7 @@ jobs:
               assert (out / rel).is_dir(), rel
           print('union modules', sum(1 for _ in out.rglob('*.olean')), flush=True)
           PY
-          export LEAN_PATH="/tmp:/tmp/raw56-lb:/tmp/raw56-lb-parent:/tmp/raw56-root14-union:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
+          export LEAN_PATH="/tmp:/tmp/raw56-lb:/tmp/raw56-lb-parent:/tmp/raw56-lb-parent/E11LB:/tmp/raw56-root14-union:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
           lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean 2>&1 | tee /tmp/raw56-root15.log
           lean -o /tmp/Raw56Root14.olean im-results/agent1-raw56/Raw56Root14.lean 2>&1 | tee /tmp/raw56-root14.log
           lean -o /tmp/Raw56Root13LB.olean im-results/agent1-raw56/Raw56Root13LB.lean 2>&1 | tee /tmp/raw56-root13.log
