@@ -3071,7 +3071,7 @@ jobs:
           W=/tmp/a50-raw34-window5
           D=im-results/agent50-raw34-window5
           mkdir -p "$W"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-window5-original "$D/Window5Witness.lean" "$D/Window5Product.lean" "$D/Window5Domains.lean" "$D/Window5Bank128.lean" 2>&1 | tee "$W/closure.log"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-window5-original "$D/Window5Witness.lean" "$D/Window5Product.lean" "$D/Window5Domains.lean" "$D/Window5Bank128.lean" "$D/Window5Symmetry128.lean" 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           grep -F "'BB6.Agent50Window5Witness.never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Witness.cover'" "$W/closure.log"
@@ -3101,7 +3101,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Kernel-check each actual 25-way allowed action in all 128 physical domain families
+      - name: Kernel-check each actual 25-way allowed action in all 256 physical domain families
         run: |
           set -euo pipefail
           W=/tmp/a50-window5-domain-shards
@@ -3109,16 +3109,19 @@ jobs:
           mkdir -p "$W"
           python tools/lean_compile_closure.py --workdir "$W/build" --jobs 5 \
             --manifest "$W/manifest.json" --artifact-name raw34-window5-domain-shards \
-            "$D"/Window5BankDomainShard*.lean 2>&1 | tee "$W/closure.log"
+            "$D"/Window5BankDomainShard*.lean "$D"/Window5BankDomainSymShard*.lean "$D"/Window5Symmetry128.lean 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           python - "$W/closure.log" <<'PY'
           import sys
           s=open(sys.argv[1]).read()
           for i in range(8):
-              n=f"BB6.Agent50Window5DomainShard{i}.all_domains_checked"
-              assert (f"'{n}' does not depend on any axioms" in s or
-                      f"'{n}' depends on axioms: [propext]" in s),n
-          print("PASS: all 128 mask x physical permitted action checks source-certified")
+              for kind in ('BB6.Agent50Window5DomainShard',
+                           'BB6.Agent50Window5DomainSymShard'):
+                  n=f"{kind}{i}.all_domains_checked"
+                  assert (f"'{n}' does not depend on any axioms" in s or
+                          f"'{n}' depends on axioms: [propext]" in s),n
+          assert "'BB6.Agent50Window5Symmetry128.all_roots_checked'" in s
+          print("PASS: all 256 masks x physical 25-action domains source-certified")
           PY
       - uses: actions/upload-artifact@v4
         if: always()
