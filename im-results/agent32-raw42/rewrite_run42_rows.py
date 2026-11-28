@@ -75,7 +75,7 @@ body = """theorem allRows (q : Fin 6) (a : Bool) :
   all_goals cases a
 """ + "\n".join(f"  · exact row{j:02}_checked" for j in range(12)) + """
 theorem checked : check table cert = true :=
-  check_of_rows (by decide) (by decide) (by decide) allRows
+  BB6.Agent32Raw42FastBiDFA.check_of_rows (by decide) (by decide) (by decide) allRows
 theorem live (m : Machine) (hm : compatible table m) : NeverHalts m :=
   never table cert checked m hm
 #print axioms live
