@@ -33,11 +33,11 @@ theorem runBits_eq (xs : List Nat) : runBits xs = bitRuns xs := by
 theorem merged_run (last first : Nat) (rest : List Nat) :
     List.replicate (last+1) true ++ runBits (first::rest) =
       runBits ((last+first+1)::rest) := by
-  change List.replicate (last+1) true ++
-        (List.replicate (first+1) true ++ false::runBits rest) =
-      List.replicate (last+first+1+1) true ++ false::runBits rest
-  rw [show last+first+1+1=(last+1)+(first+1) by omega]
-  simp only [List.replicate_add,List.append_assoc]
+  change ones (last+1) ++
+        (ones (first+1) ++ false::runBits rest) =
+      ones (last+first+1+1) ++ false::runBits rest
+  rw [show last+first+1+1=(last+1)+(first+1) by omega, ones_add]
+  simp only [Nat.add_assoc, ones_add, List.append_assoc]
 
 theorem transfer_word (s : List Bool) (hs : SegGood s)
     (right : List Nat) :
@@ -59,7 +59,7 @@ theorem transfer_word (s : List Bool) (hs : SegGood s)
             _ = s ++ [false] := by
               rw [hseg]
               simp [List.append_assoc]
-        change pack s = pack (runBits (closed++[last]))
+        simp only [runBits, List.append_nil]
         rw [he,pack_zero]
       · rw [hsummary,concat_run_summary]
         rfl
