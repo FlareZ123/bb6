@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -400,4 +400,98 @@ jobs:
             /tmp/q0149-ten.log
             im-results/agent47-raw11-adapter/Raw11Q0Ten149.lean
           if-no-files-found: warn
+          retention-days: 30
+
+
+  # Reuse immutable accepted bank and original parent objects; only the two
+  # locally compiled exact-complement consumers are new source obligations.
+  q0-152-consume:
+    if: inputs.mode == 'q0-152'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Recover exact immutable proof dependencies
+        env:
+          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/raw11-q0-152
+          for id in \
+            15159003899 15161045625 \
+            15159257293 15154832729 15154568902 \
+            15154569169 15154663882 15158958272 \
+            15017647753 15014940132 15166284252 \
+            15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          bank="$(find /tmp/deps/15166284252 -name Raw11Q0Combined.olean -print -quit)"
+          test -n "$bank"
+          for id in 84 131 133 134; do
+            case "$id" in
+              84) artifact=15163134847 ;;
+              131) artifact=15161467291 ;;
+              133) artifact=15162658933 ;;
+              134) artifact=15162722191 ;;
+            esac
+            test -n "$(find "/tmp/deps/$artifact" -name "Agent5Raw11Extra$id.olean" -print -quit)"
+          done
+      - name: Compile exact 299 to 152 original-source consumer
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/raw11-q0-152
+          while IFS= read -r module; do
+            directory="$(dirname "$module")"
+            case ":$LEAN_PATH:" in
+              *":$directory:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$directory" ;;
+            esac
+          done < <(find /tmp/deps -type f -name '*.olean' | sort)
+          export LEAN_PATH
+          src=im-results/agent47-raw11-adapter
+          for target in Raw11FourExtra Raw11Q0CombinedExtra; do
+            lean -j1 -o "/tmp/raw11-q0-152/$target.olean" "$src/$target.lean" \
+              | tee "/tmp/raw11-q0-152/$target.log"
+            if grep -Eq 'sorryAx|native_decide' "/tmp/raw11-q0-152/$target.log"; then
+              echo "Forbidden trust dependency: $target" >&2
+              exit 1
+            fi
+          done
+          grep -F "'BB6.Agent47Raw11FourExtra.cover_from_remaining' depends on axioms:" \
+            /tmp/raw11-q0-152/Raw11FourExtra.log
+          grep -F "'BB6.Agent47Raw11Q0CombinedExtra.remaining_census' depends on axioms:" \
+            /tmp/raw11-q0-152/Raw11Q0CombinedExtra.log
+          grep -F "'BB6.Agent47Raw11Q0CombinedExtra.cover_from_remaining' depends on axioms:" \
+            /tmp/raw11-q0-152/Raw11Q0CombinedExtra.log
+          {
+            lean --version
+            echo 'source_modules=Raw11FourExtra,Raw11Q0CombinedExtra'
+            echo 'bank_artifact=15166284252'
+            echo 'parent_artifacts=15163134847,15161467291,15162658933,15162722191'
+            sha256sum "$src/Raw11FourExtra.lean" "$src/Raw11Q0CombinedExtra.lean"
+            sha256sum /tmp/raw11-q0-152/*.olean
+          } > /tmp/raw11-q0-152/provenance.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-152-accepted-consumer
+          path: |
+            /tmp/raw11-q0-152
+            im-results/agent47-raw11-adapter/Raw11FourExtra.lean
+            im-results/agent47-raw11-adapter/Raw11Q0CombinedExtra.lean
+          if-no-files-found: error
           retention-days: 30
