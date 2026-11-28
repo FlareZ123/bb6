@@ -211,6 +211,23 @@ def main():
     check("sorryAx" not in final.read_text() and
           "native_decide" not in final.read_text(),
           "unapproved axioms in complete parent source consumer")
+    extra_targets=[]
+    if args.ten_only:
+        # This adds a stronger result without changing the original ten-child
+        # acceptance gate or the existing theorem's proof dependencies.
+        name="Raw39ThresholdReduction"
+        compile_missing(name,linked,evidence,index,busy,compiled)
+        extra_targets=[
+            "BB6.Agent11Raw39ThresholdReduction.oneLE_lower_bound",
+            "BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE",
+        ]
+        extra_log=evidence/(name+".log")
+        subprocess.run([
+            sys.executable,str(REPO/"im-results/agent4-raw109/audit_axioms.py"),
+            str(extra_log),*extra_targets],check=True)
+        check("sorryAx" not in extra_log.read_text() and
+              "native_decide" not in extra_log.read_text(),
+              "unapproved axioms in all-threshold reduction")
     receipt={"status":("source-accepted Raw39 ten-child conditional Bound" if args.ten_only
                       else "source-accepted Raw39 eleven-child exact weighted Bound"),
              "bound":28311,"parent_table":"1RB---_1RC---_0RD---_1LD0RA_------_------",
@@ -218,6 +235,10 @@ def main():
                  ["git","rev-parse","HEAD"],text=True).strip(),
              "producers":docs,"unique_objects":len(seen),
              "newly_compiled":compiled,"theorems":targets,
+             "all_threshold_theorems":extra_targets,
+             "all_threshold_root_sha256":(
+                 digest(linked/"Raw39ThresholdReduction.olean")
+                 if args.ten_only else None),
              "root_sha256":digest(linked/("Raw39TenChildPartial.olean" if args.ten_only else "Raw39CompleteJoin.olean")),
              "lean_version":compiler_version,"lean_sha256":compiler_sha}
     (evidence/"parent-accepted.json").write_text(
