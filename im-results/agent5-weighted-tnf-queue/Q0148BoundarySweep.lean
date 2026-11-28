@@ -115,6 +115,75 @@ theorem scanChunks (cs : List LeftChunk) (L R : List Bool) :
       simpa only [scanCost,inputBits,outputBits,List.cons_append,
         List.nil_append,List.append_assoc] using h
 
+
+/-- A separated 110 marker followed by its 10 separator is consumed in
+    fifteen steps by the exact rightward scan. The output is its reversal
+    because the generated left stack is nearest-cell first. -/
+theorem rightMarkerOne :
+    Auto.knownRun p 15 ⟨0,[false],[false,true,true,false,true,false]⟩ =
+      some ⟨0,[false,false,true,false,true,true],[false]⟩ := by decide +kernel
+
+inductive RightChunk where
+  | alternating
+  | separatedMarker
+  deriving DecidableEq, Repr
+
+def rightInput : RightChunk → List Bool
+  | .alternating => [true,false]
+  | .separatedMarker => [true,true,false,true,false]
+
+def rightOutput : RightChunk → List Bool
+  | .alternating => [false,true]
+  | .separatedMarker => [false,true,false,true,true]
+
+def rightCost : RightChunk → Nat
+  | .alternating => 6
+  | .separatedMarker => 15
+
+def inputRightChunks : List RightChunk → List Bool
+  | [] => []
+  | c::cs => rightInput c ++ inputRightChunks cs
+
+def outputRightChunks : List RightChunk → List Bool
+  | [] => []
+  | c::cs => outputRightChunks cs ++ rightOutput c
+
+def rightScanCost : List RightChunk → Nat
+  | [] => 0
+  | c::cs => rightCost c + rightScanCost cs
+
+theorem scanRightOne (c : RightChunk) (L R : List Bool) :
+    run0 p (rightCost c)
+      ⟨0,[false] ++ L,[false] ++ rightInput c ++ R⟩ =
+      some ⟨0,[false] ++ rightOutput c ++ L,[false] ++ R⟩ := by
+  cases c with
+  | alternating =>
+      simpa [rightCost,rightInput,rightOutput,Auto.extend,List.append_assoc] using
+        Auto.knownRun_sound p 6 rightOne L R
+  | separatedMarker =>
+      simpa [rightCost,rightInput,rightOutput,Auto.extend,List.append_assoc] using
+        Auto.knownRun_sound p 15 rightMarkerOne L R
+
+/-- Exact all-length *rightward* scan for arbitrary words assembled
+    from 10 and separated 11010 blocks. -/
+theorem scanRightChunks (cs : List RightChunk) (L R : List Bool) :
+    run0 p (rightScanCost cs)
+      ⟨0,[false] ++ L,[false] ++ inputRightChunks cs ++ R⟩ =
+      some ⟨0,[false] ++ outputRightChunks cs ++ L,[false] ++ R⟩ := by
+  induction cs generalizing L with
+  | nil =>
+      simp [rightScanCost,inputRightChunks,outputRightChunks,run0]
+  | cons c cs ih =>
+      have h1 := scanRightOne c L (inputRightChunks cs ++ R)
+      have h2 := ih (rightOutput c ++ L)
+      have h := join0 h1 h2
+      simpa only [rightScanCost,inputRightChunks,outputRightChunks,
+        List.cons_append,List.nil_append,List.append_assoc] using h
+
+#print axioms rightMarkerOne
+#print axioms scanRightOne
+#print axioms scanRightChunks
+
 #print axioms leftMarkerOne
 #print axioms scanOne
 #print axioms scanChunks
