@@ -114,6 +114,11 @@ jobs:
             chmod +x /tmp/raw140-lean
             cd "$GITHUB_WORKSPACE"
             if [[ "${{ inputs.audit }}" == "raw140-three-hole-source" || "${{ inputs.audit }}" == "raw140-three-hole-all" || "${{ inputs.audit }}" == "raw140-canonical37" || "${{ inputs.audit }}" == "raw140-canonical48" ]]; then
+              # Raw140's source closure reaches FourHoleData through the
+              # existing TNF proof chain; materialize its generated source
+              # before the strict import-closure index is built.
+              python im-results/agent31-three-hole-tnf/generate_sweeps.py
+              python im-results/agent31-three-hole-tnf/generate_four_hole.py
               python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
               python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
               python im-results/agent10-nov26-cryptids/generate_raw140_long.py
