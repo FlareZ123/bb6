@@ -111,6 +111,8 @@ assert.equal(portfolioMass,123226284000n);
 const SAFE_B=mask([...moves('ACD'),'1RB']); // 13 actions into A,C,D or marked B
 const SAFE_D=mask([...moves('ABC'),'0RD']); // 13 actions into A,B,C or zero-guard D
 const SAFE_A=mask([...moves('BCD'),'0RA']); // 13 actions into B,C,D or initially-guarded A
+const SAFE_C=mask([...moves('AB'),'1RC','0RD']); // causal C mark or D mark, 10 moves
+const SAFE_C_D=mask([...moves('AB'),'1RC','0RD','0LC','1LC']); // D may also return left to C, 12
 const GUARD_E=mask(['0LE','1LE']);
 const GUARD_F=mask(['0LF','1LF']);
 
@@ -135,6 +137,15 @@ const initialF=[SAFE_A,SAFE_A,SAFE_A,GUARD_F,ALL,ALL,SAFE_A,ALL];
 const initialEHalt=initialE.slice();initialEHalt[5]=bit('HALT');
 const initialFHalt=initialF.slice();initialFHalt[7]=bit('HALT');
 
+// C guards require both a known marked predecessor (1RC) and
+// an alternative D->C return onto a guaranteed zero (0LC/1LC).
+// Thus a nonzero C scan forces its predecessor to be 1. C1 left
+// into E/F can then reach only E1/F1, leaving E0/F0 arbitrary.
+const causalE=[SAFE_C_D,GUARD_E,SAFE_C,SAFE_C,ALL,SAFE_C,ALL,ALL];
+const causalF=[SAFE_C_D,GUARD_F,SAFE_C,SAFE_C,ALL,ALL,ALL,SAFE_C];
+const causalEHalt=causalE.slice();causalEHalt[4]=bit('HALT');
+const causalFHalt=causalF.slice();causalFHalt[6]=bit('HALT');
+
 // Exact two-sweep source classes (E1/F0/F1 and E0/E1/F1 free,
 // respectively). Both have a 28n+44 period in the original zipper.
 const twoE=table('1RB0LB_1RC1RE_0RD0LA_1LC0LD_0RA---_------');
@@ -147,6 +158,8 @@ const families=[
  ['zero_D_F1',zeroF,zeroFHalt],
  ['initial_A_E1',initialE,initialEHalt],
  ['initial_A_F1',initialF,initialFHalt],
+ ['causal_C_E0',causalE,causalEHalt],
+ ['causal_C_F0',causalF,causalFHalt],
  ['two_sweep_E',twoE,null],
  ['two_sweep_F',twoF,null]
 ];
@@ -188,6 +201,10 @@ assert.equal(detailed.initial_A_E1.additional_outside_portfolio,'3981250');
 assert.equal(detailed.initial_A_F1.additional_outside_portfolio,'3981250');
 assert.equal(detailed.initial_A_E1.protected_instruction_equals_HALT.new_nontrivial,'796250');
 assert.equal(detailed.initial_A_F1.protected_instruction_equals_HALT.new_nontrivial,'796250');
+assert.equal(detailed.causal_C_E0.additional_outside_portfolio,'3986500');
+assert.equal(detailed.causal_C_F0.additional_outside_portfolio,'5910500');
+assert.equal(detailed.causal_C_E0.protected_instruction_equals_HALT.new_nontrivial,'912500');
+assert.equal(detailed.causal_C_F0.protected_instruction_equals_HALT.new_nontrivial,'1412500');
 assert.equal(detailed.two_sweep_E.additional_outside_portfolio,'3125');
 assert.equal(detailed.two_sweep_F.additional_outside_portfolio,'3125');
 console.log(JSON.stringify({
