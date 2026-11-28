@@ -39,3 +39,117 @@ Material integration progress:
 - Broader Raw43 source frontier was mapped. New B1RA source gates A0LC 46127182711 and A0LE 46127185709 and A0RC 46127188899 succeeded; secondary queued audits were intentionally canceled to prioritize B0LE runner capacity. Re-dispatch after B0LE if useful. Shutdown-only missing gates remain B1LA A0LA, B1LE E0LA/E0LF/E0RA/E1RB, B1RE E1=1LE.
 - Existing accepted whole branch parents: B1RC 45934715974 bound382, B0RC 45937283185 bound620, B0RA 45953249331 bound390, B0LA 45955232997 bound1771. Candidate-complete but still source-parent pending: B1RA 519, B1LB 289, B1LA 4174, B1LE 11292, B1RE 4044, B0LE 3466.
 - Raw43 is a retained Canonical40 representative. Do not claim a global Canonical40 count decrease until the higher consumer succeeds. Current work materially builds the source-accepted parent boundary rather than another atomic leaf.
+
+## 2026-11-28 13:56Z — Raw43 B1RE accepted; B1LE symbolic reductions; B1LA symmetry
+
+Normal mode RNG=2. Immutable lease claimed 2026-11-28T12:53:05.945337Z,
+run \`agent38-gpt56sol-20261128T125305945337Z-d1f62bdc96278d3bd678f87f\`,
+claim commit \`e471b080e0d39f25bdfac11d13f192f9f2f88105\`. Earliest orderly
+release is 14:03:05.945337Z; do not refresh.
+
+### B1RE source boundary closed
+- Sole missing child \`b1re_e11le\` source run **46147698580 succeeded**.
+- Dominant residual 3
+  \`1RB0LB_1RC1RE_0RD0RF_1LD0RB_0LA1LE_---0RE\` changed from a
+  47,353-state / 1,115-edge BiDFA to the already source-accepted symmetric
+  NGram width-12 certificate with 4,416 abstract states. Generator commit:
+  \`aac7cbf2b7890316f17239c5872d3aedc7a7475e\`.
+- All 16 B1RE child pins are now source accepted. Full parent compose
+  **46151063756** was dispatched with the exact pins and is currently in
+  \`Compose sixteen source-accepted Raw43 B1RE children\`. Target theorem
+  \`BB6.Agent25Raw43B1RE.all_completions\`, weighted bound 4044.
+- Exact accepted B1RE pins:
+  0la 45973910074; 0lb 45972103423; 0lc 45972109802; 0le 45971431247;
+  0lf 45974901857; 0rc 45973916288; 0re 45973922516; 0rf 45976485722;
+  1la 45976491864; 1lc 45972117182; 1ld 45972124125; 1le 46147698580;
+  1lf 46019754922; 1rd 45973929270; 1re 45974909174; 1rf 45978321834.
+
+### B1LA exact symmetry cut
+- \`spec_b1la_a0la.json\` has 88 BiDFA leaves and they form exactly **44**
+  two-element orbits under the root-fixing E↔F state permutation.
+- Generator asserts the complete 88→44 pairing, compiles one FastBiDFA
+  representative, and transports \`NeverHalts\` to its mate using the existing
+  source-formalized rename machinery. Commit:
+  \`b2f55e9568d8059b5d034fc3e84b2aadd03fa86d\`.
+- Fixed generated Lean newline packaging and set batch size 3 so 44 reps give
+  15 nonempty batch roots: commits \`350081a1580f09ca407ee1fb80e0f47244f297b2\`,
+  \`a01ea4fe736c9ddc721a2859b4b7b9f9b1700d84\`.
+- Old replacement 46149868066 was stale (pre-batch fix) and was cancelled after
+  known empty-shard failures. Corrected source run **46151217086** was queued
+  from head 27fc547747f744b5525c57efd4d1fcf05433e3b2. Eleven other B1LA child
+  gates are already accepted; a successful A0LA gate is the sole missing pin
+  for \`raw43-b1la-compose\`.
+
+### B1LE exact frontier and symbolic proofs
+Exactly three of 20 B1LE children remain unsourced: E0LF, E0RA, E1RB. The other
+17 accepted pins are recorded in
+\`communications/agent25/20261128T131520Z_agent38-b1la-b1le-frontier.md\`.
+
+**E0RA residual 192**:
+\`1RB1LF_1RC1LE_0RD0RC_1LD0RB_0RA---_0LA1LB\`.
+Module \`im-results/agent38-raw43-pair/Raw43B1LEE0RAMacro.lean\`.
+Lean-checked exact theorem: blank → family0 in 85 steps and
+\`run0 table (30*n+97) (family n) = some (family (n+1))\`.
+Six unary sweeps plus fixed turnarounds; standard axiom profile. Replaces a
+6,428-state BiDFA. Generator macro route is committed. Corrected current-main
+source run after the generic empty-shard fix: **46151715417** (queued at the
+time of this checkpoint). Earlier E0RA runs failed only on empty static shard
+indices after actual proof roots compiled.
+
+**E0LF residual 1106**:
+\`1RB1LC_1RC1LE_0RD0RB_1LD0RB_0LF---_0LA1LE\`.
+Module \`im-results/agent38-raw43-pair/Raw43B1LEE0LFM1106.lean\`, commit
+\`0563d454aca12d3713747eace6676946ff667601\`; generator route
+\`59b126f711b0b6bea6e24f9aeee0fb1dd70dbf19\`.
+Lean-checked exact theorem: blank → family0 in 135 and
+\`run0 table (4*n+41) (family n) = some (family (n+1))\`.
+Variable work is one left 01→10 two-step sweep and one right 10→01 sweep.
+Replaces a 7,803-state BiDFA.
+Seven additional E0LF NGram overrides remove 7,144 BiDFA states, so known
+symbolic/NGram reductions remove **14,947 BiDFA states** from this open child.
+No E0LF source run was added yet to avoid worsening queue pressure.
+
+**E1RB**:
+seven exact NGram overrides, materially i175 3,643 states → width1; generator
+commit \`0acedbde6598d82a1fd62b013902bfe92d87d9b4\`. Batch size 5 fixed after
+the 86→79 BiDFA reduction so the fixed matrix has no empty shard:
+\`60c9913098f2ed9cce969f5c36a879d340f232dd\`. Still unsourced; dominant
+i174 remains 17,729 states.
+
+### New E0LF residual 559 recurrence target
+Old BiDFA: 9,922 states / 722 edges.
+Machine:
+\`1RB---_1RC1LE_0RD1RF_1LD0RB_0LF0LE_1RA0RB\`.
+Exact simulation found family n at
+\`t_n = 224*n^2 + 388*n + 170\`, state F on fresh 0 at head \`8*n+10\`,
+interval \`[-8*n-5,8*n+9]\`, left-to-right word
+\`1011011010 (10)^(2n) (110)^(4n+1) 11\`; candidate recurrence cost
+\`448*n+612\`. Verified n=0..30 through t_30=213410. Phase landmarks for the
+four new left two-cell exposures are affine:
+88n+116/117, 88n+132/133, 312n+392/393, 312n+408/409.
+This remains computational evidence; formalize next using block-sweep lemmas.
+Durable note: \`im-results/agent38-raw43-pair/E0LF559-recurrence.md\`.
+
+### Shard infrastructure hardening
+Proof simplifications repeatedly reduced batch count below the workflow's fixed
+15-way matrix, causing mathematically irrelevant failures. Commits
+\`5b939b70046ec5a2b256e423a7324f831529d83f\` and
+\`ddc1fb1e5ae8ab57c78cc9537bba9f42bf17e038\` make zero-root shard jobs emit
+an explicit EMPTY artifact; merger independently recomputes the exact modulo
+root assignment, accepts EMPTY only for genuinely empty expected shards, and
+requires exact root equality for every nonempty shard. This preserves the proof
+trust boundary while making future certificate reductions robust.
+
+Fresh Agent25 handoff:
+\`communications/agent25/20261128T1352Z_agent38-raw43-parent-frontier.md\`
+(commit \`10457fba3c05c9ac971314209d2b7d5b8746a4d7\`).
+
+Highest-value next actions:
+1. Check B1RE parent run 46151063756; if success, consume it in the Raw43 parent cut.
+2. Check B1LA 46151217086; on success immediately dispatch \`raw43-b1la-compose\`
+   with the 11 accepted pins from the 13:15 handoff.
+3. Check E0RA 46151715417 from the robust shard revision.
+4. Source-gate E0LF after queue pressure drops; it now has the 1106 sweep theorem
+   plus 7 NGram reductions. Then formalize residual 559's 448n+612 recurrence.
+5. E1RB is the other remaining B1LE child; attack i174 or source-gate the reduced bank.
+
