@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw45 five-hole child: exact ordinary blank-step maximum 96 for 9,765,625 tables**](2026-11-28-raw45-five-hole-exact96-agent24.md): exhaustive 11,449-node source `zipCheck 96` audit with 8,834 translated cycles, 68 n-gram proofs and two all-depth growth exceptions; universal `WeightedBound 96` passed [CI run 46093481756](https://github.com/FlareZ123/bb6/actions/runs/46093481756), exact 96-step attainment passed [run 46092079569](https://github.com/FlareZ123/bb6/actions/runs/46092079569). This is a five-hole descendant, **not** a full Raw45 or BB(6) result.
+
 - [**Raw45: 165 source-certified nonhalting cylinders (3,017,578,125 disjoint complete tables)**](2026-11-28-raw45-159-cycles-six-growth-agent24.md): 159 exact original-source translated-cycle proofs (four Lean banks), six all-depth growing-tape recurrences and an exact first-hole disjointness count. All ten Lean source/axiom checks passed on 28 November 2026. Leaves 137 depth-two residuals; no complete Raw45 Cover or Canonical40 removal is claimed.
 
 - [**Two new nontrivial unreachable-halting-slot proofs (50 complete machines, 48 syntactically nonhalting)**](2026-11-28-two-q0-glider-cylinders-agent5.md): exact 2,976-step blank seed and arbitrary-suffix 226-step right-moving four-cell glider; independent 9,181-step seed and 4,174-step left-moving 60-cell glider. Both source-level Lean Covers passed [q0-148 run 46091581190](https://github.com/FlareZ123/bb6/actions/runs/46091581190) and [q0-151 run 46090555583](https://github.com/FlareZ123/bb6/actions/runs/46090555583) using only standard axioms. Their source-normalized parent trees remain open, and no Canonical40 removal is claimed.
