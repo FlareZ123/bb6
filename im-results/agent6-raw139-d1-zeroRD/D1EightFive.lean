@@ -7,25 +7,31 @@ namespace BB6.Agent6D1EightFive
 open BB6Coverage BB6.Agent13BlankDelay
 open BB6.Agent6D1EightReduce
 
-private theorem table_eq (n : Nat) :
-    sub (move n) =
-      FAR.fromCodes [7,24,11,24,14,n,8,13,24,24,24,24] := by
-  funext ⟨q,b⟩
-  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;>
-    simp [sub, p, BB6.Agent6D1ZeroRD.sub, move, BB6.Agent6D1ZeroRD.move,
-      FAR.fromCodes, FAR.decodeCode, BB6.Agent6D1ZeroRD.p]
-
 theorem c1 : Cover (WeightedBound 3000) (sub (move 1)) := by
-  rw [table_eq 1]
+  have heq : sub (move 1) =
+      FAR.fromCodes [7,24,11,24,14,1,8,13,24,24,24,24] := by
+    funext ⟨q,b⟩
+    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;> decide
+  rw [heq]
   exact D8C1.cover
 
 theorem c3 : Cover (WeightedBound 3000) (sub (move 3)) := by
-  rw [table_eq 3]
+  have heq : sub (move 3) =
+      FAR.fromCodes [7,24,11,24,14,3,8,13,24,24,24,24] := by
+    funext ⟨q,b⟩
+    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;> decide
+  rw [heq]
   exact D8C3.cover
 
 theorem c6 : Cover (WeightedBound 3000) (sub (move 6)) := by
-  rw [table_eq 6]
+  have heq : sub (move 6) =
+      FAR.fromCodes [7,24,11,24,14,6,8,13,24,24,24,24] := by
+    funext ⟨q,b⟩
+    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;> decide
+  rw [heq]
   exact D8C6.cover
 
 theorem cover
