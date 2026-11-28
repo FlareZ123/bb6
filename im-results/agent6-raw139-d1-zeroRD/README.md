@@ -70,6 +70,17 @@ the eight hard children into 1,476,355 terminal leaves plus the twelve immediate
 (1,476,367 leaves total) and 7,371 cap-250 open leaves; those counts are discovery data,
 while the eight-child reduction itself is a kernel theorem.
 
+One of those eight hypotheses is now eliminated completely.  Pinned source CI
+[46137440341](https://github.com/FlareZ123/bb6/actions/runs/46137440341), retained
+artifact **15260935299** (SHA-256
+`75befd2655c60891536731c70b35ae607514173fcaec9a069fdb39eaf1477004`), kernel-checks
+the entire C1 code 6 child.  Its exact candidate tree has **94,879 terminal leaves**
+(77,768 cycles, 15,639 last-hole leaves, 760 FAR leaves, 642 graph leaves, and 70
+strong-certificate residual leaves); all 4,126 internal splits and all terminal
+certificates are joined by `D8C6.cover`.  The exported theorem has exactly
+`[propext, Classical.choice, Quot.sound]`.  Consequently the D0=8 reducer now has
+only seven unproved child-Cover hypotheses: `[1,2,3,16,17,18,19]`.
+
 [D1NineReduce.lean](D1NineReduce.lean) supplies the parallel exact D0=9 composition interface.
 For `[7,24,11,24,14,24,9,13,24,24,24,24]`, the same step-8 C1 split has only
 six hard ordinary codes, `[2,6,16,17,18,19]`; the other 14 children are
