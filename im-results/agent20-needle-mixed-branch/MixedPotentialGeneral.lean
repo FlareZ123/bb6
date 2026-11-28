@@ -44,7 +44,12 @@ theorem immediate_gap {L D d a M B P : Nat}
   have hgap := gap_from_potential (L:=L) (D:=D) (d:=d)
     (a:=a) (M:=M) (k:=1) (B:=B) (P:=P)
     (by simpa using hpot) hB hP
-  convert hgap using 1 <;> push_cast <;> ring
+  have hDInt : (D : Int) = (L : Int) + 3 := by
+    exact_mod_cast hD
+  have hpow : (D : Int)^1 - (L : Int)^1 = 3 := by
+    simp [hDInt]
+  rw [hpow] at hgap
+  exact hgap
 
 /-- A one-step transfer of another valuation's affine potential. -/
 theorem cross_step_identity {L D d a B P : Nat}
