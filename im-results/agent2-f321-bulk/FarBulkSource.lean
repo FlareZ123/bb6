@@ -95,4 +95,17 @@ theorem far_bulk_closed (a d j:Nat)
 #print axioms far_guard_iff
 #print axioms far_bulk
 #print axioms far_bulk_closed
+/-- A single accepted Far block, together with a single failed next
+guard, certifies its maximality without any intermediate unfolding. -/
+theorem far_maximal (a d j:Nat)
+    (h:farCost a j+1≤d)
+    (hstop:¬farCost a (j+1)+1≤d) :
+    CounterReach a d j (farA a j) (d-farCost a j)
+      ∧ d-farCost a j < 3*farA a j+1 := by
+  have hstep:farCost a (j+1)=farCost a j+3*farA a j := rfl
+  refine ⟨far_bulk a d j h, ?_⟩
+  omega
+
+#print axioms far_maximal
+
 end BB6.Agent2F321Bulk
