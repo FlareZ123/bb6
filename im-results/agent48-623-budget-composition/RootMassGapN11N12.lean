@@ -6,7 +6,8 @@ import Lean.Elab.Tactic.Omega
 
 This file extends the finite blank-root mass exclusions using exact
 source-shaped checkpoints 47--55. The new checkpoints are source propositions
-proved by `decide` against Agent49ParitySource.run. This is intermediate
+proved by `native_decide` against Agent49ParitySource.run (trusted native
+reflection, exposed in the resulting axiom profile). This is intermediate
 finite-scale evidence, not an all-time root invariant or a BB(6) decision.
 -/
 
@@ -23,39 +24,39 @@ set_option maxHeartbeats 0
 
 /-- Exact blank-root checkpoint at step 47. -/
 theorem root_run_47 :
-    run 47 = some (HighLevelState.D 145494 1278161) := by decide
+    run 47 = some (HighLevelState.D 145494 1278161) := by native_decide
 
 /-- Exact blank-root checkpoint at step 48. -/
 theorem root_run_48 :
-    run 48 = some (HighLevelState.D 1132670 436504) := by decide
+    run 48 = some (HighLevelState.D 1132670 436504) := by native_decide
 
 /-- Exact blank-root checkpoint at step 49. -/
 theorem root_run_49 :
-    run 49 = some (HighLevelState.D 696164 1309542) := by decide
+    run 49 = some (HighLevelState.D 696164 1309542) := by native_decide
 
 /-- Exact blank-root checkpoint at step 50. -/
 theorem root_run_50 :
-    run 50 = some (HighLevelState.D 613374 2088523) := by decide
+    run 50 = some (HighLevelState.D 613374 2088523) := by native_decide
 
 /-- Exact blank-root checkpoint at step 51. -/
 theorem root_run_51 :
-    run 51 = some (HighLevelState.D 1475146 1840152) := by decide
+    run 51 = some (HighLevelState.D 1475146 1840152) := by native_decide
 
 /-- Exact blank-root checkpoint at step 52. -/
 theorem root_run_52 :
-    run 52 = some (HighLevelState.D 365000 4425473) := by decide
+    run 52 = some (HighLevelState.D 365000 4425473) := by native_decide
 
 /-- Exact blank-root checkpoint at step 53. -/
 theorem root_run_53 :
-    run 53 = some (HighLevelState.D 4060470 1095032) := by decide
+    run 53 = some (HighLevelState.D 4060470 1095032) := by native_decide
 
 /-- Exact blank-root checkpoint at step 54. -/
 theorem root_run_54 :
-    run 54 = some (HighLevelState.D 2965430 3285134) := by decide
+    run 54 = some (HighLevelState.D 2965430 3285134) := by native_decide
 
 /-- Exact blank-root checkpoint at step 55. -/
 theorem root_run_55 :
-    run 55 = some (HighLevelState.D 319702 8896323) := by decide
+    run 55 = some (HighLevelState.D 319702 8896323) := by native_decide
 
 /-- Near-strip mass bounds at scale 11. -/
 theorem n11_near_mass_bounds (m M : Nat)
