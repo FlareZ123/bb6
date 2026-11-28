@@ -66,9 +66,7 @@ private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6)
     simpa [renameConfig,blank,hroot] using rename_run e m blank n
   have hn := h n
   rw [hrun] at hn
-  cases hr : run m n blank with
-  | none => simp [hr] at hn
-  | some d => simp [hr]
+  simpa [blank] using hn
 
 theorem hard0_never (m : Machine) (hm : compatible hard0 m) : NeverHalts m := by
   rw [hard0_source] at hm
