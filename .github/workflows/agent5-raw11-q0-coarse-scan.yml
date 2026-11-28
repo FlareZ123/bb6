@@ -723,6 +723,9 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          if [ "$ID" = "151" ]; then
+            python im-results/agent5-weighted-tnf-queue/generate_q151_finite.py im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean
+          fi
           python tools/lean_compile_closure.py "/tmp/coarse-generated/Agent5Q0Coarse${ID}Core.lean" \
             --source-root /tmp/coarse-generated --workdir /tmp/coarse-core \
             --manifest /tmp/coarse-core/manifest.json --jobs 4 --lean lean \
@@ -766,9 +769,13 @@ jobs:
       - name: Check dependency-closed source shard
         env:
           SHARD: ${{ matrix.shard }}
+          ID: ${{ needs.sharded-core.outputs.id }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          if [ "$ID" = "151" ]; then
+            python im-results/agent5-weighted-tnf-queue/generate_q151_finite.py im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean
+          fi
           mapfile -t MODS < "/tmp/coarse-generated/shard-$SHARD.txt"
           mkdir -p /tmp/coarse-shard
           if [ "${#MODS[@]}" -eq 0 ]; then
@@ -827,6 +834,9 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          if [ "$ID" = "151" ]; then
+            python im-results/agent5-weighted-tnf-queue/generate_q151_finite.py im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean
+          fi
           PARTS=(/tmp/coarse-parts/raw11-q0-sharded-part-"$ID"-*)
           test "${#PARTS[@]}" -eq '${{ needs.sharded-core.outputs.count }}'
           python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py merge /tmp/coarse-core /tmp/coarse-union "${PARTS[@]}"
