@@ -23,7 +23,7 @@ theorem farA_closed (a j:Nat) :
   | zero => simp [farA]
   | succ j ih =>
     have hpow : (a+2)*4^(j+1)=4*((a+2)*4^j) := by
-      simp [pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      simp [Nat.pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     rw [hpow]
     change 4*farA a j+6+2=4*((a+2)*4^j)
     omega
@@ -36,7 +36,7 @@ theorem farCost_closed (a j:Nat) :
   | zero => simp [farCost]
   | succ j ih =>
     have hpow : (a+2)*4^(j+1)=4*((a+2)*4^j) := by
-      simp [pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      simp [Nat.pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     have ha:=farA_closed a j
     rw [hpow]
     change (farCost a j+3*farA a j)+6*(j+1)+a+2 =
