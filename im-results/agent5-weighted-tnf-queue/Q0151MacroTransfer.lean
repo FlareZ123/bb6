@@ -18,6 +18,8 @@ open BB6.Agent5Q0151SegmentGrammar
 open BB6.Agent5Q0151TransferredWord
 open BB6.Agent5Q0151FiniteModel
 open BB6.Agent5Q0151RightWords
+open BB6.Agent5Q0151SegmentRunSound
+open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent13PackedZipper
 
 theorem good_alt_one (n : Nat) : SegGood (alt n ++ [true]) := by
   refine ⟨?_,⟨alt n,rfl⟩⟩
@@ -51,7 +53,7 @@ theorem append_transfer (s ext : List Bool) (hs : SegGood s)
   obtain ⟨decoded,hpack,hsig⟩ :=
     transfer_word (s++ext) (good_append hs he) right
   refine ⟨decoded,hpack,?_⟩
-  simpa only [Q0151SegmentRunSound.segAppend_append] using hsig
+  simpa only [BB6.Agent5Q0151SegmentRunSound.segAppend_append] using hsig
 
 theorem pop_four_transfer (s : List Bool) (hs : SegGood s)
     (right : List Nat) :
