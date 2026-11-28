@@ -95,6 +95,14 @@ Removing finitely many parameters below the explicit cutoff does not change dens
 ```
 The `2^n` term accounts for rounding in the at-most-one residue count for each of the `2^n` words. There is no probabilistic independence assumption.
 
+**Exact finite first-moment identity.** For a length-`n` word with `h` high and `f=n−h` far letters, its integrality congruence has exactly `4^n/2^(h+2f)=2^h` representatives among the `4^n` residues `d mod4^n`. Summing with multiplicity over all `2^n` words gives the precise combinatorial identity
+```
+Σ_(d mod 4^n) # {w∈{H,F}^n : A_w(d) is integral}
+  = Σ_(h=0)^n binomial(n,h) 2^h
+  = 3^n.
+```
+The mean number of **formal integral** inverse words at depth `n` is therefore exactly `(3/4)^n`, and the sum of these means over **all finite depths** is `Σ_(n≥0)(3/4)^n=4`. This is a *first-moment identity* for dyadic arithmetic words, not a claim of independent paths or of an actually infinite Turing-machine execution. It explains why the modular sieve becomes sparse and why exact reverse symbolic searches can be economical. The union bound above is the corresponding first-moment estimate for *existence* of a candidate path.
+
 Finally put `E=⋃_{n≥1}E_n`. As a countable union of explicitly modularly certified exclusion sets it is constructively enumerable. For any `n`, `E⊇E_n`, hence its complement has upper natural density at most `(3/4)^n`; letting `n→∞` gives
 
 ```
