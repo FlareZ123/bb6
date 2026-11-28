@@ -141,7 +141,7 @@ def tree : Audit :=
         .cycle 1 12 true (1),
         .cycle 13 1 false (1),
         .cycle 13 1 false (1),
-        .cycle 12 3 false (1),
+        .proven ngramP ngram_never,
         .cycle 1 12 true (1),
         .cycle 13 1 false (1),
         .cycle 13 1 false (1),
