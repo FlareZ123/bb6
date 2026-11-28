@@ -1,4 +1,4 @@
-name: Agent6 Raw139 D1=0RD 89-frontier plus full D8 parent (manual)
+name: Agent6 Raw139 D1=0RD 91/89 frontiers (manual)
 on:
   workflow_dispatch:
     inputs:
@@ -58,14 +58,12 @@ jobs:
           github-token: ${{ github.token }}
           path: .tmp/d8c17
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.full_d8_parent }}
         with:
           name: agent6-raw139-d8-c2-certified
           run-id: 46147044639
           github-token: ${{ github.token }}
           path: .tmp/d8c2
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.full_d8_parent }}
         with:
           name: agent6-raw139-d8-c16-certified
           run-id: 46147047904
@@ -147,7 +145,7 @@ jobs:
           d9c19="$(realpath .tmp/d9c19/src)"
           for spec in "8:1:.tmp/d8c1" "8:3:.tmp/d8c3" "8:6:.tmp/d8c6/d8c6" "8:17:.tmp/d8c17" "8:2:.tmp/d8c2" "8:16:.tmp/d8c16" "8:18:.tmp/d8c18" "8:19:.tmp/d8c19" "9:2:.tmp/d9c2" "9:6:.tmp/d9c6" "9:16:.tmp/d9c16" "9:18:.tmp/d9c18" "9:19:.tmp/d9c19"; do
             if [[ "${{ inputs.full_d8_parent }}" != "true" ]]; then
-              case "$spec" in "8:2:.tmp/d8c2"|"8:16:.tmp/d8c16"|"8:18:.tmp/d8c18"|"8:19:.tmp/d8c19") continue;; esac
+              case "$spec" in "8:18:.tmp/d8c18"|"8:19:.tmp/d8c19") continue;; esac
             fi
             rest="${spec#*:}"; code="${rest%%:*}"; root="${rest#*:}"; d0="${spec%%:*}"
             grep -F "FINAL" "$root/compile.log"
@@ -163,6 +161,7 @@ jobs:
           grep -F "'BB6.Agent6D1EightFive.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
           grep -F "'BB6.Agent6D1NineFour.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9four.log
           LEAN_PATH="$lp" lean -o "$map/D1EightFour.olean" im-results/agent6-raw139-d1-zeroRD/D1EightFour.lean | tee .tmp/d8four.log
+          LEAN_PATH="$lp" lean -o "$map/D1EightTwo.olean" im-results/agent6-raw139-d1-zeroRD/D1EightTwo.lean | tee .tmp/d8two.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel96.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel96.lean | tee .tmp/d96.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel96Bound.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel96Bound.lean | tee .tmp/d96bound.log
           if [[ "${{ inputs.full_d8_parent }}" == "true" ]]; then
@@ -171,6 +170,8 @@ jobs:
           LEAN_PATH="$lp" lean -o "$map/D1NineOne.olean" im-results/agent6-raw139-d1-zeroRD/D1NineOne.lean | tee .tmp/d9one.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel93.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel93.lean | tee .tmp/d93.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel93Bound.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel93Bound.lean | tee .tmp/d93bound.log
+          LEAN_PATH="$lp" lean -o "$map/D1SecondLevel91.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel91.lean | tee .tmp/d91.log
+          LEAN_PATH="$lp" lean -o "$map/D1SecondLevel91Bound.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel91Bound.lean | tee .tmp/d91bound.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel88OfParents.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel88OfParents.lean | tee .tmp/d88parents.log
           if [[ "${{ inputs.full_d8_parent }}" == "true" ]]; then
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel89.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel89.lean | tee .tmp/d89.log
@@ -185,6 +186,9 @@ jobs:
           grep -F "'BB6.Agent6D1NineOne.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9one.log
           grep -F "'BB6.Agent6D1SecondLevel93.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d93.log
           grep -F "'BB6.Agent6D1SecondLevel93Bound.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d93bound.log
+          grep -F "'BB6.Agent6D1EightTwo.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8two.log
+          grep -F "'BB6.Agent6D1SecondLevel91.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d91.log
+          grep -F "'BB6.Agent6D1SecondLevel91Bound.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d91bound.log
           grep -F "'BB6.Agent6D1SecondLevel88OfParents.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d88parents.log
           if [[ "${{ inputs.full_d8_parent }}" == "true" ]]; then
           grep -F "'BB6.Agent6D1SecondLevel89.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d89.log
@@ -201,13 +205,16 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9one.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d93.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d93bound.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8two.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d91.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d91bound.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d88parents.log
           if [[ "${{ inputs.full_d8_parent }}" == "true" ]]; then
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d89.log
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: agent6-raw139-d1-89-d8-parent-checked
+          name: agent6-raw139-d1-91-or-89-source-checked
           path: |
             .tmp/d8five.log
             .tmp/d9four.log
@@ -219,6 +226,9 @@ jobs:
             .tmp/d9one.log
             .tmp/d93.log
             .tmp/d93bound.log
+            .tmp/d8two.log
+            .tmp/d91.log
+            .tmp/d91bound.log
             .tmp/d88parents.log
             .tmp/d89.log
             .tmp/map/a6-reductions/build/D1EightFive.olean
@@ -231,6 +241,9 @@ jobs:
             .tmp/map/a6-reductions/build/D1NineOne.olean
             .tmp/map/a6-reductions/build/D1SecondLevel93.olean
             .tmp/map/a6-reductions/build/D1SecondLevel93Bound.olean
+            .tmp/map/a6-reductions/build/D1EightTwo.olean
+            .tmp/map/a6-reductions/build/D1SecondLevel91.olean
+            .tmp/map/a6-reductions/build/D1SecondLevel91Bound.olean
             .tmp/map/a6-reductions/build/D1SecondLevel88OfParents.olean
             .tmp/map/a6-reductions/build/D1SecondLevel89.olean
           retention-days: 14
