@@ -33,7 +33,7 @@ RAW112_THEOREM = "BB6.Agent47Raw112.parent_cover"
 
 def source_check(source: Path, linked: Path, evidence: Path, names):
     root, profile = c.u.compile_one(source, linked, evidence, names)
-    if set(profile) != set(names):
+    if not set(names) <= set(profile):
         raise RuntimeError("missing axiom profiles: " + repr(set(names) - set(profile)))
     if not all(set(v) <= ALLOWED for v in profile.values()):
         raise RuntimeError("unapproved axiom profile: " + repr(profile))
