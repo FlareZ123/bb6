@@ -10,6 +10,10 @@ on:
       source_run_id:
         type: string
         default: '46122807180'
+      child:
+        description: 'all for whole direct D1 parent, or one B1 action index 0..23 for a standalone source-checked child'
+        type: string
+        default: 'all'
       far_run_id:
         description: 'Successful cross-bank FAR producer workflow'
         type: string
@@ -62,9 +66,11 @@ jobs:
           D=/tmp/a7-direct-census/direct$(printf '%02d' ${{ inputs.index }}).json.gz
           opt=()
           if test -f /tmp/a7-structured/structured.json; then opt+=(--extras /tmp/a7-structured/structured.json); fi
+          mode=()
+          if [[ "${{ inputs.child }}" != all ]]; then mode+=(--allow-missing); fi
           python im-results/agent7-raw36-direct/assemble_fixture.py \
             --census "$D" --far /tmp/a7-far/found.tsv \
-            --stack /tmp/a7-stacks/ngram.json "${opt[@]}" \
+            --stack /tmp/a7-stacks/ngram.json "${opt[@]}" "${mode[@]}" \
             --out /tmp/a7-direct-evidence.xz.b64
           python - "$D" <<'PY'
           import gzip,sys
@@ -83,12 +89,20 @@ jobs:
           INDEX=${{ inputs.index }}
           printf -v PAD '%02d' "$INDEX"
           STEM="Raw36D1$PAD"
+          CHILD="${{ inputs.child }}"
+          ROOTFILE="$STEM.lean"
           THEOREM="BB6.Agent29$STEM.cover"
+          if [[ "$CHILD" != all ]]; then
+            [[ "$CHILD" =~ ^(0|[1-9]|1[0-9]|2[0-3])$ ]]
+            printf -v PADCHILD '%02d' "$CHILD"
+            ROOTFILE="${STEM}Kid${PADCHILD}.lean"
+            THEOREM="BB6.Agent29$STEM.kid${PADCHILD}_bound"
+          fi
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent7-raw36-direct/generate_direct.py \
-            /tmp/a7-direct-tree.json /tmp/a7-direct-source /tmp/a7-direct-evidence.xz.b64 280 "$INDEX"
+            /tmp/a7-direct-tree.json /tmp/a7-direct-source /tmp/a7-direct-evidence.xz.b64 280 "$INDEX" "$CHILD"
           B=$(python - <<'PY'
           import base64,lzma,json
           d=json.loads(lzma.decompress(base64.b64decode(open('/tmp/a7-direct-evidence.xz.b64').read())))
@@ -103,7 +117,7 @@ jobs:
             --artifact-name "agent7-raw36-direct-$INDEX-checked" \
             --provenance-input /tmp/a7-direct-evidence.xz.b64 \
             --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
-            "/tmp/a7-direct-source/$STEM.lean" 2>&1 | tee /tmp/a7-direct-audit.log
+            "/tmp/a7-direct-source/$ROOTFILE" 2>&1 | tee /tmp/a7-direct-audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a7-direct-audit.log "$THEOREM"
           cp /tmp/a7-direct-audit.log /tmp/a7-direct-olean/audit.log
       - uses: actions/upload-artifact@v4
