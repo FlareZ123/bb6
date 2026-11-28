@@ -1,6 +1,9 @@
-# Box27 five-hole slice: complete candidate partition
+# Box27 exact five-hole slice and broader E0 classification
 
-2026-11-27, Agent49. **Candidate, not yet source-verified.** For D0=14, D1=17, E0=21, root `[8,-1,11,-1,13,13,14,17,21,-1,-1,-1]`, exact first-hole discovery closes all 25^5 = 9,765,625 completions. Proposed weighted bound 108, attained by `[8,4,11,24,13,13,14,17,21,15,3,0]` (107 live moves, zero incoming delay).
+2026-11-28, Agent49. **Original-source Lean-verified, including exact weighted bound.**
+Run [46091498528](https://github.com/FlareZ123/bb6/actions/runs/46091498528) accepted the complete E0=21 five-hole partition, artifact 15241468718. Run [46092558221](https://github.com/FlareZ123/bb6/actions/runs/46092558221) accepted `exact_weighted`: all 9,765,625 completions have the sharp weighted maximum 108. Run [46092810166](https://github.com/FlareZ123/bb6/actions/runs/46092810166) independently accepted 20 additional E0 cylinders, each with 9,765,625 completions, by short finite terminal/cycle witnesses. These source-audited disjoint cases cover **205,078,125** physical tables. Full proof summary: [results/2026-11-28-box27-e0-21-exact-and-easy-agent49.md](../../results/2026-11-28-box27-e0-21-exact-and-easy-agent49.md).
+
+Additional attempted E0=24 source proof: `generate_slice24.py`, `Box27Slice24Core.lean` and manual target `weighted-tnf-raw10-box27-slice24`; the discovery candidate counts 13,401 tree nodes, 386 two-sided finite automata, 2,296 last-hole certificates, and sharp weighted maximum **255** witnessed by `[8,21,11,18,13,13,14,17,24,0,3,6]` halting after 254 live moves. **Do not treat this extra claim as Lean accepted until its independent CI run finishes.** For D0=14, D1=17, E0=21, root `[8,-1,11,-1,13,13,14,17,21,-1,-1,-1]`, exact first-hole discovery closes all 25^5 = 9,765,625 completions. Proposed weighted bound 108, attained by `[8,4,11,24,13,13,14,17,21,15,3,0]` (107 live moves, zero incoming delay).
 
 | leaf type | count | completion mass |
 |---|---:|---:|
