@@ -36,6 +36,8 @@ jobs:
           LEAN_PATH="$e:$a2" lean "$a2/Phase6Bridge.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean "$a2/ResetEven.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod384Graph.olean" "$q/Mod384Graph.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod384Source.olean" "$q/Mod384Source.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q:$a2" lean "$a2/ResetMod384.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean -o "$q/Mod512Core.olean" "$q/Mod512Core.lean" | tee -a /tmp/agent31-ray.log
           for i in 0 1 2 3 4 5 6 7; do
