@@ -50,7 +50,7 @@ theorem parent_cover_from_live5
     (h : ∀ i ∈ liveCodes,
       Cover (WeightedBound BB6.Agent29Raw36D110Live8.B)
         (BB6.Agent29Raw36D110Live8.child i)) :
-    Cover (WeightedBound BB6.Agent29Raw36.B)
+    Cover (WeightedBound BB6.Agent29Raw36D110Live8.B)
       BB6.Agent29Raw36D110Live8.parent :=
   BB6.Agent29Raw36D110Live6.parent_cover_from_live6
     (live6_from_live5 h)
