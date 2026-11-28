@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42, counter42full, low42, dterms42, source42, mixedTerms42, sourceReach42, cover42, cbank42, d86, c86, cover86, cut86, cutFamily, cut42Family, section37, clusterEntry, erEntry37, erClosed, rootBridge37]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42, counter42full, low42, dterms42, source42, mixedTerms42, sourceReach42, cover42, cbank42, d86, c86, cover86, cut86, cutFamily, cut42Family, section37, clusterEntry, erEntry37, erClosed, rootBridge37, sectionEntries]
         default: extra
 permissions:
   contents: read
@@ -249,6 +249,12 @@ jobs:
             fi
             for t in checked remaining_count sound cover; do
               python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "BB6.Agent10Raw140ThreeHole.$t"
+            done
+          elif [ "$TARGET" = sectionEntries ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-section-entries --jobs 3 im-results/agent10-nov26-cryptids/Raw140SectionEntries.lean 2>&1 | tee /tmp/raw140-proof.log
+            for i in 31 46 45 85; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140SectionEntries.entry$i"
             done
           elif [ "$TARGET" = rootBridge37 ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
