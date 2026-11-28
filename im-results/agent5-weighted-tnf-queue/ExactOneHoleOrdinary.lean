@@ -66,9 +66,11 @@ theorem lastPackedExact (B : Nat) (p : PartialMachine) (n : Nat)
   obtain ⟨c, hknown, hslot, hundef, _⟩ :=
     BB6.Agent5PhaseTree.firstHoleOK_sound
       (BB6.Agent5FastPhaseTree.firstOK_sound hfirst)
-  subst s
-  exact last_hole_exact B p n c hknown hundef
-    (BB6.Agent50TNFPilot.restOK_sound _ _ hrest) hb
+  have hU : p (readSlot c) = none := by simpa [hslot] using hundef
+  have hR : BB6.Agent50TNFPilot.restOK p (readSlot c) = true := by
+    simpa [hslot] using hrest
+  exact last_hole_exact B p n c hknown hU
+    (BB6.Agent50TNFPilot.restOK_sound _ _ hR) hb
 
 #print axioms lastPackedExact
 end BB6.Agent5ExactOneHole
