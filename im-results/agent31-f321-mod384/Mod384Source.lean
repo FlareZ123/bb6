@@ -97,21 +97,21 @@ theorem source_reached_live_or_seed {n a d:Nat}
       exact Or.inr (by simpa only [hn.1,hn.2] using seed_live)
     · exact Or.inr (source_closed hm hl)
 
-/-- New all-time zero-cutoff obstruction at d ≡ 373 (mod96).
+/-- New all-time zero-cutoff obstruction at d ≡ 373 (mod384).
 The true seed (1,1) has no relation to a terminal H_d with d%384=373,
 and the checked 384^2 graph excludes the pair residue (374,373). -/
-theorem terminal13_never (d:Nat) (hd:d%384=373) :
+theorem terminal373_never (d:Nat) (hd:d%384=373) :
     ∀ n, ¬CounterReach 1 1 n (d+1) d := by
   intro n hr
   rcases source_reached_live_or_seed hr with hseed | hl
   · omega
   · have hg : hit (d+1) d=false := by
       have ha : (d+1)%384=374 := by omega
-      simpa [hit,ha,hd] using forbidden_gate_13
+      simpa [hit,ha,hd] using forbidden_gate_373
     rw [hg] at hl
     contradiction
 
-#print axioms terminal13_never
+#print axioms terminal373_never
 #print axioms source_closed
 
 /-- The source seed can reach a terminal gate only in 15 residue classes. -/
