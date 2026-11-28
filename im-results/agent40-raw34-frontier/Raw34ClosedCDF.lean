@@ -104,7 +104,7 @@ theorem move_closed (v : Move) (hv : v ∈ cdfMoves) :
   have h : cdfMoves.all (fun w => decide (inside w.next)) = true := by decide
   exact of_decide_eq_true (List.all_eq_true.mp h v hv)
 
-theorem all_cde (c1 d1 f0 f1 : Move)
+theorem all_cdf (c1 d1 f0 f1 : Move)
     (hc : c1 ∈ cdfMoves) (hd : d1 ∈ cdfMoves)
     (hf0 : f0 ∈ cdfMoves) (hf1 : f1 ∈ cdfMoves)
     (m : Machine) (hm : compatible (parent c1 d1 f0 f1) m) :
@@ -119,6 +119,6 @@ theorem all_cde (c1 d1 f0 f1 : Move)
 #print axioms twelve_moves
 #print axioms moves_distinct
 #print axioms move_closed
-#print axioms all_cde
+#print axioms all_cdf
 
 end BB6.Agent40Raw34ClosedCDF
