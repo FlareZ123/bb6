@@ -35,7 +35,15 @@ For every even `n≥14` the explicit candidate Lean corollaries are:
 | `27*2^r` | `27|2^9+1` | `gcd(27,9)=9` | `2n+20` (`B=n+8`) |
 | `81*2^r` | `81|2^27+1` | `gcd(81,27)=27` | `2n+40` (`B=n+10`) |
 
-These examples illustrate a whole number-theoretic direction based on powers of three; no unproved infinite-family Lean theorem is asserted here.
+### Infinite family of signed orders (elementary paper proof)
+
+The table is the start of an **infinite** family. For every integer `t≥0`, set `h_t=3^(t+1)` and `K_t=3^t`. Then
+
+`3^(t+1) | 2^(3^t)+1.`
+
+Proof by induction on `t`: for `t=0`, `3|2+1`. If `3^(t+1)` divides `u+1`, with `u=2^(3^t)`, then `u≡-1 (mod 3)`, hence `u²-u+1≡0 (mod 3)`. The identity `u³+1=(u+1)(u²-u+1)` gives `3^(t+2)|2^(3^(t+1))+1`. In particular, for every `t≥1`, `gcd(h_t,K_t)=3^t>1`, so **none** of these signed orders satisfies the older coprimality requirement.
+
+Consequently the general negacyclic theorem, once formally accepted, supplies forbidden original-Trace equal/complement windows at all offsets `2^r*3^(t+1)`: for any `B` obeying `3^(t+1)*(7*2^n+3^t+1)<2^B`, the excluded factor length is `n+3+3^t+B`. This is a **paper-level family corollary**; the arithmetic induction has not itself been formalized in Lean. For a fixed `n`, large offsets may not fit within a possible trace, so this is not a claim of infinitely many simultaneously active restrictions at one finite size.
 
 Source files: [AntiShortCore.lean](AntiShortCore.lean) (backward divisibility and quotient collision), [AntiShort.lean](AntiShort.lean) (abstract negacyclic contradiction), [AntiShortScaled.lean](AntiShortScaled.lean) (dyadic and boundary regimes), [AntiShortTrace.lean](AntiShortTrace.lean) (original `Trace`), [AntiShortExamples.lean](AntiShortExamples.lean) (three explicit values).
 
