@@ -128,11 +128,17 @@ jobs:
           lean -j1 -o /tmp/build/Raw11Extra28AllChildren.olean             im-results/agent44-raw11-extra28/Raw11Extra28AllChildren.lean
           lean -j1 -o /tmp/build/Raw11Extra28MinimalJoin.olean             im-results/agent44-raw11-extra28/Raw11Extra28MinimalJoin.lean
 
-          literal="$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          mkdir -p .ci-agent47-three
+          literal_src="$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          src132_art="$(find /tmp/extra132 -name Agent5Raw11Extra132.lean -print -quit)"
+          src140_art="$(find /tmp/extra140 -name Agent5Raw11Extra140.lean -print -quit)"
+          literal=.ci-agent47-three/Raw11Extra28LiteralComplete.lean
+          src132=.ci-agent47-three/Agent5Raw11Extra132.lean
+          src140=.ci-agent47-three/Agent5Raw11Extra140.lean
+          cp "$literal_src" "$literal"
+          cp "$src132_art" "$src132"
+          cp "$src140_art" "$src140"
           lean -j1 -o /tmp/build/Raw11Extra28LiteralComplete.olean "$literal"             | tee /tmp/build/Raw11Extra28LiteralComplete.log
-
-          src132="$(find /tmp/extra132 -name Agent5Raw11Extra132.lean -print -quit)"
-          src140="$(find /tmp/extra140 -name Agent5Raw11Extra140.lean -print -quit)"
           lean -j1 -o /tmp/build/Agent5Raw11Extra132.olean "$src132"             | tee /tmp/build/Agent5Raw11Extra132.log
           lean -j1 -o /tmp/build/Agent5Raw11Extra140.olean "$src140"             | tee /tmp/build/Agent5Raw11Extra140.log
 
