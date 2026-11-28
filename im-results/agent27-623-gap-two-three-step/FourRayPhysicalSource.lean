@@ -92,7 +92,8 @@ theorem even_step_first_unscaled (u v x y : Nat)
       have hx := drain_first_le_a_plus_b (v+1) 2 2 x y hd
       simp [hzero]
       omega
-    · have hp : some (.D v 7)=some (.D x y) := by
+    · have hp : (some (HighLevelState.D v 7) : Option HighLevelState) =
+        some (HighLevelState.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_neg hv] using hs
       cases hp
       simp [hzero]
