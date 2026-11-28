@@ -447,12 +447,48 @@ if(withWindow7MaskBank){
  }
  assert(residualBeforeWindow7>=grand);
 }
+// Optional exact residual mass inside a chosen bank of physical source cubes.
+// This makes the early-query search actionable: long-lived traces alone are
+// not proof obligations when existing source certificates already cover them.
+const queryIndex=process.argv.indexOf("--query-cubes");
+let queryCubes=null;
+if(queryIndex>=0){
+  assert(queryIndex+1<process.argv.length,"--query-cubes needs manifest path");
+  const raw=JSON.parse(readFileSync(process.argv[queryIndex+1],"utf8"));
+  const entries=Array.isArray(raw)?raw:raw.hardLong;
+  assert(Array.isArray(entries)&&entries.length>0,
+    "query manifest needs a nonempty hardLong array");
+  const counted=entries.map((entry,i)=>{
+    const rawCodes=Array.isArray(entry)?entry:entry.codes;
+    assert(Array.isArray(rawCodes)&&rawCodes.length===12);
+    for(const [slot,action] of rootActions)
+      assert.equal(rawCodes[slot],codeOf.get(action));
+    const reduced=slots.map(slot=>rawCodes[slot]);
+    for(const x of reduced)assert(Number.isInteger(x)&&x>=0&&x<=25);
+    const gross=pow[reduced.filter(x=>x===0).length];
+    const inBank=coveredCount(intersect(coverageRoot,cubeBDD(reduced)),0);
+    assert(inBank<=gross);
+    return {index:i,codes:rawCodes,unresolved:String(gross-inBank),
+      gross:String(gross),certifiedInside:String(inBank)};
+  });
+  const unresolved=counted.reduce((t,x)=>t+BigInt(x.unresolved),0n);
+  const remaining=counted.filter(x=>BigInt(x.unresolved)>0n);
+  remaining.sort((a,b)=>BigInt(a.unresolved)>BigInt(b.unresolved)?-1:
+    BigInt(a.unresolved)<BigInt(b.unresolved)?1:0);
+  queryCubes={source:process.argv[queryIndex+1],inputs:counted.length,
+    resolvedByCurrentProofBank:counted.length-remaining.length,
+    openCubes:remaining.length,
+    exactResidualGrossOverCubes:String(unresolved),
+    note:"Gross sum assumes queried cubes are pairwise disjoint; each per-cube count is exact regardless.",
+    topOpen:remaining.slice(0,25),all:counted};
+}
 totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
   BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
 top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
   BigInt(a.residual)<BigInt(b.residual)?1:0);
 console.log(JSON.stringify({
   status:"Exact source-bank 25-way complement rank; branches are OPEN hypotheses",
+  queryCubes,
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
