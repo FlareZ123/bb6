@@ -1,8 +1,21 @@
-# Space Needle: exact mixed-valuation inverse return periods
+# Space Needle: universal upward isolation and exact inverse return periods
 
-**Agent 20, 28 November 2026.** For seven source-connected Space Needle valuation labels \(\{3,4,5,6,11,14,17\}\), an exact integer theorem gives **all 42 directed inverse-branch return periods**: from 2 through **262,146**, with concrete arithmetic evidence and a constructive CRT sharpness proof. The general inverse potential equation comes from previously source-accepted Lean. New generic and original-source **all-depth** Lean proofs are authored in this directory and dispatched in manual [CI 46101403639](https://github.com/FlareZ123/bb6/actions/runs/46101403639) (pending acceptance); the earlier two immediate-direction source proofs **passed pinned original-source CI** [46100959980](https://github.com/FlareZ123/bb6/actions/runs/46100959980) with the permitted standard axioms. The complete **42-entry order table and all-depth existential sharpness remain paper-level**, audited by exact arithmetic, not Lean-kernel-accepted.
+**Agent 20, 28 November 2026.** A universal all-valuation upward-exclusion theorem has an elementary paper proof, and for seven source-connected Space Needle valuation labels \(\{3,4,5,6,11,14,17\}\), an exact integer theorem gives **all 42 directed inverse-branch return periods**: from 2 through **262,146**, with concrete arithmetic evidence and a constructive CRT sharpness proof. The general inverse potential equation comes from previously source-accepted Lean. New generic and original-source **all-depth** Lean proofs are authored in this directory and dispatched in manual [CI 46101403639](https://github.com/FlareZ123/bb6/actions/runs/46101403639) (pending acceptance); the earlier two immediate-direction source proofs **passed pinned original-source CI** [46100959980](https://github.com/FlareZ123/bb6/actions/runs/46100959980) with the permitted standard axioms. The complete **42-entry order table and all-depth existential sharpness remain paper-level**, audited by exact arithmetic, not Lean-kernel-accepted.
 
 **Scope:** These are restrictions on **prepared high-level inverse histories** of the genuine Space Needle machine. No authentic blank-start reachability, nonhalting, or Busy Beaver upper bound follows. This note does not claim BB(6) is solved.
+
+## Strongest new theorem: every upward label switch is forbidden at depth one
+
+The complete [universal paper proof](UPWARD-SEPARATION.md) establishes, without any finite valuation cutoff,
+
+\[
+\boxed{\forall\,2\le v<w,\quad
+(2^{w+1}+3)\nmid 3\bigl(2^w(2w-3)-2^v(2v-3)\bigr).}
+\]
+
+Thus **if a prepared target has both a valuation-\(v\) predecessor and a larger valuation-\(w\) predecessor, the \(v\)-predecessor cannot itself have a \(w\)-predecessor**. The original source inverse map supplies the semantic premise via the mixed-potential identity below. This is an unbounded-label pruning rule, not merely the 42-pair finite table.
+
+The **direction is essential**: valuation \(v=5>w=2\) allows an immediate return. The explicit positive exact-source witness is target \(B=171\), with \(5\)-parent \(160\), \(2\)-parent \(124\), and a further \(2\)-parent \(116\) of \(160\). The general upward theorem is currently **paper-proved**, not yet fully quantified in source Lean; special 3/5 source lemmas are accepted by [CI 46100959980](https://github.com/FlareZ123/bb6/actions/runs/46100959980).
 
 ## Exact source equation and cross-potential theorem
 
