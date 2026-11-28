@@ -205,7 +205,7 @@ if __name__=='__main__':
  assert digest.hexdigest()=='cec07de68df50bf110bf451221886fcb0d51986bb5cbc191c1201eb4012b9c13',digest.hexdigest()
  # All generated source files must subsequently be compiled with Lean.
  imports=''.join(f'import Box27Pump{i:04d}\n' for i in found)
- head='import Box27ProofBank\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent49.Box27PumpBank\nopen BB6Coverage BB6.Agent13BlankDelay BB6Coverage.Agent31Pump\nopen BB6.Agent49.Box27Slice BB6.Agent49.Box27ProofBank\n'
+ head='import Box27ProofBank\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent49.Box27PumpBank\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent49.Box27Slice BB6.Agent49.Box27ProofBank\nopen BB6Coverage.Agent31Pump\n'
  items=',\n'.join(x for i in found for x in (f'  fromNever B M{i}.table M{i}.never',f'  conjugate B (fromNever B M{i}.table M{i}.never)'))
  tail='\ndef known (B : Nat) : Array PartialMachine := tables B (bank B)\ntheorem knownGood (B : Nat) : ∀ (i : Nat) (q : PartialMachine), (known B)[i]? = some q → Good B q := tables_good B (bank B)\n#print axioms knownGood\nend BB6.Agent49.Box27PumpBank\n'
  (out/'Box27PumpBank.lean').write_text(imports+head+'def bank (B : Nat) : Array (Certified B) := #[\n'+items+'\n]'+tail)
