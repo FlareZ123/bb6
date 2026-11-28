@@ -1,4 +1,5 @@
 import Raw56LE17557Base
+import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent1Raw56.LE17557LocalSweeps
 open BB6Coverage
@@ -11,6 +12,15 @@ theorem rep_singleton_cons (b : Bool) (n : Nat) (L : List Bool) :
     rep [b] n ++ b :: L = b :: rep [b] n ++ L := by
   have h := congrArg (fun xs : List Bool => xs ++ L) (rep_snoc [b] n)
   simpa [List.append_assoc] using h
+
+/-- Repetition distributes over addition; used to normalize merged homogeneous
+    runs when a source macro crosses a frame boundary. -/
+theorem rep_add (P : List Bool) (m n : Nat) :
+    rep P (m+n) = rep P m ++ rep P n := by
+  induction m with
+  | zero => rfl
+  | succ m ih =>
+      simp [rep, ih, List.append_assoc]
 
 /-- Compose two exact source runs whose intermediate zipper states are
     propositionally equal after run-list normalization. -/
@@ -287,11 +297,11 @@ theorem A_triad_normal (a d c z : Nat) (L R : List Bool) :
       (rep [true] (c+4) ++ rep [false] z ++ R)
     simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have hIZ := join0_of_eq hI
-    (by simp [rep, rep_singleton_cons, List.append_assoc]) hZ
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hZ
   have h := join0_of_eq hIZ
-    (by simp [rep, rep_singleton_cons, List.append_assoc]) hR
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hR
   convert h using 1 <;>
-    simp [rep, rep_singleton_cons, List.append_assoc] <;> omega
+    simp [rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
 
 theorem carry_prelude7 (L R : List Bool) :
     run0 p 7
@@ -346,9 +356,9 @@ theorem R_return_carry (a d c z : Nat) (L R : List Bool) :
         rep [true] (c+6) ++ rep [false] z ++ R)
     simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h12 := join0_of_eq h1
-    (by simp [RT, rep, rep_singleton_cons, List.append_assoc]) h2
+    (by simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc]) h2
   have h := join0_of_eq h12
-    (by simp [RT, rep, rep_singleton_cons, List.append_assoc]) h3
+    (by simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc]) h3
   convert h using 1 <;>
     simp [RT, rep, rep_singleton_cons, List.append_assoc] <;> omega
 
@@ -367,11 +377,11 @@ theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
   have hZ := Z_return a 0 c z (rep [true] d ++ false :: L) R
   have hR := R_return_carry a d c z L R
   have hIZ := join0_of_eq hI
-    (by simp [rep, rep_singleton_cons, List.append_assoc]) hZ
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hZ
   have h := join0_of_eq hIZ
-    (by simp [rep, rep_singleton_cons, List.append_assoc]) hR
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hR
   convert h using 1 <;>
-    simp [rep, rep_singleton_cons, List.append_assoc] <;> omega
+    simp [rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
 
 theorem D0D1_to_E (L R : List Bool) :
     run0 p 2 ⟨3, false :: true :: true :: L, R⟩ =
@@ -463,23 +473,23 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
       (rep [false] (A+2) ++ rep [true] (B+4) ++ RT)
     simpa [LT, rep, List.append_assoc] using ht
   have h12 := join0_of_eq h1
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h2
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h2
   have h123 := join0_of_eq h12
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h3
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h3
   have h1234 := join0_of_eq h123
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h4
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h4
   have h12345 := join0_of_eq h1234
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h5
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h5
   have h123456 := join0_of_eq h12345
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h6
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h6
   have h1234567 := join0_of_eq h123456
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h7
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h7
   have h12345678 := join0_of_eq h1234567
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h8
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h8
   have h := join0_of_eq h12345678
-    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h9
+    (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h9
   convert h using 1 <;>
-    simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc] <;> omega
+    simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
 
 /-- The second B-triad Z return is completely local and always costs eleven. -/
 theorem B_second_Z_return (L R : List Bool) :
