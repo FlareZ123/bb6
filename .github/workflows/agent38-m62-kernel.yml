@@ -79,7 +79,7 @@ jobs:
             fi
           fi
 
-if [[ "${{ inputs.target }}" == "raw44-cut-0la-kid00" || "${{ inputs.target }}" == "raw44-cut-0la-assembled" ]]; then
+          if [[ "${{ inputs.target }}" == "raw44-cut-0la-kid00" || "${{ inputs.target }}" == "raw44-cut-0la-assembled" ]]; then
             node im-results/agent16-raw44/generate_cut.cjs im-results/agent16-raw44/generated-c1la 128 0LA
             TARGET="im-results/agent16-raw44/generated-c1la/Raw44CutKid00.lean"
             if [[ "${{ inputs.target }}" == "raw44-cut-0la-assembled" ]]; then
