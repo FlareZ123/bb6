@@ -98,7 +98,7 @@ int main(int argc,char**argv) {
   string line;int roots=0,found=0;long long trials=0,mass=0;
   while(getline(in,line)) {
     size_t tab=line.find('\t');
-    if(tab==string::npos || line.substr(tab+1)!="[\\"open\\"]")continue;
+    if(tab==string::npos || line.substr(tab+1)!=R"(["open"])")continue;
     string code=line.substr(0,tab);
     Table p=parse(code);
     roots++;
