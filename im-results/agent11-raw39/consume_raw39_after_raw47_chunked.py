@@ -47,6 +47,7 @@ BRIDGE = [
 
 
 def restore_serial_predecessor(work, raw47_run):
+    work.mkdir(parents=True, exist_ok=False)
     linked, _, _, report = c.base.verify_base(work, c.base.BASE_RUN)
     sharp = c.resume.restore_sharp(work, linked, report)
     ready, _, ready_pin = c.extra.restore_ready(
@@ -120,7 +121,7 @@ def main():
         root_names=["BB6.Agent11Raw39Closed.parent_bound"],
         prefix="A11Raw39Slice", tool=tool,
         comparator_batch=HERE / "CompareKernelImportsBatch.lean",
-        chunk_size=a.chunk_size)
+        allow_compatible=True, chunk_size=a.chunk_size)
     assert report["complete"]
     assert "BB6.Agent11Raw39Closed.parent_bound" in selected
     (evidence / "kernel-plan.json").write_text(
@@ -135,7 +136,8 @@ def main():
 
     # Import the staged source theorem by a new proof of literal table
     # equality. No externally suggested or unverified axiom is postulated.
-    bridge_src = generated_bridge(work, report["staged_root"], selected)
+    bridge_src = generated_bridge(work, report["staged_root"], selected,
+        compatible=(report.get('mode') == 'authenticated-original-compatible-link'))
     b, p_b = source_check(bridge_src, linked, evidence, BRIDGE)
     generated.append(b)
 

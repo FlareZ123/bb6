@@ -170,7 +170,7 @@ def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *, ch
             root_names=["BB6.Agent50Raw47Complete.cover_at"],
             prefix="A50Raw47Slice", tool=scratch / "kernelstage",
             comparator_batch=c.selected.HERE.parent / "agent11-raw39" / "CompareKernelImportsBatch.lean",
-            chunk_size=64)
+            allow_compatible=True, chunk_size=64)
     else:
         report, objects, names = relocate(
             producer_files=files,base=linked,work=work/"raw47-kernel-replay",
@@ -187,9 +187,14 @@ def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *, ch
         else:
             shutil.copy2(file,dest)
             copied.append(dest)
-    parent_name = ("A50Raw47Slice.BB6.Agent50Raw47Depth3Cut.parent"
-                   if "BB6.Agent50Raw47Depth3Cut.parent" in names
-                   else "BB6.Agent50Raw47Depth3Cut.parent")
+    compatible = report.get("mode") == "authenticated-original-compatible-link"
+    parent_name = (
+        "A50Raw47Slice.BB6.Agent50Raw47Depth3Cut.parent"
+        if not compatible and "BB6.Agent50Raw47Depth3Cut.parent" in names
+        else "BB6.Agent50Raw47Depth3Cut.parent")
+    certified_cover = (
+        "BB6.Agent50Raw47Complete.cover_at" if compatible else
+        "A50Raw47Slice.BB6.Agent50Raw47Complete.cover_at")
     source = scratch / "Raw47KernelBridge.lean"
     source.write_text(f"""import {report['staged_root']}
 set_option maxRecDepth 100000
@@ -201,7 +206,7 @@ abbrev parent : PartialMachine := {parent_name}
 theorem cover_at (B : Nat) (h : 143977 ≤ B) :
     Cover (WeightedBound B) parent := by
   simpa only [parent] using
-    (A50Raw47Slice.BB6.Agent50Raw47Complete.cover_at B h)
+    ({certified_cover} B h)
 #print axioms cover_at
 end BB6.Agent50Raw47Bridge
 """)

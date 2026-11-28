@@ -53,11 +53,13 @@ def compile_stage_kernel(work, linked):
     return toolroot / "kernelstage"
 
 
-def generated_bridge(work, staged_root, names, namespace="A11Raw39Slice"):
+def generated_bridge(work, staged_root, names, namespace="A11Raw39Slice", compatible=False):
     parent_name = "BB6.Agent11Raw39AcceptedSix.p39"
-    if parent_name in names:
+    if not compatible and parent_name in names:
         parent_name = namespace + "." + parent_name
-    certified_bound = namespace + ".BB6.Agent11Raw39Closed.parent_bound"
+    certified_bound = (
+        "BB6.Agent11Raw39Closed.parent_bound" if compatible else
+        namespace + ".BB6.Agent11Raw39Closed.parent_bound")
     text = f"""import Raw39Canonical40Membership
 import {staged_root}
 
@@ -124,9 +126,9 @@ def main():
         prefix="A11Raw39Slice",
         tool=stage_tool,
         comparator_batch=HERE / "CompareKernelImportsBatch.lean",
-        chunk_size=args.chunk_size)
+        allow_compatible=True, chunk_size=args.chunk_size)
     (evidence / "raw39-kernel-plan.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\\n")
+        json.dumps(report, indent=2, sort_keys=True) + "\n")
     if not report["complete"] or (
         "BB6.Agent11Raw39Closed.parent_bound" not in names):
         raise RuntimeError("Raw39 parent theorem not kernel replayed")
@@ -144,7 +146,8 @@ def main():
     sys.path.insert(0, str(HERE.parent / "agent50-raw47-canonical41"))
     import consume_after_canonical40 as ca
     c = ca.c
-    bridge = generated_bridge(work, report["staged_root"], names)
+    bridge = generated_bridge(work, report["staged_root"], names,
+        compatible=(report.get('mode') == 'authenticated-original-compatible-link'))
     a = TARGETS[:4]
     root1, profile1 = c.u.compile_one(bridge, canonical, evidence, a)
     root2, profile2 = c.u.compile_one(

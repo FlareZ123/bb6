@@ -25,7 +25,8 @@ def write_lines(path, lines):
 
 
 def relocate(*, producer_files, base, work, root_module, root_names, prefix,
-             tool, comparator=None, comparator_batch=None, plan_only=False, jobs=1, checkpoint_every=1):
+             tool, comparator=None, comparator_batch=None, allow_compatible=False,
+             plan_only=False, jobs=1, checkpoint_every=1):
     """Return the root module and staged closure, leaving base untouched."""
     if jobs < 1:
         raise ValueError('jobs must be >= 1')
@@ -91,10 +92,10 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
                 different.append((m, accepted, original))
         pairs_file = logs / "kernel-compare-pairs.tsv"
         for _, a, b in different:
-            if any("\\t" in str(x) or "\\n" in str(x) for x in (a, b)):
+            if any("\t" in str(x) or "\n" in str(x) for x in (a, b)):
                 raise ValueError("unsupported object path in batch comparison")
         pairs_file.write_text("".join(
-            str(a) + "\\t" + str(b) + "\\n" for _, a, b in different))
+            str(a) + "\t" + str(b) + "\n" for _, a, b in different))
         checker = Path(comparator_batch).resolve()
         proc = subprocess.run(
             ["lean", "--run", str(checker), str(pairs_file)],
@@ -135,7 +136,34 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
         if any(dep in affected for dep in index[m]['imports']):
             affected.add(m)
     if root_module not in affected:
-        raise ValueError('root is already import-compatible; use the normal strict linker')
+        if not allow_compatible:
+            raise ValueError('root is already import-compatible; use the normal strict linker')
+        # Exact object identity is not necessary when their kernel data
+        # (including imports and every constant) are identical. Reuse
+        # accepted base objects for such names, never overwrite them.
+        equals = {x['module']: x['kernel_equal'] for x in collisions}
+        copied = []
+        for m in order:
+            p, q = files[m], base / files[m].name
+            if q.is_file():
+                assert sha(p) == sha(q) or equals.get(m) is True, (m, p, q)
+                continue
+            dest = output / p.name
+            shutil.copy2(p, dest)
+            copied.append({'module': m, 'sha256': sha(dest)})
+        report = {
+            'root_module': root_module,
+            'staged_root': root_module, 'prefix': prefix,
+            'root_names': {n: n for n in root_names},
+            'source_modules': len(order), 'affected_modules': 0,
+            'selected_declarations': 0,
+            'collisions': collisions,
+            'kernel_comparison': batch_audit,
+            'stages': [], 'copied_unmodified_objects': copied,
+            'complete': True, 'mode': 'authenticated-original-compatible-link',
+        }
+        (work / 'report.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
+        return report, output, set(root_names)
     affected_files = work / 'affected-objects.txt'
     write_lines(affected_files, [files[m] for m in order if m in affected])
     roots = work / 'roots.txt'

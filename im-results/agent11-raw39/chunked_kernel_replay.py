@@ -27,7 +27,8 @@ from stage_relocate import relocate, sha, write_lines
 
 
 def relocate_chunked(*, producer_files, base, work, root_module, root_names,
-                     prefix, tool, comparator=None, comparator_batch=None, chunk_size=64):
+                     prefix, tool, comparator=None, comparator_batch=None,
+                     allow_compatible=False, chunk_size=64):
     if chunk_size < 1:
         raise ValueError("chunk_size must be >= 1")
     producer_files = [Path(x).resolve() for x in producer_files]
@@ -39,7 +40,11 @@ def relocate_chunked(*, producer_files, base, work, root_module, root_names,
         producer_files=producer_files, base=base, work=work,
         root_module=root_module, root_names=root_names,
         prefix=prefix, tool=tool, comparator=comparator,
-        comparator_batch=comparator_batch, plan_only=True)
+        comparator_batch=comparator_batch, allow_compatible=allow_compatible,
+        plan_only=True)
+
+    if report.get('mode') == 'authenticated-original-compatible-link':
+        return report, output, names
 
     index = {}
     for line in (work / "module-index.jsonl").read_text().splitlines():
@@ -161,6 +166,7 @@ def main():
     p.add_argument("--tool", type=Path, required=True)
     p.add_argument("--comparator", type=Path)
     p.add_argument("--comparator-batch", type=Path)
+    p.add_argument("--allow-compatible", action="store_true")
     p.add_argument("--chunk-size", type=int, default=64)
     a = p.parse_args()
     report, _, _ = relocate_chunked(
@@ -168,7 +174,7 @@ def main():
         base=a.base, work=a.work, root_module=a.root_module,
         root_names=a.root_name, prefix=a.prefix, tool=a.tool.resolve(),
         comparator=a.comparator, comparator_batch=a.comparator_batch,
-        chunk_size=a.chunk_size)
+        allow_compatible=a.allow_compatible, chunk_size=a.chunk_size)
     print(json.dumps({
         "complete": report["complete"], "mode": report["mode"],
         "staged_root": report["staged_root"],
