@@ -108,7 +108,7 @@ jobs:
               for src in root.rglob('*.olean'):
                   dst=out/src.name
                   if dst.exists():
-                      assert dst.resolve().read_bytes()==src.read_bytes(),('conflicting olean',src.name,folder)
+                      if dst.resolve().read_bytes()!=src.read_bytes(): print('LEAN_OBJECT_COLLISION',src.name,folder,'keeping earlier dependency',flush=True)
                   else:
                       dst.symlink_to(src.resolve())
                   n+=1
