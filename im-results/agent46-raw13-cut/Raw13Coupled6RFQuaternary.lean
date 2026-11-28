@@ -182,19 +182,19 @@ theorem stop (k : Nat) (L : List Bool) (ds : List Digit)
       cases k with
       | zero => exact ⟨6,by decide,frame0 L (enc ds)⟩
       | succ k =>
-        have j := join0 (block0 (rep X k++M++L)) (by simpa only [List.append_assoc] using unwind k L (digit .d1++enc ds))
+        have j := join0 (block0 (rep X k++M++L) (enc ds)) (by simpa only [List.append_assoc] using unwind k L (digit .d1++enc ds))
         exact ⟨4+(3*k+5),by omega,by simpa only [pref,suffix,rep,List.append_assoc,inc,enc] using j⟩
     | d1 =>
       cases k with
       | zero => exact ⟨8,by decide,frame1 L (enc ds)⟩
       | succ k =>
-        have j := join0 (block1 (rep X k++M++L)) (by simpa only [List.append_assoc] using unwind k L (digit .d2++enc ds))
+        have j := join0 (block1 (rep X k++M++L) (enc ds)) (by simpa only [List.append_assoc] using unwind k L (digit .d2++enc ds))
         exact ⟨6+(3*k+5),by omega,by simpa only [pref,suffix,rep,List.append_assoc,inc,enc] using j⟩
     | d2 =>
       cases k with
       | zero => exact ⟨6,by decide,frame2 L (enc ds)⟩
       | succ k =>
-        have j := join0 (block2 (rep X k++M++L)) (by simpa only [List.append_assoc] using unwind k L (digit .d3++enc ds))
+        have j := join0 (block2 (rep X k++M++L) (enc ds)) (by simpa only [List.append_assoc] using unwind k L (digit .d3++enc ds))
         exact ⟨4+(3*k+5),by omega,by simpa only [pref,suffix,rep,List.append_assoc,inc,enc] using j⟩
 
 theorem scan (ds : List Digit) (k : Nat) (L : List Bool) : ∃ t, 0<t ∧
