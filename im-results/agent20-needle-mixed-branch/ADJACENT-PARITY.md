@@ -36,6 +36,41 @@ then it has an actual legal incoming valuation-\(w\) edge, with nonnegative cofa
 
 Thus **the first possible return is depth exactly 2, uniformly for every adjacent pair \(w=v+1\)**. This is optimal because depth1 is universally forbidden by [the all-valuation upward-separation theorem](UPWARD-SEPARATION.md).
 
+## Stronger form: every residue is a two-cycle or a fixed point
+
+The parity theorem is the \(w\)-parent consequence of a **full residue involution**, without assuming that the starting target has any \(w\)-parent. For \(w=v+1\), define
+
+\[
+R_w(B)=3B+d_w\pmod{D_w},\qquad
+C_v=2(d_w-d_v)=2^{v+1}(2v+1)\pmod{D_w}.
+\]
+
+For *every genuine original-source valuation-\(v\) edge* from shifted parent \(P\) to shifted target \(B\), the following exact **integer** identity holds, where \(R=3B+d_w\), \(S=3P+d_w\), and \(\Delta=d_w-d_v\):
+
+\[
+\boxed{3(S+R-2\Delta)=D_w(R-S).} \tag{R}
+\]
+
+Indeed, the source edge equation gives \(D_vS-L_vR=3\Delta\), and \(D_w=D_v+L_v\), \(2D_v=D_w+3\), \(2L_v=D_w-3\); doubling and rearranging yields (R). Since \(\gcd(D_w,3)=1\), it follows that
+
+\[
+\boxed{R_w(P)\equiv C_v-R_w(B)\pmod{D_w}.} \tag{S}
+\]
+
+Thus the exact finite-state residue transition is the **affine reflection** \(r\mapsto C_v-r\), and its square is the identity on *every* residue, not just on residue zero. This identity holds for \(v=0,1\) with **signed** corrections \(d_0=-3,d_1=-2\), and for arbitrary larger valuations.
+
+The offset \(C_v\) is nonzero modulo \(D_w\): \(D_w\) is odd and coprime to the power \(2^{v+1}\), and \(0<2v+1<D_w\), so \(D_w\nmid2^{v+1}(2v+1)\). Because \(D_w\) is odd, reflection has exactly one fixed residue \(r=\Delta\bmod D_w\), and the remaining \(D_w-1\) residues form \((D_w-1)/2\) disjoint 2-cycles. The **unique cycle containing zero** is \(\{0,C_v\}\).
+
+Hence for any legal v-inverse ray starting from *any* shifted target B, there is a complete residue classification of valuation \(w=v+1\) parent availability:
+
+- If \(R_w(B)=0\), only **even** ancestors have the \(w\)-parent congruence.
+- If \(R_w(B)=C_v\), only **odd** ancestors have the \(w\)-parent congruence.
+- For every other starting residue, **no** ancestor in that monochromatic \(v\)-ray has the \(w\)-parent congruence.
+
+As always, a congruence gives a **legal positive source parent only above** the explicit cofactor threshold. For example, the authentic high-level blank starting shifted counter \(B=3\) has \(R_1(B)=0\bmod7\) but **no** legal valuation-1 incoming predecessor, because \(B<3\cdot2^1+1+3=10\). This emphasizes that modular potential zero is not by itself physical reachability.
+
+[AdjacentReflection.lean](AdjacentReflection.lean) contains a generic exact Lean identity and nonzero-offset proof candidate. [AdjacentReflectionSource.lean](AdjacentReflectionSource.lean) connects the reflection identity to **all natural valuations of the original Cryptids Space Needle high-level map**, including the signed low cases. Both are authored and in the existing manual source-CI proof gate but **not yet kernel-accepted**. Their arithmetic is independently corroborated by direct exact transitions for valuations \(v=0,\dots,44\) with 20 cofactor choices each (900 genuine original-source edges).
+
 ## Proof
 
 The generic **signed** affine potential, valid even for \(v=0,1\), satisfies
