@@ -53,10 +53,38 @@ S+="    simpa [pre, rep, G, O, P, terminalCfg] using\n      (terminal3 "+last.k+
 S+="  have h := chain seed (chain traceSections hTerm)\n  simpa only [Nat.reduceAdd] using h\n\n";
 S+="#print axioms terminalRun\n#print axioms terminalRead\nend BB6.Agent3Leaf2265\n";
 const filename=path.join(__dirname,"Leaf2265Trace.lean");
+/* The 44 counted chunks are logically independent; factor them into eleven
+   source-identical groups so Lean can compile them independently. Keep the
+   full exact original theorem arithmetic in a small assembly wrapper. */
+const anchors=[...S.matchAll(/^theorem traceChunk(\d+)\s*:/gm)];
+if(anchors.length!==44||anchors.some((m,i)=>Number(m[1])!==i))
+  throw Error("unexpected source chunk grammar");
+const sectionStart=S.indexOf("theorem traceSections");
+if(sectionStart<0)throw Error("missing trace assembly");
+const imports=Array.from({length:11},(_,i)=>
+  "import Leaf2265TracePart"+String(i).padStart(2,"0")).join("\n");
+const wrapper=S.slice(0,anchors[0].index)
+  .replace("import Leaf2265MacroAll",imports)+S.slice(sectionStart);
+const emitted=[[filename,wrapper]];
+for(let g=0;g<11;g++){
+  let group="import Leaf2265MacroAll\n\nnamespace BB6.Agent3Leaf2265\n"+
+    "set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n\n"+
+    "/-! Source-derived, independently counted section chunks "+
+    (4*g)+"–"+(4*g+3)+" of the original 435-section trace. -/\n\n";
+  for(let j=4*g;j<4*g+4;j++){
+    const end=j+1<44?anchors[j+1].index:sectionStart;
+    group+=S.slice(anchors[j].index,end);
+  }
+  group+="end BB6.Agent3Leaf2265\n";
+  emitted.push([path.join(__dirname,"Leaf2265TracePart"+
+    String(g).padStart(2,"0")+".lean"),group]);
+}
 if(process.argv.includes("--check")){
- if(fs.readFileSync(filename,"utf8")!==S)throw Error("generated Lean source differs; regenerate deliberately");
- console.log("Generated source byte-equal, 435 sections");
+  for(const [file,body] of emitted)
+    if(fs.readFileSync(file,"utf8")!==body)
+      throw Error("generated Lean source differs: "+file);
+  console.log("Generated source byte-equal, 435 sections, 11 independent parts");
 }else{
- fs.writeFileSync(filename,S);
- console.log("Generated",filename,S.length,"bytes");
+  for(const [file,body] of emitted)fs.writeFileSync(file,body);
+  console.log("Generated",emitted.length,"Lean files for 435 sections");
 }
