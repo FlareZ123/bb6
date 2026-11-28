@@ -15,6 +15,7 @@ on:
           - epoch-marker
           - self-embedding
           - computer-certificate
+          - root-scout
           - blank-root
           - cover-bridge
         default: paired
@@ -168,3 +169,7 @@ jobs:
           lean -o "$d/CoverBridge.olean" "$d/CoverBridge.lean" | tee -a /tmp/f197-bridge.log
           lean "$d/F197WeightedLeaf.lean" | tee -a /tmp/f197-bridge.log
           ! grep -q sorryAx /tmp/f197-bridge.log
+
+      - name: Find earliest stronger F197 root-cylinder entrance
+        if: ${{ inputs.target == 'root-scout' }}
+        run: python3 im-results/agent2-f197-sweep/root_scout.py
