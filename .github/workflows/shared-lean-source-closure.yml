@@ -165,7 +165,10 @@ jobs:
           # for the specific original TM63 champion lower-bound source roots.
           case "$PROOF_ROOT" in
             im-results/agent3-raw139-e1-zeroRD/ChampionPow1024.lean|im-results/agent3-raw139-e1-zeroRD/Leaf2265ChampionCompare.lean)
-              overrides+=(--override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean) ;;
+              overrides+=(--override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean)
+              # Source archives are checked in as xz/Base64; resolve before the
+              # closure index is built, never by importing binary proof objects.
+              python3 tools/prepare_tm63_terminal_source.py ;;
           esac
           python tools/lean_compile_closure.py \
             --workdir /tmp/lean-source-closure/compiled \
