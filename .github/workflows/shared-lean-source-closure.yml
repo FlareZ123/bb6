@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "coverage-generators", "raw40-a0la", "q0151-macro"]
+        options: ["none", "coverage-generators", "raw40-a0la", "raw40-round4", "raw40-round5", "q0151-macro"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -56,6 +56,12 @@ jobs:
           elif [[ "$PREPARATION_PROFILE" == "q0151-macro" ]]; then
             test "$PROOF_ROOT" = "im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean"
             test -f im-results/agent5-weighted-tnf-queue/generate_q151_finite.py
+          elif [[ "$PREPARATION_PROFILE" == "raw40-round4" ]]; then
+            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40Round4Exact.lean"
+            test -f im-results/agent19-raw40-cut/prepare_round4.py
+          elif [[ "$PREPARATION_PROFILE" == "raw40-round5" ]]; then
+            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40Round5Exact.lean"
+            test -f im-results/agent19-raw40-cut/prepare_round5.py
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
             test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/${RAW40_CHILD}/shards/Raw40C0LA${RAW40_CHILD}All.lean"
@@ -86,7 +92,7 @@ jobs:
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
       - name: Generate source-pinned three/four-hole coverage modules
-        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' }}
+        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' || inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' }}
         run: |
           set -euo pipefail
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
@@ -99,6 +105,20 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent19-raw40-cut/prepare_a0la.py "$RAW40_CHILD"
+          test -f "$PROOF_ROOT"
+          sha256sum "$PROOF_ROOT"
+      - name: Regenerate source-pinned Raw40 historical exact child
+        if: ${{ inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' }}
+        env:
+          PREPARATION_PROFILE: ${{ inputs.preparation_profile }}
+          PROOF_ROOT: ${{ inputs.root }}
+        run: |
+          set -euo pipefail
+          case "$PREPARATION_PROFILE" in
+            raw40-round4) python im-results/agent19-raw40-cut/prepare_round4.py ;;
+            raw40-round5) python im-results/agent19-raw40-cut/prepare_round5.py ;;
+            *) exit 1 ;;
+          esac
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
       - name: Compile exact transitive Lean source, reject compiler errors
