@@ -14,6 +14,7 @@ blank-derived nonhalting theorem.
 namespace BB6.Agent39Q0148Carry
 open BB6.Agent5Q0148BoundarySweep
 open BB6Coverage
+open BB6Coverage.Agent31Pump
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 20000
@@ -56,7 +57,8 @@ theorem second_cycle_output (ns : List Nat) :
       ([.separatedMarker,.separatedMarker] ++ normalizedBlocks ns, .eleven) := by
     simp [fold_append, block_normalization_output, carryFold, carryStep]
   rw [hp]
-  rfl
+  dsimp only
+  simp [a3Second,carryFold,carryStep,List.append_assoc]
 
 /-- A second further boundary cycle turns T into S, and emits exactly
     THREE leading markers. The rest is the unchanged normal form. -/
@@ -72,8 +74,10 @@ theorem third_cycle_output (ns : List Nat) :
       [.separatedMarker,.separatedMarker,.separatedMarker] =
       ([.separatedMarker,.separatedMarker,.separatedMarker], .eleven) := by
     rfl
-  rw [hp, block_normalization_output]
-  rfl
+  rw [hp]
+  dsimp only
+  rw [block_normalization_output]
+  simp [a3Third,List.append_assoc]
 
 def a3FirstTime (ns : List Nat) : Nat :=
   ((4 + 4*scanCost (a3Input ns)) + 13) +
