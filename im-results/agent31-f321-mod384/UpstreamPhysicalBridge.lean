@@ -51,8 +51,9 @@ theorem source_next_upstream (s : HighLevelState) :
   | P a d =>
       have hHigh : (d+1<a) = (a≥d+2) := propext (by omega)
       have hFar : (3*a<d) = (3*a+1≤d) := propext (by omega)
-      simp [sourceNext, highLevelNext, pairSourceNext, decodeUpstream,
-        hHigh, hFar]
+      dsimp [pairSourceNext, sourceNext, highLevelNext, decodeUpstream]
+      simp only [←hHigh, ←hFar]
+      split_ifs <;> simp [decodeUpstream]
 
 /-- Every genuine upstream high-level trace decodes to a source-counter
     trace, and hence is covered by the exact parity-residue certificate. -/
