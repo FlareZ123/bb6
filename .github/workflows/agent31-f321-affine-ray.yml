@@ -36,6 +36,7 @@ jobs:
           LEAN_PATH="$e:$a2" lean "$a2/Phase6Bridge.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean "$a2/ResetEven.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q:$a2" lean "$a2/ResetMod384.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay7933.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay9043.lean" | tee -a /tmp/agent31-ray.log
