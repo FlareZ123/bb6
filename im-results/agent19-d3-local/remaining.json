@@ -435,16 +435,6 @@
       "1RE",
       "1RB",
       "1RF",
-      "0LF"
-    ],
-    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LF---",
-    "mass": 1250
-  },
-  {
-    "address": [
-      "1RE",
-      "1RB",
-      "1RF",
       "0RA"
     ],
     "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RA---",
@@ -518,26 +508,6 @@
       "1LD"
     ],
     "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LD---",
-    "mass": 1250
-  },
-  {
-    "address": [
-      "1RE",
-      "1RB",
-      "1RF",
-      "1LE"
-    ],
-    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LE---",
-    "mass": 1250
-  },
-  {
-    "address": [
-      "1RE",
-      "1RB",
-      "1RF",
-      "1LF"
-    ],
-    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LF---",
     "mass": 1250
   },
   {
