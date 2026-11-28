@@ -29,12 +29,20 @@ def main() -> int:
     ap.add_argument("--variant", required=True)
     ap.add_argument("--revision", required=True)
     ap.add_argument("--expected-shards", type=int, default=4)
+    ap.add_argument("--replacement-indices", type=int, nargs="*", default=[])
+    ap.add_argument("--replacement-revision")
     args = ap.parse_args()
 
     if args.expected_shards < 2:
         raise ValueError("expected-shards must be at least 2")
     if not args.revision or len(args.revision) != 40:
         raise ValueError("revision must be a full 40-character Git SHA")
+
+    replacements = set(args.replacement_indices)
+    if len(replacements) != len(args.replacement_indices) or not all(0 <= i < args.expected_shards for i in replacements):
+        raise ValueError("invalid replacement shard indices")
+    if replacements and (not args.replacement_revision or len(args.replacement_revision) != 40):
+        raise ValueError("replacement shards require a full revision SHA")
 
     batch_sources = sorted(
         args.generated_dir.glob("Raw43*BiDFABatch*.lean"),
@@ -51,6 +59,7 @@ def main() -> int:
 
     for shard in range(args.expected_shards):
         directory = args.shards_root / f"raw43-b0le-shard-{shard}"
+        expected_revision = args.replacement_revision if shard in replacements else args.revision
         expected_shard_roots = {
             path.stem for pos, path in enumerate(batch_sources)
             if pos % args.expected_shards == shard
@@ -71,13 +80,13 @@ def main() -> int:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("schema_version") != 1:
             raise ValueError(f"unsupported manifest schema in shard {shard}")
-        if manifest.get("proof_source_revision") != args.revision:
+        if manifest.get("proof_source_revision") != expected_revision:
             raise ValueError(
                 f"shard {shard} proof revision {manifest.get('proof_source_revision')} "
-                f"!= expected {args.revision}"
+                f"!= expected {expected_revision}"
             )
         workflow = manifest.get("workflow", {})
-        if workflow.get("workflow_head_sha") != args.revision:
+        if workflow.get("workflow_head_sha") != expected_revision:
             raise ValueError(f"shard {shard} workflow head does not match revision")
         expected_artifact = f"raw43-b0le-shard-{shard}"
         if manifest.get("artifact_name") != expected_artifact:
@@ -142,7 +151,7 @@ def main() -> int:
     merged = dict(
         base,
         label=f"raw43-{args.variant}-bidfa-union",
-        source_revisions=[args.revision],
+        source_revisions=sorted({args.revision} | ({args.replacement_revision} if replacements else set())),
         claim={"theorem": None, "parent_table": None, "weighted_bound": None},
         artifact_name=None,
         roots=[],
