@@ -67,12 +67,15 @@ jobs:
               im-results/agent42-raw40-crossing-splice/Raw40A0LAExact.lean|im-results/agent42-raw40-crossing-splice/Raw40A0LARefinement.lean) ;;
               *) exit 1 ;;
             esac
-            test -f im-results/agent19-raw40-cut/prepare_round4.py
             test -f im-results/agent19-raw40-cut/prepare_round5.py
             test -f im-results/agent19-raw40-cut/prepare_a0la.py
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
-            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/${RAW40_CHILD}/shards/Raw40C0LA${RAW40_CHILD}All.lean"
+            if [[ "$RAW40_CHILD" == "1LB" ]]; then
+              test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/1LB/shards/Raw40C0LAC1LBAll.lean"
+            else
+              test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/${RAW40_CHILD}/shards/Raw40C0LA${RAW40_CHILD}All.lean"
+            fi
           fi
           [[ "$SUFFIX" =~ ^[a-zA-Z0-9_.]+$ ]]
           [[ "$MIN_THEOREMS" =~ ^[0-9]+$ ]]
@@ -136,8 +139,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent19-raw40-cut/prepare_round5.py
-          python im-results/agent19-raw40-cut/prepare_round4.py
-          for child in 0LE 0RB 0RD 0RE 1LA 1LC 1LE 1RB 1RC 1RE; do
+          for child in 0LE 0RB 0RD 0RE 1LA 1LB 1LC 1LE 1RB 1RC 1RE; do
             python im-results/agent19-raw40-cut/prepare_a0la.py "$child"
           done
           test -f "$PROOF_ROOT"
