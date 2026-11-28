@@ -805,7 +805,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent8-raw54/check_raw54_canonical40_membership.py --work /tmp/a8-raw54-canonical40
+          python im-results/agent8-raw54/check_raw54_canonical40_membership.py --work /tmp/a8-raw54-canonical40 --conditional
       - uses: actions/upload-artifact@v4
         with:
           name: raw54-canonical40-membership
