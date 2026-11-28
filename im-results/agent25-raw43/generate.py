@@ -112,7 +112,7 @@ def partial_table_source(table):
         nxt = ord(tr[2]) - ord("A")
         out.append(f"  | {j//2},{str(bool(j%2)).lower()} => some (some ⟨{write},{right},{nxt}⟩)")
     out.append("  | _,_ => none")
-    return "\\n".join(out)
+    return "\n".join(out)
 
 def symmetry_never_body(i, table, rep_i, rep_namespace):
     return f"""namespace M{i}
