@@ -56,8 +56,15 @@ theorem marker_phase (j : Nat) :
   calc
     [true,true] ++ rep [false,true] (j+2) =
       [true,true,false,true,false,true] ++ rep [false,true] j := he
+    _ = ([true,true,false,true,false] ++ [true]) ++ rep [false,true] j := by
+          rfl
+    _ = [true,true,false,true,false] ++
+          ([true] ++ rep [false,true] j) := by
+          simp [List.append_assoc]
+    _ = [true,true,false,true,false] ++
+          (rep [true,false] j ++ [true]) := h
     _ = [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
-          simpa only [List.append_assoc, List.cons_append, List.nil_append] using h
+          simp [List.append_assoc]
 
 /-- The source right-continuation head prefix is a canonical left
     chunk word A^(n+2) M A^j followed by a dangling one bit.
@@ -114,6 +121,12 @@ theorem marked_hop_bitword (n j : Nat) (tail : List LeftChunk)
   have hcarry : [true] ++ rightSubst tail =
       inputBits f.1 ++ carryBits f.2 := by
     simpa [f,carryBits] using carryFoldBits .one tail
+  have hchunks :
+      inputBits (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ f.1) =
+        rep [true,false] (n+2) ++ [true,true,false,true,false] ++
+          rep [true,false] j ++ inputBits f.1 := by
+    rw [inputBits_append, inputBits_append, inputBits_append]
+    simp [input_aRun, inputBits, chunkBits]
   have hphase := marked_phase n j
   have hp := congrArg
     (fun z : List Bool =>
@@ -143,8 +156,8 @@ theorem marked_hop_bitword (n j : Nat) (tail : List LeftChunk)
     _ = [true,false] ++ inputBits
         (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ f.1) ++
           carryBits f.2 ++ L := by
-            simp [inputBits_append,input_aRun,inputBits,chunkBits,
-              List.append_assoc]
+            rw [← hchunks]
+            simp only [List.append_assoc]
 
 /-- Original open-table source theorem: the exact markedHopN execution
     rewrites A^(j+2) ++ tail into A^(n+2) M A^j ++ carryFold_U(tail),
@@ -166,7 +179,9 @@ theorem marked_hop_source (n j : Nat) (tail : List LeftChunk)
   dsimp only
   have h := markedHopN (aRun (j+2) ++ tail) n L R
   have hb := marked_hop_bitword n j tail L
-  rw [outputRightChunks_rightSeq, hb] at h
+  have hseq := outputRightChunks_rightSeq (aRun (j+2) ++ tail)
+  rw [hseq] at h
+  rw [hb] at h
   simpa only [List.append_assoc] using h
 
 #print axioms stagger01
