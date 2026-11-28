@@ -28,14 +28,15 @@ theorem first_e1_left_word (n : Nat) (L : List Bool) :
       [false,true,false] ++ L =
     [true,false] ++ inputBits (aRun ((2*n+1)+2)) ++ L := by
   have h := stagger01 (2*n+1)
-  have hn : (2*n+1)+2 = (2*n+2)+1 := by omega
   have hrep : rep [true,false] ((2*n+1)+2) =
-      [true,false] ++ rep [true,false] (2*n+2) := by
-    rw [hn]
-    rfl
-  simpa [input_aRun,rep,List.append_assoc] using
-    congrArg
-      (fun x : List Bool => x ++ [false,true,false] ++ L) h
+      rep [true,false] (2*n+1) ++ [true,false,true,false] := by
+    rw [show (2*n+1)+2 = ((2*n+1)+1)+1 by omega]
+    rw [rep, ← rep_snoc, rep, ← rep_snoc]
+    simp only [List.append_assoc,List.cons_append,List.nil_append]
+  rw [input_aRun,hrep]
+  change [true,false] ++ ([true] ++ rep [false,true] (2*n+1)) ++ [false,true,false] ++ L = _
+  rw [h]
+  simp only [List.append_assoc,List.cons_append,List.nil_append]
 
 def a1FutureMarkers (us : List Nat) : List Nat :=
   us.map (fun u => 2*u) ++ [0]
@@ -62,8 +63,19 @@ theorem a1_reset_to_train (us : List Nat) (n : Nat)
   have hr := a1_reset_right_markers us
   have hl := first_e1_left_word n
     (leftPad (a1FutureMarkers us).length ++ L)
-  simpa [a1FutureMarkers,firstMarkerState,
-    List.append_assoc,hl,hr] using h
+  have ha : ∀ (ps : List Nat) (R : List Bool), rightMarkers ps [true,false] ++ R = rightMarkers ps ([true,false] ++ R) := by
+    intro ps R
+    induction ps with
+    | nil => rfl
+    | cons u ps ih => simp [rightMarkers,List.append_assoc,ih]
+  simp only [a1FutureMarkers] at hl hr h ⊢
+  simp only [List.append_assoc,List.cons_append,List.nil_append] at hl hr h ⊢
+  rw [hl] at h
+  have hr' := congrArg (· ++ R) hr
+  simp only [List.append_assoc,List.cons_append,List.nil_append] at hr'
+  rw [ha] at hr'
+  rw [hr'] at h
+  simpa only [firstMarkerState,a1FutureMarkers,List.append_assoc,List.cons_append,List.nil_append] using h
 
 /-- THREE blank-turn rounds in the a=3 case, followed by the same
     exact A0-to-E1, produce THREE short right-end markers. -/
@@ -86,8 +98,20 @@ theorem a3_reset_to_train (us : List Nat) (n : Nat)
   have hr := a3_reset_right_markers us
   have hl := first_e1_left_word n
     (leftPad (a3FutureMarkers us).length ++ L)
-  simpa [a3FutureMarkers,firstMarkerState,
-    List.append_assoc,hl,hr] using h
+  have ha : ∀ (ps : List Nat) (R : List Bool), rightMarkers ps [true,false] ++ R = rightMarkers ps ([true,false] ++ R) := by
+    intro ps R
+    induction ps with
+    | nil => rfl
+    | cons u ps ih => simp [rightMarkers,List.append_assoc,ih]
+  unfold a3Third at h
+  simp only [a3FutureMarkers] at hl hr h ⊢
+  simp only [List.append_assoc,List.cons_append,List.nil_append] at hl hr h ⊢
+  rw [hl] at h
+  have hr' := congrArg (· ++ ([false] ++ R)) hr
+  simp only [List.append_assoc,List.cons_append,List.nil_append] at hr'
+  rw [ha] at hr'
+  rw [hr'] at h
+  simpa only [firstMarkerState,a3FutureMarkers,List.append_assoc,List.cons_append,List.nil_append] using h
 
 /-- Both source-reset channels have a nonempty list of future 110
     markers (one extra for a1, three for a3). -/

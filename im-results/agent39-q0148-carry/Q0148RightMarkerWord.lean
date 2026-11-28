@@ -38,7 +38,7 @@ theorem markerTail_word (k : Nat) :
   | zero => rfl
   | succ k ih =>
       simp [markerTail,outputBits_append,rightMarkers,
-        outputBits,chunkBits,rep,ih,List.append_assoc]
+        outputBits,chunkBits,rep,ih,List.append_assoc,List.replicate_succ]
 
 /-- One normalized marker block M A^(2u) in the SOURCE chunk list
     becomes A^(2u+1) B at the physical right edge, and leaves the
@@ -61,7 +61,7 @@ theorem rightMarkerWord (us : List Nat) (k : Nat) :
           List.replicate k 0) [true,false] := by
   induction us with
   | nil =>
-      simpa [rightMarkers] using markerTail_word k
+      simpa [rightMarkers,normalizedBlocks] using markerTail_word k
   | cons u us ih =>
       have hform :
           markerTail k ++ normalizedBlocks (u::us).reverse =

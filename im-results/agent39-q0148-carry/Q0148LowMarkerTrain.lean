@@ -66,6 +66,7 @@ theorem shortPreparation_source (ix : HopIndex) (n m : Nat)
       (markerState ix [n,m] L R) =
     some (shortState n (ix.j :: ix.prior) [m] L R) := by
   rcases ix with ⟨j,rs,z⟩
+  change z = 0 at hz
   subst z
   have h := prepare_two_hop_source n j rs
     (twoPad 1 ++ L) (rightMarkers [m] R)
@@ -99,28 +100,28 @@ theorem lastTwo_source (ix : HopIndex) (n m : Nat)
 /-- Arbitrarily many preceding ordinary source hops followed by the
     final two exceptional transitions. The initial far debt equals
     the number of ordinary hops; no marker bound is assumed. -/
-theorem lowMarkerTrain_source (ix : HopIndex) (prefix : List Nat)
+theorem lowMarkerTrain_source (ix : HopIndex) (pre : List Nat)
     (n m : Nat) (L R : List Bool)
-    (hz : ix.far = prefix.length) :
-    let ix' := trainEnd ix prefix
+    (hz : ix.far = pre.length) :
+    let ix' := trainEnd ix pre
     run0 p
-      ((trainCost ix prefix + markerCost ix' n) +
+      ((trainCost ix pre + markerCost ix' n) +
         shortCost n (ix'.j::ix'.prior) m)
-      (markerState ix prefix (twoPad 2 ++ L)
+      (markerState ix pre (twoPad 2 ++ L)
         (rightMarkers [n,m] R)) =
     some (lowTerminal m (n::ix'.j::ix'.prior) L R) := by
   dsimp only
-  have hz' : prefix.length ≤ ix.far := by omega
-  have h0 := markerTrain_source ix prefix
+  have hz' : pre.length ≤ ix.far := by omega
+  have h0 := markerTrain_source ix pre
       (twoPad 2 ++ L) (rightMarkers [n,m] R) hz'
-  have he : (trainEnd ix prefix).far = 0 := by
+  have he : (trainEnd ix pre).far = 0 := by
     rw [trainEnd_far,hz]
     simp
-  have h1 := lastTwo_source (trainEnd ix prefix) n m L R he
-  have h0' : run0 p (trainCost ix prefix)
-      (markerState ix prefix (twoPad 2 ++ L)
+  have h1 := lastTwo_source (trainEnd ix pre) n m L R he
+  have h0' : run0 p (trainCost ix pre)
+      (markerState ix pre (twoPad 2 ++ L)
         (rightMarkers [n,m] R)) =
-    some (markerState (trainEnd ix prefix) [n,m] L R) := by
+    some (markerState (trainEnd ix pre) [n,m] L R) := by
       simpa [markerState,rightMarkers,leftPad,twoPad,
         List.append_assoc] using h0
   have h := join0 h0' h1

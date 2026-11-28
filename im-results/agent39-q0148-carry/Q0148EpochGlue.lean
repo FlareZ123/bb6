@@ -36,59 +36,60 @@ theorem high_from_reset (t : Nat) (start : Z0)
   simpa only [Nat.add_assoc] using join0 hreset h
 
 /-- The extra two right markers of the low branch have to be
-    passed as a *suffix* to the ordinary prefix; both source
+    passed as a *suffix* to the ordinary pre; both source
     configurations are literally identical. -/
 theorem twoPad_append (a b : Nat) :
     twoPad (a+b) = twoPad a ++ twoPad b := by
   induction a with
-  | zero => rfl
+  | zero => simp [twoPad]
   | succ a ih =>
       simp [twoPad,ih,List.append_assoc,Nat.succ_add]
 
-theorem low_first_state_split (j first : Nat) (prefix : List Nat)
+theorem low_first_state_split (j first : Nat) (pre : List Nat)
     (u v : Nat) (L R : List Bool) :
-    firstMarkerState j (first :: (prefix ++ [u,v])) L R =
-    firstMarkerState j (first::prefix)
+    firstMarkerState j (first :: (pre ++ [u,v])) L R =
+    firstMarkerState j (first::pre)
        (twoPad 2 ++ L) (rightMarkers [u,v] R) := by
-  have hlen : (first :: (prefix ++ [u,v])).length =
-      (first::prefix).length + 2 := by simp
+  have hlen : (first :: (pre ++ [u,v])).length =
+      (first::pre).length + 2 := by simp
   have ht :
-      leftPad ((first :: (prefix ++ [u,v])).length) ++ L =
-      leftPad (first::prefix).length ++ twoPad 2 ++ L := by
+      leftPad ((first :: (pre ++ [u,v])).length) ++ L =
+      leftPad (first::pre).length ++ twoPad 2 ++ L := by
     rw [hlen]
     simp [leftPad,twoPad_append,List.append_assoc]
-  have hr := rightMarkers_append (first::prefix) [u,v] R
+  have hr := rightMarkers_append (first::pre) [u,v] R
   unfold firstMarkerState
+  simp only [List.cons_append] at hr
   rw [hr]
   have he := congrArg
     (fun z : List Bool =>
       (⟨4,[true,false] ++ inputBits (aRun (j+2)) ++ z,
-        [false] ++ rightMarkers (first::prefix)
+        [false] ++ rightMarkers (first::pre)
           (rightMarkers [u,v] R)⟩ : Z0)) ht
   simpa only [List.append_assoc] using he
 
 /-- Source low-branch epoch: arbitrary number of ordinary middle
     hops and the final two exceptional low-end hops, all exact. -/
 theorem low_from_reset (t : Nat) (start : Z0)
-    (first : Nat) (prefix : List Nat) (u v : Nat)
+    (first : Nat) (pre : List Nat) (u v : Nat)
     (L R : List Bool)
     (hreset : run0 p t start =
-      some (firstMarkerState (prefix.length+1)
-        (first::(prefix++[u,v])) L R)) :
-    let ix := firstIndex (prefix.length+1) first
-    let ix' := trainEnd ix prefix
+      some (firstMarkerState (pre.length+1)
+        (first::(pre++[u,v])) L R)) :
+    let ix := firstIndex (pre.length+1) first
+    let ix' := trainEnd ix pre
     run0 p
-      (t + ((firstHopCost (prefix.length+1) first +
-          trainCost ix prefix + markerCost ix' u) +
+      (t + ((firstHopCost (pre.length+1) first +
+          trainCost ix pre + markerCost ix' u) +
           shortCost u (ix'.j::ix'.prior) v))
       start =
     some (lowTerminal v (u::ix'.j::ix'.prior) L R) := by
   dsimp only
   have hs := low_first_state_split
-    (prefix.length+1) first prefix u v L R
+    (pre.length+1) first pre u v L R
   rw [hs] at hreset
   have h := lowTrainFromFirst_source
-    first prefix u v L R
+    first pre u v L R
   dsimp only at h
   simpa [Nat.add_assoc] using join0 hreset h
 

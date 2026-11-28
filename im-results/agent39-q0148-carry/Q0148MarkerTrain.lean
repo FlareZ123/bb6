@@ -77,12 +77,17 @@ theorem markerStep (ix : HopIndex) (n : Nat) (ns : List Nat)
       some (markerState (nextIndex ix n) ns L R) := by
   rcases ix with ⟨j,rs,z⟩
   cases z with
-  | zero => omega
+  | zero => simp at hfar
   | succ z =>
       have h := ordinary_hop_source n j rs (z+1)
         (twoPad ns.length ++ L) (rightMarkers ns R)
+      have hgap : gapChain (rs ++ [z]) = gapChain rs ++ [.separatedMarker] ++ aRun (z+2) := by
+        clear h hfar
+        induction rs with
+        | nil => simp [gapChain]
+        | cons r rs ih => simp [gapChain,ih,List.append_assoc]
       simpa [markerState,markerCost,nextIndex,rightMarkers,
-        leftPad,twoPad,gapChain,rep,List.append_assoc,
+        leftPad,twoPad,gapChain,rep,List.append_assoc,hgap,
         Nat.succ_eq_add_one,Nat.add_assoc] using h
 
 /-- Exact total source time over a finite remaining marker train. -/
@@ -108,11 +113,11 @@ theorem markerTrain_source (ix : HopIndex) (ns : List Nat)
       simp [trainCost,trainEnd,run0]
   | cons n ns ih =>
       have hp : ix.far > 0 := by
-        simpa only [List.length_cons] at hfar
+        simp only [List.length_cons] at hfar
         omega
       have hn : ns.length ≤ (nextIndex ix n).far := by
         simp only [nextIndex]
-        simpa only [List.length_cons] at hfar
+        simp only [List.length_cons] at hfar
         omega
       have h1 := markerStep ix n ns L R hp
       have h2 := ih (nextIndex ix n) hn
