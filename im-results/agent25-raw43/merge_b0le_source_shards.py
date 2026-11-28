@@ -36,7 +36,10 @@ def main() -> int:
     if not args.revision or len(args.revision) != 40:
         raise ValueError("revision must be a full 40-character Git SHA")
 
-    batch_sources = sorted(args.generated_dir.glob("Raw43*BiDFABatch*.lean"))
+    batch_sources = sorted(
+        args.generated_dir.glob("Raw43*BiDFABatch*.lean"),
+        key=lambda path: int(path.stem.rsplit("BiDFABatch", 1)[1]),
+    )
     if not batch_sources:
         raise RuntimeError(f"no generated BiDFA batch sources under {args.generated_dir}")
     expected_batches = {path.stem for path in batch_sources}
