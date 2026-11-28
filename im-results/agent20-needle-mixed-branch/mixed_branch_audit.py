@@ -23,6 +23,33 @@ def parent(B, w):
 def available(B, w):
     return B >= 3*2**w+w+3 and (3*B+d(w))%D(w)==0
 
+def multiplicative_order(a, modulus):
+    """Brute-force exact order, bounded by the modulus (all orders <=262146)."""
+    assert gcd(a, modulus) == 1
+    x=1
+    for k in range(1,modulus+1):
+        x=x*a % modulus
+        if x==1:
+            return k
+    raise AssertionError((a,modulus))
+
+def all_pair_orders():
+    result={}
+    for v in W:
+        for w in W:
+            if v==w: continue
+            assert gcd(D(v),D(w))==1
+            modulus=D(w)//gcd(D(w),d(w)-d(v))
+            ratio=D(v)*pow(2**(v+1),-1,modulus) % modulus
+            result[(v,w)]=multiplicative_order(ratio,modulus)
+    assert len(result)==42
+    assert result[3,5]==11 and result[5,3]==18
+    assert result[3,17]==262146 and result[14,4]==3
+    print('All 42 exact return periods, rows v and columns w:')
+    for v in W:
+        print('v=',v, {w:result[v,w] for w in W if w!=v})
+    return result
+
 def audit():
     # Every pair of distinct source valuations in W has a modular gap:
     # any target with both incoming edges forbids a switch at the first
@@ -62,6 +89,7 @@ def audit():
         cur=parent(cur,5)
         assert available(cur,3) == (j%18==0)
     print('5->3 resonance: first possible mixed edge depth 18, B=',B)
+    all_pair_orders()
     print('PASS')
 
 if __name__ == '__main__':
