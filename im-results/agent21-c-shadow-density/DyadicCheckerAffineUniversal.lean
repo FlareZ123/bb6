@@ -29,6 +29,90 @@ theorem pairOfMassNorm_coords (s z:Int):
     dsimp
     omega
 
+/-- The signed plane-to-mass/normal coordinate map is bijective. -/
+theorem pairOfMassNorm_left (x y:Int):
+    pairOfMassNorm (signedS x y) (signedZ x y)=⟨x,y⟩ := by
+  have hz : 2*signedZ x y=-x-2-parity (signedS x y) :=
+    signed_twice_Z x y
+  have hx : (pairOfMassNorm (signedS x y) (signedZ x y)).x=x := by
+    dsimp [pairOfMassNorm]
+    omega
+  have hy : (pairOfMassNorm (signedS x y) (signedZ x y)).y=y := by
+    dsimp [pairOfMassNorm]
+    unfold signedS at *
+    omega
+  cases h : pairOfMassNorm (signedS x y) (signedZ x y) with
+  | mk xx yy =>
+      simp only [h] at hx hy
+      cases hx
+      cases hy
+      rfl
+
+/-- Every admissible mass/normal affine line maps exactly to a line in
+    signed two-counter coordinates, whose left increment is even. -/
+theorem pairOfMassNorm_affine (a:Affine) (ha:a.sigma%2=0) (t:Int):
+    pairOfMassNorm (mass a t) (norm a t) =
+      ⟨(pairOfMassNorm a.s a.z).x+(-2*a.lam)*t,
+        (pairOfMassNorm a.s a.z).y+(a.lam-a.sigma/2)*t⟩ := by
+  have hsigma : a.sigma=2*(a.sigma/2) := by omega
+  have heven : a.sigma*t=2*((a.sigma/2)*t) := by
+    calc
+      a.sigma*t=(2*(a.sigma/2))*t :=
+        congrArg (fun v:Int => v*t) hsigma
+      _=2*((a.sigma/2)*t) := by rw [Int.mul_assoc]
+  have hmass : mass a t=a.s+2*((a.sigma/2)*t) := by
+    unfold mass
+    rw [heven]
+  have hpar : parity (mass a t)=parity a.s := by
+    rw [hmass]
+    unfold parity
+    omega
+  have hx : (pairOfMassNorm (mass a t) (norm a t)).x=
+      (pairOfMassNorm a.s a.z).x+(-2*a.lam)*t := by
+    change -2*(norm a t)-2-parity (mass a t) =
+      -2*a.z-2-parity a.s+(-2*a.lam)*t
+    rw [hpar]
+    unfold norm
+    rw [Int.mul_add]
+    rw [Int.mul_assoc]
+    omega
+  have hy : (pairOfMassNorm (mass a t) (norm a t)).y=
+      (pairOfMassNorm a.s a.z).y+(a.lam-a.sigma/2)*t := by
+    change (2*(norm a t)+2+parity (mass a t)-(mass a t))/2 =
+      (2*a.z+2+parity a.s-a.s)/2+(a.lam-a.sigma/2)*t
+    rw [hpar]
+    rw [hmass]
+    unfold norm
+    have heq :
+        2*(a.z+a.lam*t)+2+parity a.s-(a.s+(2*((a.sigma/2)*t))) =
+        (2*a.z+2+parity a.s-a.s)+2*((a.lam-a.sigma/2)*t) := by
+      rw [Int.mul_add,Int.sub_mul,Int.mul_sub]
+      omega
+    rw [heq]
+    have hm : (2*a.z+2+parity a.s-a.s)%2=0 := by
+      unfold parity
+      omega
+    omega
+  cases h : pairOfMassNorm (mass a t) (norm a t) with
+  | mk xx yy =>
+      simp only [h] at hx hy
+      cases hx
+      cases hy
+      rfl
+
+/-- The right-counter increment of every admissible signed affine line
+    is odd; the normalized affine condition is exactly the geometric
+    odd-direction condition. -/
+theorem admissible_signed_slope_odd (a:Affine) (ha:Admissible a):
+    (a.lam-a.sigma/2)%2=1 := by
+  rcases ha with ⟨he,ho⟩
+  have hsigma : a.sigma=2*(a.sigma/2) := by omega
+  omega
+
+#print axioms pairOfMassNorm_left
+#print axioms pairOfMassNorm_affine
+#print axioms admissible_signed_slope_odd
+
 /-- Strongest source-independent form of checker density: a single
     universal precision n excludes a fraction >=1-1/d of EVERY
     admissible signed affine family, and exclusion persists at ALL
