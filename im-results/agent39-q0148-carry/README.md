@@ -53,3 +53,60 @@ The simpler a=1 case has `C=E(ns)`, normalized carry `S`, qA0 after `5s+26` orig
 - Direct independent JS interpretation of the literal original partial table checked **150 parametrically chosen finite `ns` lists** of up to seven blocks, with different arbitrary left/right nonblank tails, at exactly `13s+114` source steps. All 150 yielded the predicted qA0 head and complete named output tape prefix/tail; this is an internal finite regression, **not** proof of universal validity. The Lean files contain the mathematical generalization and are the authoritative proof target.
 
 **Next action:** source-compile the two new files against pinned Lean 4.36.0-rc2, repair any failing goals, then use the exact right-output factorization to join the original `ARightToEOne` and `markedHopN` macros into the universal positive boundary return. Do not mistake a successful source subroutine for the full raw one-hole Cover.
+
+## Arbitrary marked-hop train: the missing all-marker induction is now explicit
+
+After the blank-turn and first E1 source gadgets, the remaining difficulty is an arbitrary number of original-table marked E1 hops. The source-level word algebra has a sharp uniform formulation. For every `r>=0`, the same finite-state carry satisfies
+
+```
+  carryFold U (M A^(r+2)) = (A A M A^r, U)
+  carryFold U (M A)       = (A A, T)
+  carryFold U (M)         = (A A, S).
+```
+
+For any finite list `rs`, put `G(rs)=concat_{r in rs}(M A^(r+2))` and `O(rs)=concat_{r in rs}(A A M A^r)`. **There is no assumption on marker count, gap parity or gap size beyond these displayed natural parameters.** The exact transducer identity is `carryFold U G(rs)=(O(rs),U)`. The crucial telescoping identities for every `rs,z` are
+
+```
+  O(rs ++ [z]) A   = A A G(rs) M A^(z+1)
+  O(rs) A A        = A A G(rs).
+```
+
+These are what make the boundary gap arithmetic exact: the first marker-crossing output keeps old crossed gaps unchanged, decrements only the far-left gap, and creates one new group. Specifically, for arbitrary `n,j,rs,z>=0`, `L,R`, the literal original F1-open table has the positive source step
+
+```
+  qE, left = 10 inputBits(A^(j+2) G(rs ++ [z])) 000 L,
+      right= 010 A^n 110 R
+
+  -- after (4 + 4 scanCost(leftChunks)) + (13 + 2n) TM steps -->
+
+  qE, left = 10 inputBits(A^(n+2) M A^(j+2) G(rs) M A^(z+1)) 0 L,
+      right= 0 R.
+```
+
+This is `ordinary_hop_source` in `Q0148SourceHopSection.lean`. It remains true when `z=0`, yielding a short `M A` far-left suffix. A final exceptional hop with this short suffix has the **exact original-source output**
+
+```
+  qE, left = 10 inputBits(A^(j+2) G(rs) M A) 000 L,
+      right= 010 A^n 110 R
+
+  -- same positive TM time formula -->
+
+  qE, left = 10 inputBits(A^(n+2) M A^(j+2) G(rs) M) 0 L,
+      right= 0 R.
+```
+
+The low endpoint is therefore far-left gap **one** rather than an undefined transition; it is `final_two_hop_source` in `Q0148ExceptionalSourceHop.lean`. The high endpoint has far-left gap **three**.
+
+`Q0148MarkerTrain.lean` folds the ordinary step inductively over **any finite list of future right-side markers**, preserving explicit external zeros and an exact total source time. If the far-left countdown `z` is at least the list length, it reaches the last marker with the high endpoint. `Q0148LowMarkerTrain.lean` handles the case with countdown exactly two fewer: it runs the ordinary prefix, the penultimate `z=0` hop, and the final `M A -> M` exception. This gives the **all-marker source mechanism for both head-height possibilities** of Agent5's boundary invariant, assuming these Lean candidate files compile.
+
+Writing `n0,n1,...,n_H` for the successive right-marker parameters, the terminal gap vectors implied by these exact stack identities are
+
+```
+   high: [3, n0+3, n1+3, ..., n_(H-1)+3, n_H+4]
+   low:  [1, n0+3, n1+3, ..., n_(H-1)+3, n_H+4].
+```
+
+For the original stable boundary `g=(a,g1,...,g_(m-1),4)`, the parameters after the first blank return are the **old** `g2-1,g3-1,...,g_(m-1)-1,2` followed by **one** zero if a=1 or **three** zeros if a=3. Thus the displayed high/low formula *literally simplifies* to Agent5's conjectured `F(g)`. The head-height constraint `g1 in {m+a-3,m+a-1}` is equivalent to the starting far-left countdown being either the number of remaining marked hops or two fewer. The abstract recurrence closure was already established by Agent5; the new work is the all-depth **original-source correspondence**.
+
+**Validation boundary:** The full Lean chain remains a proof **candidate**, not an accepted `NeverHalts` theorem. Direct literal partial-machine execution checked 120 nonterminal and 140 terminal arbitrary-gap source configurations (both with nontrivial external tails), all matching their exact source durations and left/right outputs; finite regression is not universal proof. Source CI initially exposed and then repaired five errors in the shared imported `Q0148BoundarySweep.lean`; subsequent jobs are checking the new all-length lemmas. Most important remaining integration: prove the exact boundary-word/first-E1 parameter-list splice, then connect the high/low final stack to `F(g)` and to the 147-step blank base. The exceptional base is **not** a 293-step boundary epoch: from `(3,4)` its first next E1 is at 293, three marked hops add 57+85+113, and the first next **boundary** is `(3,3,3,4)` after **548** source steps.
+
