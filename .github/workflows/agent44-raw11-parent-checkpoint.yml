@@ -35,6 +35,11 @@ on:
         required: true
         default: false
         type: boolean
+      split_extra140_aggregate:
+        description: Split the resource-heavy Extra140 root_6_root_9_root_20 automata leaves into independent kernel modules
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -129,6 +134,16 @@ jobs:
           test -s /tmp/parent-source/TwoSidedAutomataRows.lean
           echo "row_split_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
 
+      - name: Split the resource-heavy Extra140 aggregate
+        if: inputs.split_extra140_aggregate && inputs.parent_id == '140'
+        run: |
+          set -euo pipefail
+          target=/tmp/parent-source/Agent5Raw11Extra140Sub_root_6_root_9_root_20.lean
+          test -s "$target"
+          python im-results/agent44-raw11-extra28/split_phase_automata_leaves.py "$target" | tee /tmp/extra140-aggregate-split.log
+          test "$(find /tmp/parent-source -maxdepth 1 -name 'Agent44SplitAgent5Raw11Extra140Sub_root_6_root_9_root_20Leaf*.lean' | wc -l)" -eq 12
+          test "$(wc -c < "$target")" -lt 25000
+
       - name: Advance exact kernel DAG by bounded fresh modules
         id: advance
         env:
@@ -156,6 +171,7 @@ jobs:
             echo "prior_artifact=${{ inputs.prior_artifact }}"
             echo "max_fresh=${RAW11_REPAIR_MAX_FRESH}"
             echo "target_module=${RAW11_REPAIR_TARGET}"
+            echo "split_extra140_aggregate=${{ inputs.split_extra140_aggregate }}"
             echo "head_sha=${GITHUB_SHA}"
             echo "lean_version=$(lean --version)"
           } > /tmp/parent-out/checkpoint-provenance.txt
