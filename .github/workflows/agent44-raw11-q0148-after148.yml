@@ -22,7 +22,7 @@ on:
         required: true
         type: string
       q0148_run:
-        description: Successful q0-148 parent run ID (q0148 target only)
+        description: Successful Agent5 q0-148 cover-sharded run ID publishing raw11-coarse-cover-148 (q0148 target only)
         required: false
         default: ''
         type: string
