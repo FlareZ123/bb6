@@ -122,11 +122,27 @@ rows are free, while every A/B/C/D/F row is assigned an ordinary transition
 whose next state remains in {A,B,C,D,F}, so `Raw34Plan.Cert.closed` applies
 at entry zero.
 
-A deeper candidate census using the same short side-cycle checker, then the
-repository's larger half-line search window (entry <= 500, period <= 200,
-trace cap 1,000), reduces the unresolved physical target further to 131,081.
-That number is **candidate-level only** until those deeper candidates are
-emitted as source theorems and kernel checked.  Its useful structural
-breakdown is 82 long depth-six cylinders, 1,276 long depth-seven cylinders,
-and 16,681 complete depth-eight long machines after the two depth-five
-growth cylinders are separated.
+The earlier 131,081-table deeper census has now been superseded by
+`census_f0ld.cpp`, which exactly replays the corrected source-plan
+semantics and the state-major physical choice order.  Starting from the
+4,274 depth-six residual cylinders (2,671,250 physical completions), it finds:
+
+- 78,968 short sidecycles, 4,234 halts, 20,605 next-query branches, and
+  2,043 long traces at depth seven;
+- 767 of those 2,043 long depth-seven branches are certified by the existing
+  larger half-line window (entry <= 500, period <= 200, trace cap 1,000),
+  leaving exactly 1,276 one-hole long cylinders;
+- all 20,605 open depth-seven branches are exhausted at depth eight:
+  455,952 short sidecycles, 20,605 halts, and 38,568 long complete machines;
+- every one of those 38,568 long complete machines has a finite closed
+  state set reachable from A, so it is a candidate for the existing
+  `Cert.closed 0 ss` source theorem.
+
+Consequently the candidate-level physical remainder is now exactly
+**56,900 = 40*625 + 1,276*25** tables.  The other 2,614,350 physical
+completions in the depth-six residual mass have finite source-certificate
+shapes.  This 56,900 figure remains intermediate until the corresponding
+source bank is kernel checked; `generate_full8_covers.mjs` separately
+source-generates complete row Covers for the large easy tranche, while
+`generate_pair_depth6_plan.mjs --root-shards` removes the monolithic
+kernel-check bottleneck for the exact pair-parent plan.
