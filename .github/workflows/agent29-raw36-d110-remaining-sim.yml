@@ -1,0 +1,40 @@
+name: Agent29 Raw36 D1=0RE hard 124 literal delayed-halt scout
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-structured-candidates
+          run-id: 46154479283
+          github-token: ${{ github.token }}
+          path: /tmp/a29-raw36-d110-remaining
+      - name: Search exact eventual undefined transition of 124 hard literals
+        run: |
+          set -euo pipefail
+          g++ -O3 -std=c++17 -Wall -Wextra \
+            im-results/agent29-raw36/sim_direct10_remaining.cpp \
+            -o /tmp/a29-sim-d110
+          /tmp/a29-sim-d110 \
+            /tmp/a29-raw36-d110-remaining/remaining.txt \
+            2000000 \
+            /tmp/a29-direct10-traces.tsv | tee /tmp/a29-direct10-sim.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d110-hard124-exact-trace-discovery
+          path: |
+            /tmp/a29-direct10-traces.tsv
+            /tmp/a29-direct10-sim.log
+          if-no-files-found: warn
+          retention-days: 45
