@@ -5,7 +5,8 @@ namespace BB6Coverage.Agent19Raw40LateCrossing.C1REM1096
 open BB6Coverage Agent42Crossing Agent19OrientedCrossing Agent50Zipper
 def right0B0 : List Cell := [c337]
 theorem right0B0OK : chain oriented true (edge headCell true) right0B0 (edge c337 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right0Tail0 : List Cell := right0B0
 theorem right0Tail0OK : chain oriented true (edge headCell true) right0Tail0 (edge c337 true) := right0B0OK
 def right0 : List Cell := right0Tail0
@@ -15,7 +16,7 @@ theorem pump0 : seg0.pump = true → (edge headCell true) = seg0.exit := by deci
 def right1B0 : List Cell := copies [c337] 224
 theorem right1B0OK : chain oriented true (edge c337 true) right1B0 (edge c337 true) := by
   have he : (edge c337 true) = (edge c337 true) := by decide +kernel
-  have ho : chain oriented true (edge c337 true) [c337] (edge c337 true) := by decide +kernel
+  have ho : chain oriented true (edge c337 true) [c337] (edge c337 true) := by apply chainB_sound; rfl
   simpa only [he] using (chain_copies oriented true (edge c337 true) [c337] ho 224)
 def right1Tail0 : List Cell := right1B0
 theorem right1Tail0OK : chain oriented true (edge c337 true) right1Tail0 (edge c337 true) := right1B0OK
@@ -26,86 +27,112 @@ theorem pump1 : seg1.pump = true → (edge c337 true) = seg1.exit := by decide +
 def right2B0 : List Cell := copies [c337] 526
 theorem right2B0OK : chain oriented true (edge c337 true) right2B0 (edge c337 true) := by
   have he : (edge c337 true) = (edge c337 true) := by decide +kernel
-  have ho : chain oriented true (edge c337 true) [c337] (edge c337 true) := by decide +kernel
+  have ho : chain oriented true (edge c337 true) [c337] (edge c337 true) := by apply chainB_sound; rfl
   simpa only [he] using (chain_copies oriented true (edge c337 true) [c337] ho 526)
 def right2B1 : List Cell := [c338,c339,c340,c341,c342,c343]
 theorem right2B1OK : chain oriented true (edge c337 true) right2B1 (edge c343 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B2 : List Cell := [c344,c345,c346,c347,c348,c349]
 theorem right2B2OK : chain oriented true (edge c343 true) right2B2 (edge c349 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B3 : List Cell := [c350,c351,c352,c353,c354,c355]
 theorem right2B3OK : chain oriented true (edge c349 true) right2B3 (edge c355 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B4 : List Cell := [c356,c357,c358,c359,c360,c361]
 theorem right2B4OK : chain oriented true (edge c355 true) right2B4 (edge c361 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B5 : List Cell := [c362,c363,c364,c365,c366,c367]
 theorem right2B5OK : chain oriented true (edge c361 true) right2B5 (edge c367 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B6 : List Cell := [c368,c369,c370,c371,c372,c373]
 theorem right2B6OK : chain oriented true (edge c367 true) right2B6 (edge c373 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B7 : List Cell := [c374,c375,c376,c377,c378,c379]
 theorem right2B7OK : chain oriented true (edge c373 true) right2B7 (edge c379 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B8 : List Cell := [c380,c381,c382,c383,c384,c385]
 theorem right2B8OK : chain oriented true (edge c379 true) right2B8 (edge c385 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B9 : List Cell := [c386,c387,c388,c389,c390,c391]
 theorem right2B9OK : chain oriented true (edge c385 true) right2B9 (edge c391 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B10 : List Cell := [c392,c393,c394,c395,c396,c397]
 theorem right2B10OK : chain oriented true (edge c391 true) right2B10 (edge c397 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B11 : List Cell := [c398,c399,c400,c401,c402,c403]
 theorem right2B11OK : chain oriented true (edge c397 true) right2B11 (edge c403 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B12 : List Cell := [c404,c405,c406,c407,c408,c409]
 theorem right2B12OK : chain oriented true (edge c403 true) right2B12 (edge c409 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B13 : List Cell := [c410,c411,c412,c413,c414,c415]
 theorem right2B13OK : chain oriented true (edge c409 true) right2B13 (edge c415 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B14 : List Cell := [c416,c417,c418,c419,c420,c421]
 theorem right2B14OK : chain oriented true (edge c415 true) right2B14 (edge c421 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B15 : List Cell := [c422,c423,c424,c425,c426,c427]
 theorem right2B15OK : chain oriented true (edge c421 true) right2B15 (edge c427 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B16 : List Cell := [c428,c429,c430,c431,c432,c433]
 theorem right2B16OK : chain oriented true (edge c427 true) right2B16 (edge c433 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B17 : List Cell := [c434,c435,c436,c437,c438,c439]
 theorem right2B17OK : chain oriented true (edge c433 true) right2B17 (edge c439 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B18 : List Cell := [c440,c441,c442,c443,c444,c445]
 theorem right2B18OK : chain oriented true (edge c439 true) right2B18 (edge c445 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B19 : List Cell := [c446,c447,c448,c449,c450,c451]
 theorem right2B19OK : chain oriented true (edge c445 true) right2B19 (edge c451 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B20 : List Cell := [c452,c453,c454,c455,c456,c457]
 theorem right2B20OK : chain oriented true (edge c451 true) right2B20 (edge c457 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B21 : List Cell := [c458,c459,c460,c461,c462,c463]
 theorem right2B21OK : chain oriented true (edge c457 true) right2B21 (edge c463 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B22 : List Cell := [c464,c465,c466,c467,c468,c469]
 theorem right2B22OK : chain oriented true (edge c463 true) right2B22 (edge c469 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B23 : List Cell := [c470,c471,c472,c473,c474,c475]
 theorem right2B23OK : chain oriented true (edge c469 true) right2B23 (edge c475 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B24 : List Cell := [c476,c477,c478,c479,c480,c481]
 theorem right2B24OK : chain oriented true (edge c475 true) right2B24 (edge c481 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B25 : List Cell := [c482,c483,c484,c485,c486,c487]
 theorem right2B25OK : chain oriented true (edge c481 true) right2B25 (edge c487 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2B26 : List Cell := [c488,c489,c490,c491,c492,c493]
 theorem right2B26OK : chain oriented true (edge c487 true) right2B26 (edge c493 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right2Tail26 : List Cell := right2B26
 theorem right2Tail26OK : chain oriented true (edge c487 true) right2Tail26 (edge c493 true) := right2B26OK
 def right2Tail25 : List Cell := right2B25 ++ right2Tail26
@@ -166,52 +193,68 @@ def seg2 : Segment := ⟨right2,false,(edge c493 true)⟩
 theorem pump2 : seg2.pump = true → (edge c337 true) = seg2.exit := by decide +kernel
 def right3B0 : List Cell := [c494,c495,c496,c497,c498,c491]
 theorem right3B0OK : chain oriented true (edge c493 true) right3B0 (edge c491 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B1 : List Cell := [c492,c493,c494,c495,c496,c497]
 theorem right3B1OK : chain oriented true (edge c491 true) right3B1 (edge c497 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B2 : List Cell := [c498,c491,c492,c493,c494,c495]
 theorem right3B2OK : chain oriented true (edge c497 true) right3B2 (edge c495 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B3 : List Cell := [c496,c497,c498,c491,c492,c493]
 theorem right3B3OK : chain oriented true (edge c495 true) right3B3 (edge c493 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B4 : List Cell := [c494,c495,c496,c497,c498,c491]
 theorem right3B4OK : chain oriented true (edge c493 true) right3B4 (edge c491 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B5 : List Cell := [c492,c493,c494,c495,c496,c497]
 theorem right3B5OK : chain oriented true (edge c491 true) right3B5 (edge c497 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B6 : List Cell := [c498,c491,c492,c493,c494,c495]
 theorem right3B6OK : chain oriented true (edge c497 true) right3B6 (edge c495 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B7 : List Cell := [c496,c497,c498,c491,c492,c493]
 theorem right3B7OK : chain oriented true (edge c495 true) right3B7 (edge c493 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B8 : List Cell := [c494,c495,c496,c497,c498,c491]
 theorem right3B8OK : chain oriented true (edge c493 true) right3B8 (edge c491 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B9 : List Cell := [c492,c493,c494,c495,c496,c497]
 theorem right3B9OK : chain oriented true (edge c491 true) right3B9 (edge c497 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B10 : List Cell := [c498,c491,c492,c493,c494,c495]
 theorem right3B10OK : chain oriented true (edge c497 true) right3B10 (edge c495 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B11 : List Cell := [c496,c497,c498,c491,c492,c493]
 theorem right3B11OK : chain oriented true (edge c495 true) right3B11 (edge c493 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B12 : List Cell := [c494,c495,c496,c497,c498,c491]
 theorem right3B12OK : chain oriented true (edge c493 true) right3B12 (edge c491 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B13 : List Cell := [c492,c493,c494,c495,c496,c497]
 theorem right3B13OK : chain oriented true (edge c491 true) right3B13 (edge c497 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B14 : List Cell := [c498,c491,c492,c493,c494,c495]
 theorem right3B14OK : chain oriented true (edge c497 true) right3B14 (edge c495 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3B15 : List Cell := [c496,c497,c498,c491,c492,c493]
 theorem right3B15OK : chain oriented true (edge c495 true) right3B15 (edge c493 true) := by
-  decide +kernel
+  apply chainB_sound
+  rfl
 def right3Tail15 : List Cell := right3B15
 theorem right3Tail15OK : chain oriented true (edge c495 true) right3Tail15 (edge c493 true) := right3B15OK
 def right3Tail14 : List Cell := right3B14 ++ right3Tail15

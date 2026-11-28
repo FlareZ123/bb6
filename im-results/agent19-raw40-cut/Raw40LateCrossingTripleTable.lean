@@ -1,4 +1,4 @@
-import Raw40OrientedCrossing
+import Raw40PackedCrossing
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
 namespace BB6Coverage.Agent19Raw40LateCrossing.C1REM1096
@@ -16,6 +16,25 @@ def table : PartialMachine := fun slot => match slot.1.val,slot.2 with
   | 5,false => some (some ⟨false,true,2⟩)
   | 5,true => some (some ⟨false,true,5⟩)
   | _,_ => none
-def oriented : PartialMachine := orientPartial true true table
+def oriented : PartialMachine := fun slot => match slot.1.val,slot.2 with
+  | 0,false => some (some ⟨false,false,3⟩)
+  | 0,true => some (some ⟨true,false,4⟩)
+  | 1,false => some (some ⟨true,false,0⟩)
+  | 1,true => some (some ⟨true,false,2⟩)
+  | 2,false => some (some ⟨true,false,1⟩)
+  | 2,true => some (some ⟨false,true,2⟩)
+  | 3,false => some (some ⟨true,true,3⟩)
+  | 3,true => some (some ⟨true,true,2⟩)
+  | 4,true => some (some ⟨false,false,5⟩)
+  | 5,false => some (some ⟨false,false,0⟩)
+  | 5,true => some (some ⟨false,false,5⟩)
+  | _,_ => none
+
+theorem oriented_eq : oriented = orientPartial true true table := by
+  funext slot
+  rcases slot with ⟨q,a⟩
+  have hq := (by decide : ∀ q : Fin 6, q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5) q
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases a <;> rfl
+
 
 end BB6Coverage.Agent19Raw40LateCrossing.C1REM1096
