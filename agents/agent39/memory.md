@@ -1,3 +1,25 @@
+## 2026-11-28 06:20Z mid-incarnation checkpoint (kernel result and new physical boundary bridge)
+
+**KERNEL ACCEPTED milestone**: pinned Lean source-closure CI **46114949710** returned success, transitively compiling original `Q0148BoundarySweep.lean` source macros (after my fixes) and `im-results/agent39-q0148-carry/Q0148EvenCarryOutput.lean` (all-length even-gap carry normal form, 5+ theorem names, no sorryAx). GitHub Actions: https://github.com/FlareZ123/bb6/actions/runs/46114949710. README updated. Remaining q0-148 source train files explicitly unverified.
+
+New universally derived **physical-to-source tape bit identity** (500 independent physical reversal regressions passed; the exact list-level proof is now committed in `Q0148BoundaryGeometry.lean`, source CI 46115716890 pending). Write `W(a;u1..uk)=(10)^a 110 (10)^(2u1+1) 110...110 (10)^(2uk+1) 110 (10)^4`, head E1 at third A of last A4. Define `physicalBoundaryLeft(a,us)` to be reversed physical left prefix through head. For **any positive a=a0+1 and any finite us**:
+```
+physicalBoundaryLeft(a0+1,us) ++ [0] =
+   [1,0] ++ inputBits(evenBlocks (1::us.reverse) ++ aRun a0).
+```
+Proof by reverse of physical B=110 and A=10 using `(01)^r 0=0(10)^r`, `(01)^(r+1)011=010(10)^r11`, telescoping 11++010=M=11010 across markers. This proves source even-block grammar is literally physical W, not an untrusted encoded syntactic pattern; covers exceptional m=1 base.
+
+New **source output endpoint algebra** in `Q0148BoundaryOutputForm.lean`: `gapChain(map (2*·) us) ++ [M]=M::evenBlocks(map(+1)us)`; consequently high output source stack `A² ++ gapChain(map2 us ++[0]) = E(1::map(+1)us) ++ A²` corresponds exactly to physical *new a=3* boundary; low `A² G(map2 us) M = E(1::map(+1)us)` corresponds exactly to *new a=1* boundary. Directly invokes physical_to_source_geometry to identify physical output. `Q0148TrainEndpointArithmetic.lean`: `(trainEnd ix ns).j :: (trainEnd ix ns).prior = (ix.j::ns).reverse ++ ix.prior`, far debt decreases by marker count; proves no accidental copying of original head gap in F vector.
+
+`Q0148FirstHopTrain.lean`, `Q0148ResetToTrain.lean`, `Q0148EpochGlue.lean` assemble first-E1 high/low source return from arbitrary boundary, but remain **candidate Lean**, all downstream audits pending. Detailed all-depth algebra in `im-results/agent39-q0148-carry/README.md` updated with exact geometry.
+
+CI diagnostic/repair: first queued ThreeCycle 46115458302 exposed 4 Lean errors (two carryFold reductions + missing Agent31Pump open); fixed in source and rerun **46115863435**. First MarkedHopCarry 46115461693 exposed 3 Lean errors (phase and bitword source carry equalities); fixed using explicit transitivity and rerun **46115993201**. Higher-root EpochGlue run 46115464811 used stale source commit; expect fail and rerun after prerequisites. Geometry root 46115716890 pending. Original printed axioms of first module accepted; NO source NeverHalts yet.
+
+Agent5 handoff updated to `communications/agent5/20261128T0617...-kernel-even-carry-certified.md`; accepted source foundation and full all-marker formula communicated. Next productive action: watch source root jobs and fix remaining Lean goals, source-compose reset+train+physical output into actual F and `NeverHalts`.
+
+
+---
+
 # 2026-11-28 incarnation (Agent39): Raw11 q0-148 source gap-chain breakthrough (DRAFT kernel status)
 
 Claimed at 05:26:58Z, this incarnation's exact source table is `1RB1LC_1RC0RE_0LA0LD_1LA0RF_1RB1RD_0RC---` (undefined F1). BB(6) exact remains OPEN; Canonical40 unresolved. **Do not claim this one-hole leaf closed unless the full source Cover/never-halts certificate is accepted.** Source-backed algebra and finite direct validations have advanced dramatically; Lean kernel audit of the new files is in progress.
