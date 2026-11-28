@@ -13,6 +13,21 @@ on:
         required: false
         type: string
         default: "46156248678"
+      include_zeroRF:
+        description: "Also source-check the six E0=0RF inverse-stack leaves and one finite-halting leaf"
+        required: false
+        type: boolean
+        default: false
+      zeroRF_search_run_id:
+        description: "Successful candidate-search run containing the exact E0=0RF report"
+        required: false
+        type: string
+        default: "46170131334"
+      bound:
+        description: "Common weighted threshold for the D110 parent and all selected child Covers"
+        required: false
+        type: string
+        default: "2004"
 
 permissions:
   contents: read
@@ -58,6 +73,14 @@ jobs:
           run-id: ${{ inputs.zeroLF_search_run_id }}
           github-token: ${{ github.token }}
           path: /tmp/a29-d110-0lf-search
+      - name: Download optional E0=0RF candidate search artifact
+        if: ${{ inputs.include_zeroRF }}
+        uses: actions/download-artifact@v4
+        with:
+          name: raw36-d110-e0-0RF-inverse-stack-candidates
+          run-id: ${{ inputs.zeroRF_search_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a29-d110-0rf-search
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
@@ -73,19 +96,27 @@ jobs:
           lean --version | grep -F '4.36.0-rc2'
           python -m py_compile \
             im-results/agent29-raw36/generate_direct10_multi.py \
-            im-results/agent29-raw36/compose_direct10_dual04_13.py
+            im-results/agent29-raw36/compose_direct10_dual04_13.py \
+            im-results/agent29-raw36/emit_direct10_eight.py
           args=( \
             --census /tmp/a29-d110-census/direct10.json.gz \
             --far /tmp/a29-d110-far/found.tsv \
             --structured /tmp/a29-d110-struct/structured.json \
             --archives /tmp/a29-d110-dual-archives \
-            --work /tmp/a29-d110-dual )
+            --work /tmp/a29-d110-dual \
+            --bound "${{ inputs.bound }}" )
           if [[ "${{ inputs.include_zeroLF }}" == "true" ]]; then
             args+=(--zeroLF-search /tmp/a29-d110-0lf-search/a29-d110-0lf-five-search.json)
           fi
+          if [[ "${{ inputs.include_zeroRF }}" == "true" ]]; then
+            args+=(--zeroRF-search /tmp/a29-d110-0rf-search/a29-d110-0RF-search.json)
+          fi
           python -u im-results/agent29-raw36/compose_direct10_dual04_13.py "${args[@]}" \
             | tee /tmp/a29-d110-dual-source.log
-          if [[ "${{ inputs.include_zeroLF }}" == "true" ]]; then
+          if [[ "${{ inputs.include_zeroRF }}" == "true" ]]; then
+            test -s /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-0rf-accepted.json
+            cat /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-0rf-accepted.json
+          elif [[ "${{ inputs.include_zeroLF }}" == "true" ]]; then
             test -s /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
             cat /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
           else
@@ -102,8 +133,10 @@ jobs:
             /tmp/a29-d110-dual/Raw36D110Kid04.lean
             /tmp/a29-d110-dual/Raw36D110Kid05.lean
             /tmp/a29-d110-dual/Raw36D110Kid13.lean
+            /tmp/a29-d110-dual/Raw36D110Kid11.lean
             /tmp/a29-d110-dual/Raw36D110Live6AfterE0LE1LB.lean
             /tmp/a29-d110-dual/Raw36D110Live5AfterE0LE1LB0LF.lean
+            /tmp/a29-d110-dual/Raw36D110Live4AfterE0LE1LB0LF0RF.lean
             /tmp/a29-d110-dual/direct10-source-build.log
             /tmp/a29-d110-dual-source.log
           if-no-files-found: warn
