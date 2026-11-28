@@ -1,0 +1,53 @@
+name: Agent7 Raw36 direct D1 cross-bank FAR recovery
+run-name: Raw36 direct D1=${{ inputs.index }} recover only saved OPEN leaves
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        description: 'Canonical D1 move index'
+        type: choice
+        options: ['0','1','4','10','12','16','22']
+        default: '1'
+      source_run_id:
+        description: 'Exact source census workflow run containing indexed artifact'
+        type: string
+        default: '46122807180'
+      maxd:
+        description: 'Rooted FAR depth for final residuals (<=4 recommended)'
+        type: choice
+        options: ['0','1','2','3','4']
+        default: '3'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-census
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-direct-census
+      - name: Replay saved witnesses and exact FAR mutations
+        run: |
+          set -euo pipefail
+          python im-results/agent7-raw36-direct/recover.py \
+            --index ${{ inputs.index }} \
+            --census /tmp/a7-direct-census/direct$(printf '%02d' ${{ inputs.index }}).json.gz \
+            --out /tmp/a7-recovered --maxd ${{ inputs.maxd }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-recovered
+          path: |
+            /tmp/a7-recovered/summary.json
+            /tmp/a7-recovered/candidate.json
+            /tmp/a7-recovered/found.tsv
+            /tmp/a7-recovered/remaining.txt
+            /tmp/a7-recovered/search.log
+          if-no-files-found: warn
+          retention-days: 30
