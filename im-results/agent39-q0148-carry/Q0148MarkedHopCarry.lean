@@ -49,7 +49,8 @@ theorem marker_phase (j : Nat) :
   have h := congrArg
       (fun z : List Bool => [true,true,false,true,false] ++ z)
       (stagger01 j)
-  simpa [rep, List.append_assoc] using h
+  have hj : j+2 = (j+1)+1 := by omega
+  simpa only [hj, rep, List.append_assoc] using h
 
 /-- The source right-continuation head prefix is a canonical left
     chunk word A^(n+2) M A^j followed by a dangling one bit.
@@ -61,12 +62,29 @@ theorem marked_phase (n j : Nat) :
       [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
   have h1 := stagger01 (n+1)
   have h2 := marker_phase j
-  simpa [rep, List.append_assoc] using
-    congrArg
-      (fun z : List Bool =>
-        z ++ [false,true,true] ++ rep [false,true] (j+2))
-      h1 |>.trans (by
-        simp [rep, marker_phase, List.append_assoc])
+  have hr : rep [true,false] (n+2) =
+       rep [true,false] (n+1) ++ [true,false] := by
+    calc
+      rep [true,false] (n+2) =
+          [true,false] ++ rep [true,false] (n+1) := by
+            rw [show n+2=(n+1)+1 by omega]
+            rfl
+      _ = rep [true,false] (n+1) ++ [true,false] :=
+        (rep_snoc [true,false] (n+1)).symm
+  calc
+    [true] ++ rep [false,true] (n+1) ++
+      [false,true,true] ++ rep [false,true] (j+2) =
+        rep [true,false] (n+1) ++ [true,false] ++
+          ([true,true] ++ rep [false,true] (j+2)) := by
+            rw [h1]
+            simp only [List.append_assoc]
+    _ = rep [true,false] (n+1) ++ [true,false] ++
+          ([true,true,false,true,false] ++ rep [true,false] j ++ [true]) := by
+            rw [h2]
+    _ = rep [true,false] (n+2) ++
+        [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
+          rw [hr]
+          simp only [List.append_assoc]
 
 /-- The complete source marked-hop left tape factors through exactly
     the existing U-state carry transducer. No assumption on tail.
