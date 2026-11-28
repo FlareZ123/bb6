@@ -2,6 +2,7 @@
 """Authenticate Agent3 direct Canonical38 and source-check Raw43 conditional 38->37."""
 import argparse
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -46,7 +47,7 @@ def main():
 
     meta = json.loads(sh(
         "gh", "api",
-        f"repos/{subprocess.check_output(['git','config','--get','remote.origin.url'], text=True).strip().split('github.com/')[-1].removesuffix('.git')}/actions/runs/{a.canonical38_run}"
+        f"repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{a.canonical38_run}"
     ))
     assert meta["conclusion"] == "success"
     assert meta["event"] == "workflow_dispatch"
