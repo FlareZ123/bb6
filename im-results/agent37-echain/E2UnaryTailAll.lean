@@ -17,13 +17,13 @@ private def front (b : Bool) : List Bool :=
 /-- The complete 20-step A/0-to-C/1 turn, before a universal C-pair pump. -/
 private def turned (b : Bool) : List Bool :=
   if b then [true,false,true,false,true,false,true]
-       else [true,false,true,false,true,false]
+       else [true,false,true,false,true,false,false]
 
 /-- The corresponding packet suffix after converting one more leading
     one into the unary block. -/
 private def tail (b : Bool) : List Bool :=
   if b then [false,true,false,true,false,true]
-       else [false,true,false,true,false]
+       else [false,true,false,true,false,false]
 
 /-- The input's arbitrary left tape is untouched; the binary fourth
     marker bit changes only the end of the output word. -/
@@ -139,7 +139,7 @@ theorem e_two_1110 (k q : Nat) (ys : List Bool) :
       (packet (3*k+4) q 2
         (false :: true :: true :: true :: false :: ys)) =
       packet (8*k+5) 0 (2*q+6)
-        ([false,true,false,true,false] ++ ys) :=
+        ([false,true,false,true,false,false] ++ ys) :=
   e_two_111_all k q false ys
 
 /-- Bit-one branch without any restriction on the alternating depth. -/
