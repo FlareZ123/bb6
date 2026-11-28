@@ -206,7 +206,7 @@ theorem stageA (toC : Bool) (n : Nat) :
       some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by
     have H := afront3 toC ([true] ++ V (n+1))
     have hv := rotateV n
-    simpa only [leftA,hv,List.append_assoc,List.nil_append] using H
+    simpa [leftA,hv,List.append_assoc] using H
   have h2 : run0 (table toC) (8*(n+1))
       ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ =
       some ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ := by
@@ -290,7 +290,7 @@ theorem stageA2 (toC : Bool) (n : Nat) :
   have h1 : run0 (table toC) 3 (leftA2 n) =
       some ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ := by
     have H := afront3 toC (Y (n+1) ++ [true,false,true,true])
-    simpa only [leftA2,rotateX,List.append_assoc,List.nil_append] using H
+    simpa [leftA2,rotateX,List.append_assoc] using H
   have h2 : run0 (table toC) (6*(n+1))
       ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ =
       some ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ := by
