@@ -28,7 +28,7 @@ on:
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
         type: choice
-        options: ["0LE", "0RB", "0RD", "0RE", "1LA", "1LC", "1LE", "1RB", "1RC", "1RE"]
+        options: ["0LE", "0RB", "0RD", "0RE", "1LA", "1LB", "1LC", "1LE", "1RB", "1RC", "1RE"]
         default: "1RB"
 
 permissions:
