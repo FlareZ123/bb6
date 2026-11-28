@@ -115,3 +115,26 @@ Consequently **98 / 3841** exact D1=1LA OPEN tables remain outside the current
 FAR, structured-quotient, and late-hole weighted banks. This is a genuine
 weighted-certificate reduction. Whole-parent Cover status still needs full
 structured-bank integration plus proofs for those 98 residual tables.
+
+
+## Generic structured sweep: 95 unresolved
+
+Extending the structured parameter bank from the 27 inherited D1=0RE winners
+to the repository's generic run-length and modular motifs finds **three**
+additional exact D1=1LA nonhalting leaves:
+
+- `1RB0LE_1RC1RB_0RD1LF_0LD1LA_0LB1LC_---0LA`: `["r",4,4,4,192]`
+- `1RB1LA_1RC0RE_0RD1RB_0LD1LA_---1RF_1RA0LF`: `["r",3,2,4,140]`
+- `1RB1LC_1RC1RA_0RD0LE_0LD1LA_---0LF_0LB0RA`: `["r",3,2,4,579]`
+
+All three were regenerated through the independent incidence-quotient emitter
+and kernel-checked by Lean 4.36.0-rc2; each `never` theorem reports exactly
+`[propext, Classical.choice, Quot.sound]`.  The generated source SHA256 is
+`e317beb729a592edc278574e78fa4e0ee1201126d12dd03d8e1f08e000acaa2f`
+and olean SHA256 is
+`650e5ccfabb8983c6850c0417eb16061a0608a3fb46d7c7abc68e9b16dc05789`.
+`generic_extra3.tsv` and `emit_extra3.py` reproduce the exact source.
+
+After the inherited FAR bank, inherited structured bank, 31 FAR-mutation
+leaves, 24 late-hole weighted leaves, and these three generic structured
+leaves, **95 / 3841** exact D1=1LA canonical OPEN tables remain unresolved.
