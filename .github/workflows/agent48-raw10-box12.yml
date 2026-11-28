@@ -1,6 +1,11 @@
 name: Agent48 Raw10 Box12 exact domain cover (manual)
 on:
   workflow_dispatch:
+    inputs:
+      reuse_46112001673:
+        description: Rejoin the ten successful frozen Box12 branch artifacts only
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -10,6 +15,7 @@ env:
   DEPS: /tmp/box12-deps/tmp/a49-raw10-box6-probe
 jobs:
   prepare:
+    if: ${{ !inputs.reuse_46112001673 }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -101,5 +107,31 @@ jobs:
           path: |
             /tmp/box12-final.tar.gz
             /tmp/box12-final.log
+          retention-days: 90
+          if-no-files-found: error
+
+  recover:
+    if: ${{ inputs.reuse_46112001673 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Rejoin the exact successful branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 "$D/recover-join.py" --artifact-dir /tmp/box12-zips --work /tmp/box12-recovered --out /tmp/box12-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: box12-final
+          path: |
+            /tmp/box12-final/box12-final.tar.gz
+            /tmp/box12-final/box12-final.log
           retention-days: 90
           if-no-files-found: error
