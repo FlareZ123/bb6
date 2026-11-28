@@ -8,7 +8,7 @@ late-query leaf and canonical cut is rechecked by Lean 4.36.0-rc2.
 import argparse, concurrent.futures, hashlib, json, os, shutil, subprocess, sys
 from pathlib import Path
 
-TAGS=("E10RD","E11LC")
+TAGS=("E10RD","E11LC","E10RB")
 BOUND=12000
 BAD_MARKERS=("sorryAx","native_decide","declaration uses 'sorry'")
 
@@ -58,7 +58,7 @@ end M20376
 end BB6.Agent1Raw56PilotSpecial
 ''')
     summary={}
-    for tag in TAGS:
+    for tag in ("E10RD","E11LC"):
         rb=out/'rootbranches'/tag; opens=rb.with_suffix('.open').read_text().splitlines(); D=json.loads(rb.with_suffix('.finite.json').read_text())
         # Reject transferred FAR-bank codes whose digits reference states outside the encoded automaton.
         valid=[]; invalid=[]
