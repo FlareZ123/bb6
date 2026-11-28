@@ -315,6 +315,340 @@ theorem phase_to_p2raw (n : Nat) :
   have hc : (88*n+116)+16 = 88*n+132 := by omega
   simpa only [hc] using H
 
+def K (n : Nat) : Nat := 4*n+1
+
+/-- Endpoint of the first half of the P2 -> P3 transfer. -/
+def midraw (n : Nat) : Z0 :=
+  ⟨4,[true,true,false,false,true,false,true,true,false,true],
+    [false] ++ rep [true,true] (D n) ++ [true,true] ++
+      rep [false,true,true] (K n + 1) ++
+      [false,true,false,false,true,true]⟩
+
+/-- P3 in the same sweep-native representation as P1/P2. -/
+def p3raw (n : Nat) : Z0 :=
+  ⟨4,[],
+    [false,false,true,true,false,true,true,false] ++
+      rep [true,true] (D n + 1) ++ [true,true] ++
+      rep [false,true,true] (K n + 2) ++ [false,false,true,true]⟩
+
+/-- The turnaround image of P3, before the equivalent P4 rebracketing. -/
+def p4turn (n : Nat) : Z0 :=
+  ⟨4,[],
+    [false,false,false,false,false,true,false,true,true,false] ++
+      rep [true,true] (D n + 1) ++ [true,true] ++
+      rep [false,true,true] (K n + 2) ++ [false,false,true,true]⟩
+
+theorem finish8FE (L R : List Bool) :
+    run0 table 8 ⟨5,[true]++L,[false,true,false,false,true]++R⟩ =
+      some ⟨4,[true,true,false]++L,[false,false,true]++R⟩ := by
+  rfl
+
+theorem alignOnesPrelude (d : Nat) :
+    [true] ++ rep [true,true] d ++ [true,true] =
+      rep [true,true] (d+1) ++ [true] := by
+  induction d with
+  | zero => rfl
+  | succ d ih =>
+    have hh := congrArg (fun x : List Bool => [true,true] ++ x) ih
+    simpa [rep, List.append_assoc] using hh
+
+theorem alignOnesTurn (d : Nat) :
+    rep [true,true] d ++ [true,true] =
+      [true] ++ rep [true,true] d ++ [true] := by
+  induction d with
+  | zero => rfl
+  | succ d ih =>
+    simp only [rep, List.append_assoc]
+    rw [ih]
+    rfl
+
+theorem rotate011 (k : Nat) (X : List Bool) :
+    [true] ++ rep [false,true,true] k ++ X =
+      rep [true,false,true] k ++ [true] ++ X := by
+  have h := rotate true [false,true] k
+  have hh := congrArg (fun x : List Bool => x ++ X) h
+  simpa [List.append_assoc] using hh
+
+theorem alignAfterFE (m p : Nat) :
+    rep [true,true,false] m ++ [true] ++ rep [true,false] p ++ fTail =
+      [true] ++ rep [true,false,true] (m+1) ++ rep [false,true] (p+1) ++
+        [true,false,true,true,false,true] := by
+  have hr := rotate true [true,false] m
+  have hr0 :
+      [true] ++ rep [true,false,true] m =
+        rep [true,true,false] m ++ [true] := by
+    simpa using hr
+  have ht := alignFTail p
+  have hs := rep_snoc [true,false,true] m
+  simp only [List.append_assoc]
+  rw [← List.append_assoc (rep [true,true,false] m) [true]
+    (rep [true,false] p ++ fTail)]
+  rw [← hr0]
+  simp only [List.append_assoc]
+  rw [ht]
+  have hm :
+      rep [true,false,true] (m+1) =
+        [true,false,true] ++ rep [true,false,true] m := by
+    rfl
+  rw [hm]
+  have hh := congrArg
+    (fun x : List Bool => [true] ++ x ++ rep [false,true] (p+1) ++
+      [true,false,true,true,false,true]) hs
+  simpa [List.append_assoc] using hh
+
+theorem phase_middle_first (n : Nat) :
+    run0 table (112*n+100) (p2raw n) = some (midraw n) := by
+  have h0raw : run0 table 21 (p2raw n) =
+      some ⟨2,[true,true,false,true,true,false,false,true,false,true,true,false,true],
+        [true] ++ rep [true,true] (2*n) ++ [true,true] ++
+          rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true]⟩ := by
+    simpa [p2raw, D, K, rep, List.append_assoc] using
+      preludeC
+        ([true] ++ rep [true,true] (2*n) ++ [true,true] ++
+          rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true])
+
+  have h0 : run0 table 21 (p2raw n) =
+      some ⟨2,[true]++cTail,
+        rep [true,true] (D n) ++ [true] ++
+          rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true]⟩ := by
+    rw [alignOnesPrelude (2*n)] at h0raw
+    simpa [cTail, D, List.append_assoc] using h0raw
+
+  have h1 : run0 table (6*(D n))
+      ⟨2,[true]++cTail,
+        rep [true,true] (D n) ++ [true] ++ rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true]⟩ =
+      some ⟨2,[true] ++ rep [true,false] (D n) ++ cTail,
+        [true] ++ rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true]⟩ := by
+    have h := sweepR table 2 [true] [] [true,true] [true,false] 6 right6C
+      (D n) cTail
+      ([true] ++ rep [false,true,true] (K n) ++
+        [false,false,true,true,false,false,true,true])
+    simpa [List.append_assoc] using h
+
+  have h2 : run0 table (3*(K n))
+      ⟨2,[true] ++ rep [true,false] (D n) ++ cTail,
+        [true] ++ rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true]⟩ =
+      some ⟨2,[true] ++ rep [true,false,true] (K n) ++
+          rep [true,false] (D n) ++ cTail,
+        [true,false,false,true,true,false,false,true,true]⟩ := by
+    have h := sweepR table 2 [true] [] [true,false,true] [true,false,true] 3
+      right3C (K n) (rep [true,false] (D n) ++ cTail)
+      [true,false,false,true,true,false,false,true,true]
+    rw [← rotate011 (K n)
+      [false,false,true,true,false,false,true,true]] at h
+    simpa [List.append_assoc] using h
+
+  have h3raw : run0 table 11
+      ⟨2,[true] ++ rep [true,false,true] (K n) ++
+          rep [true,false] (D n) ++ cTail,
+        [true,false,false,true,true,false,false,true,true]⟩ =
+      some ⟨4,[true,true,false,true] ++ rep [true,false,true] (K n) ++
+          rep [true,false] (D n) ++ cTail,
+        [false,true,false,false,true,true]⟩ := by
+    simpa [List.append_assoc] using finishCE
+      (rep [true,false,true] (K n) ++ rep [true,false] (D n) ++ cTail)
+      [false,false,true,true]
+
+  have h3 : run0 table 11
+      ⟨2,[true] ++ rep [true,false,true] (K n) ++
+          rep [true,false] (D n) ++ cTail,
+        [true,false,false,true,true,false,false,true,true]⟩ =
+      some ⟨4,[true] ++ rep [true,false,true] (K n+2) ++
+          rep [false,true] (D n) ++ eTail,
+        [false,true,false,false,true,true]⟩ := by
+    rw [← alignAfterCE (K n) (D n)]
+    exact h3raw
+
+  have h4 : run0 table (15*(K n+2))
+      ⟨4,[true] ++ rep [true,false,true] (K n+2) ++
+          rep [false,true] (D n) ++ eTail,
+        [false,true,false,false,true,true]⟩ =
+      some ⟨4,[true] ++ rep [false,true] (D n) ++ eTail,
+        rep [false,true,true] (K n+2) ++ [false,true,false,false,true,true]⟩ := by
+    have h := sweepL table 4 [true] [] [true,false,true] [false,true,true] 15
+      left15 (K n+2) (rep [false,true] (D n) ++ eTail)
+      [false,true,false,false,true,true]
+    simpa [List.append_assoc] using h
+
+  have h5 : run0 table (14*(D n))
+      ⟨4,[true] ++ rep [false,true] (D n) ++ eTail,
+        rep [false,true,true] (K n+2) ++ [false,true,false,false,true,true]⟩ =
+      some (midraw n) := by
+    have h := sweepL table 4 [true] [false] [false,true] [true,true] 14
+      left14 (D n) eTail
+      ([true,true] ++ rep [false,true,true] (K n+1) ++
+        [false,true,false,false,true,true])
+    have hk : K n+2 = (K n+1)+1 := by omega
+    rw [hk] at *
+    simpa [midraw, eTail, List.append_assoc] using h
+
+  have H := join0 h0 (join0 h1 (join0 h2 (join0 h3 (join0 h4 h5))))
+  have hc :
+      21 + (6*(D n) + (3*(K n) + (11 + (15*(K n+2) + 14*(D n))))) =
+        112*n+100 := by
+    simp [D,K]
+    omega
+  simpa only [hc] using H
+
+theorem phase_middle_second (n : Nat) :
+    run0 table (112*n+160) (midraw n) = some (p3raw n) := by
+  have h0raw : run0 table 21 (midraw n) =
+      some ⟨5,[true,true]++fTail,
+        rep [true,true] (2*n) ++ [true,true] ++
+          rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true]⟩ := by
+    simpa [midraw, D, fTail, rep, List.append_assoc] using
+      preludeF [true,false,true,true,false,true]
+        (rep [true,true] (2*n) ++ [true,true] ++
+          rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true])
+
+  have h0 : run0 table 21 (midraw n) =
+      some ⟨5,[true,true]++fTail,
+        rep [true,true] (D n) ++ rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true]⟩ := by
+    have hs := rep_snoc [true,true] (2*n)
+    rw [hs] at h0raw
+    simpa [D, rep, List.append_assoc] using h0raw
+
+  have h1 : run0 table (6*(D n))
+      ⟨5,[true,true]++fTail,
+        rep [true,true] (D n) ++ rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true]⟩ =
+      some ⟨5,[true,true] ++ rep [true,false] (D n) ++ fTail,
+        rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true]⟩ := by
+    have h := sweepR table 5 [true,true] [] [true,true] [true,false] 6 right6F
+      (D n) fTail
+      (rep [false,true,true] (K n+1) ++ [false,true,false,false,true,true])
+    simpa [List.append_assoc] using h
+
+  have h2 : run0 table (3*(K n+1))
+      ⟨5,[true,true] ++ rep [true,false] (D n) ++ fTail,
+        rep [false,true,true] (K n+1) ++
+          [false,true,false,false,true,true]⟩ =
+      some ⟨5,[true] ++ rep [true,true,false] (K n+1) ++
+          [true] ++ rep [true,false] (D n) ++ fTail,
+        [false,true,false,false,true,true]⟩ := by
+    have h := sweepR table 5 [true] [] [false,true,true] [true,true,false] 3
+      right3F (K n+1) ([true] ++ rep [true,false] (D n) ++ fTail)
+      [false,true,false,false,true,true]
+    simpa [List.append_assoc] using h
+
+  have h3raw : run0 table 8
+      ⟨5,[true] ++ rep [true,true,false] (K n+1) ++
+          [true] ++ rep [true,false] (D n) ++ fTail,
+        [false,true,false,false,true,true]⟩ =
+      some ⟨4,[true,true,false] ++ rep [true,true,false] (K n+1) ++
+          [true] ++ rep [true,false] (D n) ++ fTail,
+        [false,false,true,true]⟩ := by
+    simpa [List.append_assoc] using finish8FE
+      (rep [true,true,false] (K n+1) ++
+        [true] ++ rep [true,false] (D n) ++ fTail)
+      [true]
+
+  have h3 : run0 table 8
+      ⟨5,[true] ++ rep [true,true,false] (K n+1) ++
+          [true] ++ rep [true,false] (D n) ++ fTail,
+        [false,true,false,false,true,true]⟩ =
+      some ⟨4,[true] ++ rep [true,false,true] (K n+3) ++
+          rep [false,true] (D n+1) ++ [true,false,true,true,false,true],
+        [false,false,true,true]⟩ := by
+    have ha := alignAfterFE (K n+2) (D n)
+    have hm :
+        [true,true,false] ++ rep [true,true,false] (K n+1) =
+          rep [true,true,false] (K n+2) := by
+      rfl
+    rw [hm] at h3raw
+    rw [ha] at h3raw
+    have hk : (K n+2)+1 = K n+3 := by omega
+    simpa only [hk] using h3raw
+
+  have h4 : run0 table (15*(K n+3))
+      ⟨4,[true] ++ rep [true,false,true] (K n+3) ++
+          rep [false,true] (D n+1) ++ [true,false,true,true,false,true],
+        [false,false,true,true]⟩ =
+      some ⟨4,[true] ++ rep [false,true] (D n+1) ++
+          [true,false,true,true,false,true],
+        rep [false,true,true] (K n+3) ++ [false,false,true,true]⟩ := by
+    have h := sweepL table 4 [true] [] [true,false,true] [false,true,true] 15
+      left15 (K n+3)
+      (rep [false,true] (D n+1) ++ [true,false,true,true,false,true])
+      [false,false,true,true]
+    simpa [List.append_assoc] using h
+
+  have h5 : run0 table (14*(D n+1))
+      ⟨4,[true] ++ rep [false,true] (D n+1) ++
+          [true,false,true,true,false,true],
+        rep [false,true,true] (K n+3) ++ [false,false,true,true]⟩ =
+      some ⟨4,[true,true,false,true,true,false,true],
+        [false] ++ rep [true,true] (D n+1) ++ [true,true] ++
+          rep [false,true,true] (K n+2) ++ [false,false,true,true]⟩ := by
+    have h := sweepL table 4 [true] [false] [false,true] [true,true] 14
+      left14 (D n+1) [true,false,true,true,false,true]
+      ([true,true] ++ rep [false,true,true] (K n+2) ++ [false,false,true,true])
+    have hk : K n+3 = (K n+2)+1 := by omega
+    rw [hk] at *
+    simpa [rep, List.append_assoc] using h
+
+  have h6 : run0 table 31
+      ⟨4,[true,true,false,true,true,false,true],
+        [false] ++ rep [true,true] (D n+1) ++ [true,true] ++
+          rep [false,true,true] (K n+2) ++ [false,false,true,true]⟩ =
+      some (p3raw n) := by
+    simpa [p3raw, List.append_assoc] using finish31
+      ([false] ++ rep [true,true] (D n+1) ++ [true,true] ++
+        rep [false,true,true] (K n+2) ++ [false,false,true,true])
+
+  have H := join0 h0 (join0 h1 (join0 h2 (join0 h3 (join0 h4 (join0 h5 h6)))))
+  have hc :
+      21 + (6*(D n) + (3*(K n+1) + (8 + (15*(K n+3) +
+        (14*(D n+1) + 31))))) = 112*n+160 := by
+    simp [D,K]
+    omega
+  simpa only [hc] using H
+
+theorem phase_middle (n : Nat) :
+    run0 table (224*n+260) (p2raw n) = some (p3raw n) := by
+  have H := join0 (phase_middle_first n) (phase_middle_second n)
+  have hc : (112*n+100)+(112*n+160) = 224*n+260 := by omega
+  simpa only [hc] using H
+
+theorem phase_p3_turn (n : Nat) :
+    run0 table 16 (p3raw n) = some (p4turn n) := by
+  simpa [p3raw, p4turn, List.append_assoc] using turn16
+    (rep [true,true] (D n+1) ++ [true,true] ++
+      rep [false,true,true] (K n+2) ++ [false,false,true,true])
+
+theorem p4turn_eq_p4 (n : Nat) : p4turn n = p4 n := by
+  apply Z0.mk.injEq.mpr
+  constructor
+  · rfl
+  constructor
+  · rfl
+  · have h := alignOnesTurn (D n+1)
+    have hk : K n+2 = A n := by simp [K,A]; omega
+    have hb : D n+1 = B n := by simp [D,B]; omega
+    rw [hk, hb] at *
+    simpa [p4turn, p4, List.append_assoc] using
+      congrArg
+        (fun x : List Bool =>
+          [false,false,false,false,false,true,false,true,true,false] ++ x ++
+            rep [false,true,true] (A n) ++ [false,false,true,true]) h
+
+theorem phase_p2_to_p4 (n : Nat) :
+    run0 table (224*n+276) (p2raw n) = some (p4 n) := by
+  have H := join0 (phase_middle n) (phase_p3_turn n)
+  rw [p4turn_eq_p4 n] at H
+  have hc : (224*n+260)+16 = 224*n+276 := by omega
+  simpa only [hc] using H
+
 theorem phase_final (n : Nat) :
     run0 table (136*n+204) (p4 n) = some (finalOut n) := by
   have h0 : run0 table 21 (p4 n) =
@@ -468,6 +802,9 @@ theorem phase_final_family (n : Nat) :
   exact phase_final n
 
 #print axioms phase_first_raw
+#print axioms phase_middle_first
+#print axioms phase_middle_second
+#print axioms phase_p2_to_p4
 #print axioms phase_to_p2raw
 #print axioms phase_final
 #print axioms phase_final_family
