@@ -22,6 +22,7 @@ open BB6.Agent5Q0151PreimageFold
 open BB6.Agent5Q0151Category
 open BB6.Agent5Q0151RunAddition
 open BB6.Agent5Q0151RightWords
+open BB6.Agent5Q0151RightCut
 
 def runCat (n : Nat) : Nat := cat (n+1)
 def runWord (xs : List Nat) : List Nat := xs.map runCat
