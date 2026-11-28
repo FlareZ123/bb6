@@ -31,6 +31,26 @@ jobs:
           name: agent47-raw11-exact-299-to-150-extra28
           path: /tmp/q0150accepted
 
+      - name: Download accepted Extra28 child proof objects (twelve)
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105742866
+          pattern: agent44-raw11-extra28-confirmed-*
+          merge-multiple: true
+          path: /tmp/extra28-eight
+
+      - name: Download accepted Extra28 child proof objects (four)
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105738773
+          pattern: agent44-raw11-extra28-child-*
+          merge-multiple: true
+          path: /tmp/extra28-four
+
       - name: Download accepted Raw11 151 object
         uses: actions/download-artifact@v4
         with:
@@ -81,7 +101,7 @@ jobs:
               *":$dir:"*) ;;
               *) LEAN_PATH="$LEAN_PATH:$dir" ;;
             esac
-          done < <(find /tmp/deps /tmp/root53accepted /tmp/q0152accepted /tmp/q0151accepted /tmp/q0150accepted                     -type f -name '*.olean' | sort)
+          done < <(find /tmp/deps /tmp/root53accepted /tmp/q0152accepted /tmp/q0151accepted /tmp/q0150accepted /tmp/extra28-eight /tmp/extra28-four                     -type f -name '*.olean' | sort)
           export LEAN_PATH
 
           src=im-results/agent47-raw11-adapter/Raw11FiveLiveAfter150.lean
