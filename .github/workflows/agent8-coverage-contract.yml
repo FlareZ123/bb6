@@ -651,3 +651,23 @@ jobs:
             /tmp/raw54-e1rc-complete
             /tmp/raw54-e1rc-complete.log
           if-no-files-found: error
+
+
+  raw54_onerd_bank_base:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-base'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile compact 1RD FAR-bank audit soundness
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/raw54-onerd-bank-base
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" im-results/agent8-raw54/Raw54OneRDBankAudit.lean 2>&1 | tee "$W.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent8Raw54.OneRDBankAudit.farSpecCheck_sound BB6.Agent8Raw54.OneRDBankAudit.bankSound
