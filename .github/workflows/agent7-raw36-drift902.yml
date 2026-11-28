@@ -325,7 +325,7 @@ jobs:
           fi
           python tools/lean_compile_closure.py \
             --workdir /tmp/a7-long-epoch-proof \
-            --source-root /tmp/a7-long-epoch --jobs 2 \
+            --source-root /tmp/a7-long-epoch --jobs 4 \
             --manifest /tmp/a7-long-epoch-proof/manifest.json \
             --label raw36-d100-long-epoch-${{ inputs.d100_long_epoch_mode }} \
             --artifact-name raw36-d100-long-epoch-${{ inputs.d100_long_epoch_mode }} \
