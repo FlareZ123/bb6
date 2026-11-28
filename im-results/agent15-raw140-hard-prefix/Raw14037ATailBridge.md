@@ -34,6 +34,25 @@ Two further empirical A-tail conversions were observed:
 
 These are simulation observations only.
 
+## Additional framed D-phase entry certificate
+
+The same Lean file now also contains a second fixed framed certificate:
+
+\[
+\operatorname{BL}(94,X)=
+(\text{q}=1,\leftarrow,\epsilon,2^{94}X)
+\;\longrightarrow\;
+(\text{q}=3,\leftarrow,5^{186},2X)
+\]
+
+with 26,135 block exits and 78,405 primitive transitions, preserving arbitrary right suffix (X). The composite theorem `t11511_to_dPhaseEntry` applies this to the two-bank state produced by `Raw14037Counter.deplete`, and reaches the exact D-phase entry state (H(0,11,c32,5^{186})).
+
+Empirical probes suggest the more general map
+\[
+\operatorname{BL}(m,X)\to (\text{q}=3,\leftarrow,5^{2m-2},2X)
+\]
+with (3m^2-4m+3) block exits and (9m^2-12m+9) primitive transitions. It was observed for (m=10,20,30,50,94); for (m=10,20), the path was also tested across all six C-tails and (n=0,1,5,11). This generalization is not yet proved.
+
 ## Why it matters
 
-`Raw14037Terminal.one` emits G-states whose right suffix is an A-tail rather than one of the six C-tails accepted by `Raw14037Counter.advance`. For the actual transfer-out branch, the terminal suffix is 11511. This lemma moves that branch into the existing C-tail counter language, after which `Raw14037Counter.iterate` and `deplete` can be applied. It closes one explicit interface gap; it does not by itself prove a complete return or nonhalting.
+`Raw14037Terminal.one` emits G-states whose right suffix is an A-tail rather than one of the six C-tails accepted by `Raw14037Counter.advance`. For the actual transfer-out branch, the terminal suffix is 11511. The first framed lemma moves that branch into the existing C-tail counter language; the existing `iterate` and `deplete` theorems then produce the two-bank state; the second framed lemma moves that state into the D-phase H-family. Together these close the A-tail-to-D-phase entry for this concrete branch. The targeted CI workflow is still pending, and the subsequent D-phase low-tail return and global section invariant remain open.
