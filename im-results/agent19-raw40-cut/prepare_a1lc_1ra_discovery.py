@@ -144,6 +144,7 @@ for line in far.stdout.splitlines():
 if any(i < 0 or i >= len(opens) for i in far_codes):
     raise SystemExit("FAR search returned out-of-range ids")
 invalid_far = filter_invalid_far(far_codes)
+far5_valid_count = len(far_codes)
 
 # One residual can require a six-state FAR summary even when the other 187
 # close at five.  Search only the remaining ids so the larger bank stays cheap.
@@ -157,12 +158,17 @@ if remaining_for_far6:
                cwd=OUT, input=far6_input, capture_output=True)
     (OUT / "far6.txt").write_text(far6.stdout)
     (OUT / "far6.log").write_text(far6.stderr)
+    far6_ids = []
     for line in far6.stdout.splitlines():
         fields = line.split()
         if len(fields) == 2:
-            far_codes[int(fields[0])] = fields[1]
+            i = int(fields[0])
+            far_codes[i] = fields[1]
+            far6_ids.append(i)
     invalid_far.update(filter_invalid_far(far_codes))
     far6_stats = [line for line in far6.stderr.splitlines() if line.startswith("n=")]
+else:
+    far6_ids = []
 
 # Remaining residuals need stronger finite summaries.  Try the already-
 # established A1LC n-gram, run-length and lag-XOR families.  Each accepted
@@ -279,6 +285,8 @@ if unresolved:
     (ROOT / "a1lc-1RA-unresolved.json").write_text(json.dumps(summary, indent=2) + "\n")
     print("A1LC_1RA_UNRESOLVED", json.dumps(unresolved, separators=(",", ":")))
     print("FAR", len(far_codes), "/", len(opens), "COMPACT", len(compact_records))
+    print("FAR_DIAG", "far5_valid", far5_valid_count, "far6_output_ids", far6_ids,
+          "invalid", sorted(invalid_far.items()))
     print("FAR_STATS", far_stats)
     raise SystemExit(2)
 
@@ -288,6 +296,8 @@ if unresolved:
 print("A1LC_1RA_DISCOVERY_JSON_BEGIN")
 print(json.dumps(summary, separators=(",", ":")))
 print("A1LC_1RA_DISCOVERY_JSON_END")
+print("FAR_DIAG", "far5_valid", far5_valid_count, "far6_output_ids", far6_ids,
+      "invalid", sorted(invalid_far.items()))
 print("A1LC_1RA_CLOSED", "FAR", len(far_codes), "COMPACT", len(compact_records),
       "BOUND", bound, "WITNESS", witness_table)
 print("FAR_STATS", far_stats)
