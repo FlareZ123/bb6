@@ -171,7 +171,11 @@ theorem b_to_a (n : Nat) :
       some ⟨4,[true] ++ rep [false,true] (n+1) ++ [false,false],
         [false,false,true,false,true,true]⟩ := by
     have hh := bTurn (rep [true,false] n ++ [true,false,false])
-    simpa only [rep,List.append_assoc,List.cons_append,List.nil_append,rotate_b] using hh
+    have heq : [true,false] ++ (rep [true,false] n ++ [true,false,false]) =
+        [true] ++ rep [false,true] (n+1) ++ [false,false] := by
+      simpa only [List.append_assoc] using rotate_b n
+    rw [heq] at hh
+    simpa only [rep,List.append_assoc,List.cons_append,List.nil_append] using hh
   have h3 : run0 p (12*(n+1))
       ⟨4,[true] ++ rep [false,true] (n+1) ++ [false,false],
         [false,false,true,false,true,true]⟩ =
@@ -185,7 +189,11 @@ theorem b_to_a (n : Nat) :
         [false,false] ++ rep [true,true] (n+1) ++ [true,false,true,true]⟩ =
       some (a (n+1)) := by
     have hh := bTerminal (rep [true,true] n ++ [true,false,true,true])
-    simpa only [a,rep,List.append_assoc,List.cons_append,List.nil_append,rotate_a] using hh
+    have heq : [false,false,true,true,true,true] ++ (rep [true,true] n ++ [true,false,true,true]) =
+        [false,false,true,true,true] ++ rep [true,true] (n+1) ++ [false,true,true] := by
+      simpa only [List.append_assoc] using rotate_a n
+    rw [heq] at hh
+    simpa only [a,rep,List.append_assoc,List.cons_append,List.nil_append] using hh
   have h := join0 (join0 (join0 (join0 h0 h1) h2) h3) h4
   rw [show 4+4*(n+1)+27+12*(n+1)+12 = 16*n+59 by omega] at h
   exact h
