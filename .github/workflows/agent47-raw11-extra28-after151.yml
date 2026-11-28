@@ -108,7 +108,10 @@ jobs:
           lean -j1 -o /tmp/build/Raw11Extra28AllChildren.olean             im-results/agent44-raw11-extra28/Raw11Extra28AllChildren.lean
           lean -j1 -o /tmp/build/Raw11Extra28MinimalJoin.olean             im-results/agent44-raw11-extra28/Raw11Extra28MinimalJoin.lean
 
-          literal="$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          literal_src="$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          mkdir -p .ci-agent47-extra28
+          literal=.ci-agent47-extra28/Raw11Extra28LiteralComplete.lean
+          cp "$literal_src" "$literal"
           lean -j1 -o /tmp/build/Raw11Extra28LiteralComplete.olean "$literal"             | tee /tmp/build/Raw11Extra28LiteralComplete.log
 
           src=im-results/agent47-raw11-adapter/Raw11Extra28After151.lean
