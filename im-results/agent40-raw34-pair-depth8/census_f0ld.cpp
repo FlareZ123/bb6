@@ -116,7 +116,7 @@ void buildDepth6(int depth) {
   work[s]=0;
 }
 
-int main() {
+int main(int argc, char** argv) {
   initMasks();
   buildDepth6(2);
   if (rows.size()!=4274 ||
@@ -178,7 +178,8 @@ int main() {
   if (depth6Physical!=2671250 || unresolvedPhysical!=56900 ||
       classifiedPhysical!=2614350) return 9;
 
-  long long closedLong6=0, hardLong6=0;
+  vector<array<int,12>> hardMachines;
+    long long closedLong6=0, hardLong6=0;
   for (auto base:long6Rows) {
     vector<int> holes;
     for (int i=0;i<12;i++) if (base[i]==0) holes.push_back(i);
@@ -187,7 +188,7 @@ int main() {
     for (int a:CH) for (int b:CH) {
       auto m=base; m[holes[0]]=a; m[holes[1]]=b;
       if (closedReachable(m)) { closedLong6++; rowClosed++; }
-      else { hardLong6++; rowHard++; }
+      else { hardLong6++; rowHard++; hardMachines.push_back(m); }
     }
     // Exactly the 24*24 ordinary/ordinary completions close by state graph;
     // the 49 completions with HALT in at least one unqueried hole remain.
@@ -209,7 +210,7 @@ int main() {
       if (r.kind==1) { haltLong7++; rowHalt++; continue; }
       auto rr=trace(m,1000);
       if (rr.kind==1) { haltLong7++; rowHalt++; }
-      else { hardLong7++; rowHard++; }
+      else { hardLong7++; rowHard++; hardMachines.push_back(m); }
     }
     // Every ordinary completion closes. The unique HALT completion either
     // halts by 123 or is the one remaining hard complete machine.
@@ -225,7 +226,21 @@ int main() {
   const long long finalCandidatePhysical=hardLong6+hardLong7;
   const long long finalPartialBehaviorTargets=(long long)long6Rows.size()+hardLong7Targets;
   if (finalCandidatePhysical!=3233 || hardLong7Targets!=1273 ||
-      haltingLong7Targets!=3 || finalPartialBehaviorTargets!=1313) return 14;
+      haltingLong7Targets!=3 || finalPartialBehaviorTargets!=1313 ||
+      hardMachines.size()!=3233) return 14;
+  {
+    set<array<int,12>> uniq(hardMachines.begin(),hardMachines.end());
+    if (uniq.size()!=3233) return 17;
+  }
+
+  if (argc>1 && string(argv[1])=="--emit-hard") {
+    for (int id=0; id<(int)hardMachines.size(); id++) {
+      cout<<id;
+      for (int x:hardMachines[id]) cout<<' '<<x;
+      cout<<'\n';
+    }
+    return 0;
+  }
 
   cout<<"{\n"
       <<"  \"depth6ResidualRows\": 4274,\n"
