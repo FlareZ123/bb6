@@ -144,6 +144,7 @@ jobs:
           lean -o "$Q/E2AlternatingPacket.olean" "$Q/E2AlternatingPacket.lean" | tee -a axioms.log
           lean "$Q/E2AlternatingAll.lean" | tee -a axioms.log
           lean "$Q/E2DoubleZeroGuard.lean" | tee -a axioms.log
+          lean "$Q/E2UnaryTailAll.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
 
   safe_e:
