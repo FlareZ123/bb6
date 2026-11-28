@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct]
         default: late-parent
       base_run:
         type: string
@@ -494,5 +494,51 @@ jobs:
             /tmp/a50-raw34-bcd/closure.log
             /tmp/a50-raw34-bcd/manifest.json
             /tmp/a50-raw34-bcd/build/*.olean
+          if-no-files-found: error
+          retention-days: 30
+
+  raw34-depth3-distinct:
+    if: inputs.mode == 'raw34-depth3-distinct'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check disjointness of all 1206 Raw34 depth-three certificates
+        run: |
+          set -euo pipefail
+          W=/tmp/a50-raw34-depth3-distinct
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 4 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent50Raw34Depth3.distinct \
+            --artifact-name raw34-depth3-distinct-source \
+            im-results/agent50-raw34-firsthole/Raw34Depth3Distinct.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('distinct','no_first_level','no_second_level'):
+              full='BB6.Agent50Raw34Depth3.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 1206 pairwise-key-distinct cylinders and older-level separation')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-depth3-distinct-source
+          path: |
+            /tmp/a50-raw34-depth3-distinct/closure.log
+            /tmp/a50-raw34-depth3-distinct/manifest.json
+            /tmp/a50-raw34-depth3-distinct/build/*.olean
           if-no-files-found: error
           retention-days: 30
