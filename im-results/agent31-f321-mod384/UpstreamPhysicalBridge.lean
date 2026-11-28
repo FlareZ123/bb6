@@ -18,6 +18,26 @@ open BB6.Agent31F321Mod384
 open BusyBeaver
 open BusyBeaver.M_1RBHHH_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD
 
+/-- An option-valued map can first become `none` only immediately after
+    some finite genuine trace ending at a state with `next = none`. -/
+theorem eventually_none_has_terminal {S : Type} (f : S → Option S)
+    (s : S) (h : ∃ n : Nat,
+    ((Option.bind · f)^[n] (some s)).isNone) :
+    ∃ (m : Nat) (t : S), OptTrace f s m t ∧ f t = none := by
+  rcases h with ⟨n,hn⟩
+  induction n generalizing s with
+  | zero => simp at hn
+  | succ n ih =>
+      rw [Function.iterate_succ_apply] at hn
+      cases hs : f s with
+      | none => exact ⟨0,s,OptTrace.nil,hs⟩
+      | some s' =>
+          have hn' : ((Option.bind · f)^[n] (some s')).isNone := by
+            simpa [hs] using hn
+          obtain ⟨m,t,hr,ht⟩ := ih s' hn'
+          exact ⟨m+1,t,OptTrace.prepend hs hr,ht⟩
+
+
 /-- Erase the upstream single-constructor high-level state wrapper. -/
 def decodeUpstream : HighLevelState → Nat × Nat
  | .P a d => (a,d)
@@ -79,6 +99,7 @@ theorem original_blank_halt_implies_mod384_terminal
       subst a
       exact ⟨d,n,hreach,terminal_mod384_candidates d n hreach⟩
 
+#print axioms eventually_none_has_terminal
 #print axioms source_next_upstream
 #print axioms upstream_trace_to_source
 #print axioms original_blank_halt_implies_mod384_terminal
