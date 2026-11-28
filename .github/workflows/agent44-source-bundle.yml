@@ -63,7 +63,7 @@ jobs:
           echo "GENERATORS:"
           find /tmp/raw11 -maxdepth 2 -type f \( -name '*.sh' -o -name '*.py' -o -name '*.cjs' \) -printf '%P\n' | sort
           echo "DEPS:"
-          find /tmp/raw11-deps -name '*.olean' -printf '%P\n' | head -60
+          find /tmp/raw11-deps -name '*.olean' -printf '%P\n' | sed -n '1,60p'
       - name: Generate exact remaining four first-hole sibling certificates
         run: |
           set -euo pipefail
