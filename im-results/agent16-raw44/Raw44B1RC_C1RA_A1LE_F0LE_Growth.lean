@@ -196,7 +196,7 @@ theorem stageA (n : Nat) :
       unfold V
       rw [show n+1=1+n by omega,rep_add]
       rfl
-    have ho : [false] ++ (V n ++ [false,true,false,true]) =
+    have ho : [false] ++ V n ++ [false,true,false,true] =
         W (n+1) ++ [true] := by
       simpa only [List.append_assoc] using (rotateV n)
     calc
