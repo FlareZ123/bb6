@@ -117,8 +117,11 @@ theorem stepPhase (b : Bool) (n : Nat) :
       List.append_nil,List.append_assoc] using H
   have h5 : run0 table 1 ⟨3,[true,!b],ones (3*n+5)⟩ =
       some ⟨1,[!b],ones (3*n+6)⟩ := by
-    simpa only [show 3*n+6=(3*n+5)+1 by omega] using
-      dfinish (!b) (ones (3*n+5))
+    have hrep : [true] ++ ones (3*n+5) = ones (3*n+6) := by
+      unfold ones
+      rw [show 3*n+6=(3*n+5)+1 by omega]
+      rfl
+    simpa only [hrep] using dfinish (!b) (ones (3*n+5))
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
   have ht : (((2+3*n)+4)+(3*n+5))+1 = 6*n+12 := by omega
   simpa only [ht] using H
