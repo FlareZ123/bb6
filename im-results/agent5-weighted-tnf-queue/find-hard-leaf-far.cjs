@@ -33,6 +33,14 @@ function tryParam(kind,k,mirror,cap=2,depth=2,limit=90000,block=false){
  return false;
 }
 function progressPhases(){
+ // Dedicated alternating-run regular abstraction: q0-148's tape is made of
+ // long 10 strings with rare defects. Skip previously tested lag/blk modes.
+ if(process.argv[5]==="alt"){
+   for(const depth of [2,3,4,5,6])for(const mod of [3,4,5,6,7,8,9,10,12,16])for(const cap of [1,2,3])for(const mirror of [false,true]){
+     if(tryParam("alt",mod,mirror,cap,depth,300000))return true;
+   }
+   return false;
+ }
  // Preserve exact source checking; discovery code may be wrong.
  for(const k of [8,10,12,14,16,18])for(const mirror of [false,true])if(tryParam("ngram",k,mirror,2,2,140000))return true;
  // Density-adapted regular summaries: 151 has long 111110 runs,
