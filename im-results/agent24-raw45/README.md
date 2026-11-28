@@ -231,4 +231,4 @@ Focused CI links:
 and [full cut search](https://github.com/FlareZ123/bb6/actions/workflows/agent38-m62-kernel.yml).
 A successful full-cut original-source gate would certify all
 `25^5=9,765,625` physical completions of this exact five-hole
-Raw45 child at weighted score strictly below 101.
+Raw45 child at weighted score at most 101.
