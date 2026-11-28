@@ -175,9 +175,10 @@ private theorem a12DRreturn_sound (K L : List ℕ) :
     rcases p with ⟨v,T⟩
     simp only [a12DRreturn,hs]
     rw [hL]
-    have hh := ReachesIn.trans (a12cDRsweep z K ((v+1)::T))
-      (a12c_DR_succ (List.replicate z 1 ++ K) [] v T)
-    simpa only [Nat.zero_add] using hh
+    have h1 := a12cDRsweep z K ((v+1)::T)
+    simp only [List.cons_append] at h1
+    have hh := ReachesIn.trans h1 (a12c_DR_succ (List.replicate z 1 ++ K) [] v T)
+    simpa only [Nat.zero_add,List.cons_append] using hh
 
 def a12Live (c : ℕ) (p : ℕ × A12CRPoint) : ℕ × Option A12CRPoint :=
   (c+p.1,some p.2)
@@ -254,7 +255,7 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
           have hs := a12DRreturn_sound (1::(k+1)::K) (b::L)
           rw [a12PointCfg_eq] at hs
           exact ⟨by omega,ReachesIn.trans (a12c_CR_1_add2 (k+1) K [] b L) hs⟩
-    · simpa only [a12CRCostStep,Nat.add_assoc] using a12c_CR_add2_halts ((k+1)::K) [] a L
+    · simpa only [a12CRCostStep,Nat.add_assoc,show (1:ℕ)+1=2 by decide] using a12c_CR_add2_halts ((k+1)::K) [] a L
 
 def a12CRNext (s : A12CRPoint) : Option A12CRPoint := (a12CRCostStep s).2
 
@@ -289,7 +290,7 @@ theorem a12CRNext_sound (s : A12CRPoint) :
 theorem a12CR_acceleration : IsValidAcceleration target a12Root85 a12PointCfg a12CRNext := by
   refine IsValidAcceleration.of_step a12Root85_exact.to_star ?_
   intro s
-  exact a12CRNext_sound s
+  cases h : a12CRNext s <;> simpa only [h] using a12CRNext_sound s
 
 theorem a12Root85_halt_iff : IsHalt target ↔ CollatzHalts a12CRNext a12Root85 :=
   a12CR_acceleration.isHalt_iff
