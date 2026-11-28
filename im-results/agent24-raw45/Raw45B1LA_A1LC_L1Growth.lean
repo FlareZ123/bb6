@@ -135,7 +135,7 @@ theorem odd_to_even (n : Nat) :
   have h2 : run0 table (3*(n+2))
       ⟨1,[false,true],rep B (n+2)++[true,false]++ones (n+1)⟩ =
       some ⟨1,[false]++rep Q (n+2)++[true],[true,false]++ones (n+1)⟩ := by
-    simpa only [List.nil_append,List.append_nil,List.append_assoc] using
+    simpa only [List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using
       sweepR table 1 [false] [] B Q 3 bpacket
         (n+2) [true] ([true,false]++ones (n+1))
   have h3 : run0 table 2
@@ -144,7 +144,7 @@ theorem odd_to_even (n : Nat) :
     have hl : [false,true,true]++rep Q (n+2)++[true] =
         [false,true,true,true,false,true,true]++rep I (n+1) := by
       simpa only [show (n+1)+1=n+2 by omega] using leftOdd (n+1)
-    simpa only [hl,List.append_assoc] using
+    simpa only [← List.append_assoc,hl] using
       bfinishOdd (rep Q (n+2)++[true]) (ones (n+1))
   have h4 : run0 table 7
       ⟨4,[false,true,true,true,false,true,true]++rep I (n+1),ones (n+1)⟩ =
@@ -173,7 +173,7 @@ theorem even_to_odd (n : Nat) :
   have h2 : run0 table (3*(n+2))
       ⟨1,[false,true],rep B (n+2)++U++ones (n+2)⟩ =
       some ⟨1,[false]++rep Q (n+2)++[true],U++ones (n+2)⟩ := by
-    simpa only [List.nil_append,List.append_nil,List.append_assoc] using
+    simpa only [List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using
       sweepR table 1 [false] [] B Q 3 bpacket (n+2) [true] (U++ones (n+2))
   have h3 : run0 table 8
       ⟨1,[false]++rep Q (n+2)++[true],U++ones (n+2)⟩ =
