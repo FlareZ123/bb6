@@ -159,7 +159,7 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
             'selected_declarations': 0,
             'collisions': collisions,
             'kernel_comparison': batch_audit,
-            'stages': [], 'copied_unmodified_objects': copied,
+            'stages': [], 'chunks': [], 'copied_unmodified_objects': copied,
             'complete': True, 'mode': 'authenticated-original-compatible-link',
         }
         (work / 'report.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')

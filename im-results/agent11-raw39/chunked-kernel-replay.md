@@ -71,7 +71,7 @@ two-batch collision, and no-collision fast path) is the next acceptance gate.
 |---|---|
 | Two genuinely conflicting `Common.olean` versions plus dependent theorem, **one chunk** | [CI 46125547642](https://github.com/FlareZ123/bb6/actions/runs/46125547642): two new constants replayed by kernel; resulting proof and independent Lean consumer had no axioms |
 | The same dependent theorem split across **two sequential chunks** | [CI 46125794862](https://github.com/FlareZ123/bb6/actions/runs/46125794862): stages each replayed one declaration; final imported theorem and consumer had no axioms |
-| Batch comparator equality and difference, plus chunk replay | [CI 46126278860](https://github.com/FlareZ123/bb6/actions/runs/46126278860): dispatched; **pending** |
+| Batch comparator equality and difference, plus chunk replay | [CI 46127191254](https://github.com/FlareZ123/bb6/actions/runs/46127191254): one-chunk and cross-chunk kernel and batch comparator passed, compatible plan constructed; final CLI failed on absent empty `chunks` key (patched and rerun needed) |
 | Accepted complete Raw39 parent imported into original-source Canonical40 | [CI 46125731816](https://github.com/FlareZ123/bb6/actions/runs/46125731816): **pending** |
 | Original-source Raw47→Canonical39 via chunked kernel replay | [CI 46126483858](https://github.com/FlareZ123/bb6/actions/runs/46126483858): **pending** |
 

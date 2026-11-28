@@ -179,7 +179,7 @@ def main():
         "complete": report["complete"], "mode": report["mode"],
         "staged_root": report["staged_root"],
         "affected_modules": report["affected_modules"],
-        "chunks": len(report["chunks"])
+        "chunks": len(report.get("chunks", []))
     }, sort_keys=True))
 
 
