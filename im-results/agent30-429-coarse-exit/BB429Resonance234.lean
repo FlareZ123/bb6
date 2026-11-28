@@ -68,6 +68,12 @@ theorem d234_tail (j : Nat) :
   let P := 16^j
   have hP : 1 ≤ P := Nat.pow_pos (by decide)
   have hs : 16*j ≤ P := by simpa [P] using scale_ge j
+  have hphase :
+      phase (d234PhaseU j) (234*16^j) =
+        (6066*P+8*j+75,6300*P+8*j+87) := by
+    dsimp [phase,d234PhaseU,P]
+    omega
+  rw [hphase]
   change run 12 (6066*P+8*j+75,6300*P+8*j+87) =
     some (416*j+4797,18432*P-808*j-9293)
   have h1 : next (6066*P+8*j+75,6300*P+8*j+87) =
