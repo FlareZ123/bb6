@@ -23,6 +23,11 @@ on:
         description: Accepted Canonical39 Raw47 successor run for conditional Raw39 consumption
         type: string
         default: ''
+      canonical39_transport:
+        description: Audited kernel-replay strategy for Canonical39 Raw47 source integration
+        type: choice
+        options: [staged, chunked]
+        default: staged
       raw34_parent:
         description: Exact partial Raw34 table for the parameterized six-hole frontier generator
         type: string
@@ -221,7 +226,7 @@ jobs:
           python -m py_compile im-results/agent50-raw47-canonical41/consume_after_canonical40.py
           python im-results/agent50-raw47-canonical41/consume_after_canonical40.py \
             --work /tmp/a50-canonical39-raw47 \
-            --raw47-run-id "$RAW47_RUN" --transport staged | tee /tmp/a50-canonical39-raw47.log
+            --raw47-run-id "$RAW47_RUN" --transport "${{ inputs.canonical39_transport }}" | tee /tmp/a50-canonical39-raw47.log
           test -s /tmp/a50-canonical39-raw47/canonical39-raw47-delta/delta.json
           cat /tmp/a50-canonical39-raw47/canonical39-raw47-delta/delta.json
       - uses: actions/upload-artifact@v4
