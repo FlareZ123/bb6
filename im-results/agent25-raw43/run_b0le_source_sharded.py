@@ -188,6 +188,7 @@ def assemble(variant: str, count: int, shards_root: Path) -> None:
         "python", "tools/lean_compile_closure.py",
         "--workdir", str(work),
         "--jobs", "1",
+        "--source-root", "im-results/agent9-raw43-e0lf559",
         "--override", "FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean",
         "--override", "M44Proof=im-results/agent38-raw43-pair/M44Proof.lean",
         "--override", "M44Data=im-results/agent38-raw43-pair/M44Data.lean",
