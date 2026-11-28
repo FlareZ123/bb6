@@ -1,0 +1,135 @@
+name: Agent10 Raw42 1LB merge-only recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      recovery_run:
+        description: 'Run with accepted recovered part2 and generated sources'
+        required: true
+        type: string
+        default: '46155553883'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  SOURCE_RUN: "46129062347"
+
+jobs:
+  rebuild_and_compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate recovery run
+        env:
+          RECOVERY_RUN: ${{ inputs.recovery_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RECOVERY_RUN" =~ ^[0-9]+$ ]]
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.recovery_run }}
+          name: raw42-part2-generated
+          path: im-results/agent32-raw42/generated-assembly
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          pattern: raw42-group1-1LB-part-*
+          path: /tmp/parts
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.recovery_run }}
+          name: raw42-group1-1LB-part-2
+          path: /tmp/parts/raw42-group1-1LB-part-2
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-group1-split-plan
+          path: /tmp/original
+
+      - name: Reconstruct canonical group 1 from accepted siblings plus recovered part2
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/parts/raw42-group1-1LB-part-2.failed 2>/dev/null || true
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/parts /tmp/group1 /tmp/original/split.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/group1/manifest.json')
+          m=json.loads(p.read_text())
+          m['artifact_name']='raw42-assembly-shard-1'
+          m['label']='raw42-assembly-shard-1'
+          p.write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
+          PY
+
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46100532768'
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46111777843'
+          name: raw42-assembly-shard-0
+          path: /tmp/shards/raw42-assembly-shard-0
+
+      - name: Install rebuilt group 1
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/shards/raw42-assembly-shard-1
+          cp -a /tmp/group1 /tmp/shards/raw42-assembly-shard-1
+
+      - name: Authenticate all eight shards and prove Raw42 1LB Cover
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/shards /tmp/merged "$g/shards.json"
+          mkdir -p /tmp/final
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json \
+            --artifact-name raw42-certified-1LB-targeted-recovery \
+            --theorem BB6.Agent32Raw421LB.Closed.cover \
+            --parent-table '1RB---_1RC1LB_0RD---_1LD0LB_------_------' \
+            --weighted-bound 100006 "$g/Raw421LBClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/final/audit.log BB6.Agent32Raw421LB.Closed.cover
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-certified-1LB-targeted-recovery
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: warn
