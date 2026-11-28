@@ -55,10 +55,42 @@ theorem blank_to_transferOut :
   exact Reach.trans blank_to_afterBank
     ⟨13730 + (83 + 45*3), Raw14037RootBridge.afterBank_to_transferOut⟩
 
+/-- Any completion preserving Raw37's assigned rows inherits the whole symbolic
+prefix, so the theorem applies to the entire one-hole residual cylinder. -/
+def Extends37 (M : Table) : Prop :=
+  ∀ q b m, M37 q b = some m → M q b = some m
+
+theorem step_ext37 (M : Table) (ext : Extends37 M) (c c' : Prim)
+    (h : primStep M37 c = some c') : primStep M c = some c' := by
+  cases hm : M37 c.q (c.r 0) with
+  | none => simp [primStep, hm] at h
+  | some m => simpa [primStep, hm, ext _ _ _ hm] using h
+
+theorem run_ext37 (M : Table) (ext : Extends37 M) (n : Nat) (c c' : Prim)
+    (h : run M37 n c = some c') : run M n c = some c' := by
+  induction n generalizing c with
+  | zero => exact h
+  | succ n ih =>
+    rw [run] at h ⊢
+    cases hm : primStep M37 c with
+    | none => simp [hm] at h
+    | some d =>
+      simp only [hm, Option.bind_some] at h
+      rw [step_ext37 M ext c d hm]
+      exact ih d h
+
+theorem blank_to_transferOut_ext (M : Table) (ext : Extends37 M) :
+    Reach M primBlank Raw14037RootBridge.transferOut.prim := by
+  obtain ⟨t, ht⟩ := blank_to_transferOut
+  exact ⟨t, run_ext37 M ext t _ _ ht⟩
+
 #print axioms section0_to_section13
 #print axioms blank_to_section13
 #print axioms drain_endpoint
 #print axioms section13_to_afterBank
 #print axioms blank_to_afterBank
 #print axioms blank_to_transferOut
+#print axioms step_ext37
+#print axioms run_ext37
+#print axioms blank_to_transferOut_ext
 end Raw14037HardPrefix
