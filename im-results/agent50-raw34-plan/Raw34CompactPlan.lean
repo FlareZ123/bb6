@@ -1,6 +1,7 @@
 import Raw34WeightedPlan
 import LastHole
 import FastFAR
+import Agent46AutoPump
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
@@ -11,10 +12,12 @@ inductive CompactCert where
   | basic (c : Cert)
   | last (slot : Slot) (n : Nat)
   | far (d : Nat) (reflected : Bool) (c : BB6Coverage.FAR.Data d)
+  | pump (c : BB6Coverage.Agent31Pump.Auto.Cert)
 
 def compactCheck (B : Nat) (p : PartialMachine) : CompactCert → Bool
   | .basic c => weightedCheck B p c
   | .last s n => allOtherOrdinary p s && weightedCheck B (refine p s none) (.halt n)
+  | .pump c => BB6Coverage.Agent31Pump.Auto.check p c
   | .far _ reflected c =>
       c.fastValid (if reflected then BB6Coverage.FAR.reflectPartial p else p)
 
@@ -28,6 +31,8 @@ theorem compactCheck_sound (B : Nat) (p : PartialMachine) (cert : CompactCert)
       simpa only [compactCheck,Bool.and_eq_true] using h
     exact lastHole_cover p s hh.1 (weighted_of_never B)
       (weightedCheck_sound B (refine p s none) (.halt n) hh.2)
+  | pump c => exact .leaf p (fun m hm => weighted_of_never B m
+      (BB6Coverage.Agent31Pump.Auto.check_never p c h m hm))
   | far d reflected c =>
     cases reflected with
     | false =>
