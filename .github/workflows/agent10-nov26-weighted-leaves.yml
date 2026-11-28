@@ -4,7 +4,7 @@ on:
     inputs:
       audit:
         type: choice
-        options: [nonhalt, raw8, raw140, raw140-n20-local, raw140-n20-source, raw140-deep-local, raw140-root-local, raw140-block-local, raw140-three-hole-source]
+        options: [nonhalt, raw8, raw140, raw140-n20-local, raw140-n20-source, raw140-deep-local, raw140-root-local, raw140-block-local, raw140-three-hole-source, raw140-three-hole-all]
         default: nonhalt
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
             lake build BusyBeaver.BB6.Halt.M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB
           elif [[ "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
             lake build BusyBeaver.BB6.NonHalt.M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE
-          elif [[ "${{ inputs.audit }}" == "raw140-three-hole-source" ]]; then
+          elif [[ "${{ inputs.audit }}" == "raw140-three-hole-source" || "${{ inputs.audit }}" == "raw140-three-hole-all" ]]; then
             lake build BusyBeaver.BB6.NonHalt.M_1RB0RA_1RC0RD_1RD0LC_1LE1RA_HHH1LF_1RB0LC BusyBeaver.BB6.NonHalt.M_1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RDHHH
           elif [[ "${{ inputs.audit }}" == "raw140" ]]; then
             mapfile -t modules < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/raw140-upstream-modules.txt"
@@ -101,7 +101,7 @@ jobs:
           set -euo pipefail
           python "$GITHUB_WORKSPACE/im-results/agent13-coverage/unpack.py"
           mkdir -p /tmp/nov26-axioms
-          if [[ "${{ inputs.audit }}" == "raw140" || "${{ inputs.audit }}" == "raw140-n20-source" || "${{ inputs.audit }}" == "raw140-three-hole-source" ]]; then
+          if [[ "${{ inputs.audit }}" == "raw140" || "${{ inputs.audit }}" == "raw140-n20-source" || "${{ inputs.audit }}" == "raw140-three-hole-source" || "${{ inputs.audit }}" == "raw140-three-hole-all" ]]; then
             export BB6_UPSTREAM_LEAN_PATH="$(lake env printenv LEAN_PATH)"
             cp lake-manifest.json /tmp/nov26-axioms/upstream-lake-manifest.json
             git rev-parse HEAD > /tmp/nov26-axioms/upstream-commit.txt
@@ -113,14 +113,50 @@ jobs:
           EOF
             chmod +x /tmp/raw140-lean
             cd "$GITHUB_WORKSPACE"
-            if [[ "${{ inputs.audit }}" == "raw140-three-hole-source" ]]; then
+            if [[ "${{ inputs.audit }}" == "raw140-three-hole-source" || "${{ inputs.audit }}" == "raw140-three-hole-all" ]]; then
               python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
               python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
               python im-results/agent10-nov26-cryptids/generate_raw140_long.py
               node im-results/agent10-nov26-cryptids/generate_raw140_double.js
               node im-results/agent10-nov26-cryptids/generate_raw140_double_entry.js
-              python im-results/agent10-nov26-cryptids/generate_raw140_three_hole_cut.py --source36
+              cutargs=(--source36)
+              if [[ "${{ inputs.audit }}" == "raw140-three-hole-all" ]]; then
+                node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+                node im-results/agent10-nov26-cryptids/generate_raw140_42_counter.js
+                node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
+                node im-results/agent10-nov26-cryptids/generate_raw14086_local.js
+                for i in 28 39 77 81 88; do
+                  node im-results/agent10-nov26-cryptids/generate_raw140_28.js "$i"
+                done
+                node im-results/agent10-nov26-cryptids/generate_raw140_42_low.js
+                node im-results/agent10-nov26-cryptids/generate_raw140_42_right.js
+                cd im-results/agent10-nov26-cryptids
+                for pair in mixed:Mixed bmixed:BMixed bmixed_end:BMixedEnd word:Word aword:AWord dexit:DExit extratail:ExtraTail mixed_front:MixedFront; do
+                  gen="${pair%:*}"
+                  mod="${pair#*:}"
+                  python "generate_raw140_42_${gen}.py" > "Raw14042${mod}Local.lean"
+                done
+                node generate_raw140_42_dexit_affine.js
+                node generate_raw140_42_mixed_exit.js > Raw14042MixedExitLocal.lean
+                node generate_raw140_42_b_even.js > Raw14042BEvenLocal.lean
+                cd ../..
+                cutargs+=(--source86 --source42 --family)
+              fi
+              python im-results/agent10-nov26-cryptids/generate_raw140_three_hole_cut.py "${cutargs[@]}"
               python tools/lean_compile_closure.py --workdir /tmp/raw140-three-hole-source --jobs 3 --lean /tmp/raw140-lean --override CryptidsTapeAdapter=im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean 2>&1 | tee /tmp/nov26-axioms/Raw140ThreeHoleCut.log
+              if [[ "${{ inputs.audit }}" == "raw140-three-hole-all" ]]; then
+                python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log Raw14036.never
+                python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log Raw14086.cover
+                for i in 28 39 77 81 88; do
+                  python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "Raw140$i.cover"
+                done
+                for t in step_plus forever; do
+                  python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "Raw14042Positive.$t"
+                done
+                for t in never cover; do
+                  python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "Raw14042Cover.$t"
+                done
+              fi
               for t in checked remaining_count sound cover; do
                 python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "BB6.Agent10Raw140ThreeHole.$t"
               done
