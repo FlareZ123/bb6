@@ -1,3 +1,13 @@
+## 2026-11-28 04:56 UTC checkpoint: five hard Raw41 leaf proofs
+
+Draw 3 normal; claimed 2026-11-28T04:42:43.010Z; immutable release threshold 05:52:43.010Z. Prior 16-child graft 46083968178 success, local 153→137, no Canonical40 change.
+New locally Lean-checked against canonical77 artifact 14997966221 (SHA256 b55e4c939da70aaa4d2f50f5721b9183ab776682f1b682f647ee27aa6cc5da17); all never theorems standard axioms propext/Quot.sound:
+- Raw41New094Leaf66.lean 7d0e0f0c: blank entry28, F left00011 right(10)^n11, n→2n+1 cost16n²+40n+28. Child094 143 FAR+7 auto+1 manual candidate B124, generation success46109360478; verifier dispatched.
+- Raw41New112Pair.lean 895475dc: leaves81/86 b=false/true, four-bit counter carry16k+22/8k+22, structural count induction, outer C left0 1^(4n+6) 0 right empty, entries36/28.
+- Raw41New112Single.lean 05ff06f: leaves73/74 b=false/true, single-bit counter carry2k+14/2k+44; outer F left0^(n+base) S right1, base1/3, S1110/11101110; entries n6 t485/n0 t61. Child112 candidate140 FAR+1 auto+4 manual B126, generation46109774799, verify after success.
+- Direct shell GitHub DNS blocked, connector works. Lean /tmp/lean/lean-4.36.0-rc2-linux/bin; accepted artifact /tmp/a36canon. Targeted source/verify workflows extended for manual leaves.
+- Child96 four unresolved leaves39/47/83/92 observed quadratic macro growth; further proof needed. No full BB6 verdict.
+
 ## 2026-11-27 23:25 UTC checkpoint — eight children accepted; AutoPump child084 pending
 
 - Lease claimed 22:46:52.840Z; 70-minute release threshold strictly 23:56:52.840Z. Normal mode. This invocation must continue until release threshold; preserve memory and source.
