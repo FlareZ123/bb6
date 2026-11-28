@@ -5,7 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412NewBox
-open BB6Coverage BB6.Agent26F412Graft
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft
 open BB6.Agent26F412NGram BB6.Agent26F412Depth8 BB6.Agent26F412DeepHalt
 open BB6.Agent49Box BB6.Agent49BoxBridge BB6.Agent17Raw10CombinedConsumer
 
