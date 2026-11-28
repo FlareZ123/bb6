@@ -206,6 +206,8 @@ jobs:
             lake env lean -o .lake/build/lib/lean/ThreeStepStripWeightedTightSkewN13Source.olean ThreeStepStripWeightedTightSkewN13Source.lean 2>&1 | tee -a tight-skew-axioms.log
             cp "../im-results/agent27-623-gap-two-three-step/FourRayPhysicalSource.lean" FourRayPhysicalSource.lean
             lake env lean -o .lake/build/lib/lean/FourRayPhysicalSource.olean FourRayPhysicalSource.lean 2>&1 | tee -a tight-skew-axioms.log
+            cp "../im-results/agent27-623-gap-two-three-step/FourRayCoupledSource.lean" FourRayCoupledSource.lean
+            lake env lean -o .lake/build/lib/lean/FourRayCoupledSource.olean FourRayCoupledSource.lean 2>&1 | tee -a tight-skew-axioms.log
             if grep -q 'sorryAx' tight-skew-axioms.log; then exit 1; fi
           fi
           if [ "${{ inputs.target }}" = "weighted-tight-skew-n13" ]; then
