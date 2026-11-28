@@ -137,7 +137,7 @@ theorem regularEndpointFloor_sourceSection
       simp [endpointOne,BB6.Agent2BoundaryBZero.regularSection,
         CryptidBoundary.oppairs]
     have hsec :=
-      BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
+      regularSection_sourceSection
         n 0 0 hn2
     rw [h1,heq,hsec]
     exact BB6.Padding.cfgEq_refl _
@@ -154,7 +154,7 @@ theorem regularEndpointFloor_sourceSection
           (BB6.Agent2BoundaryBZero.regularSection n 4 0))
       apply BB6.Padding.cfgEq_symm
       simp only [BB6.BoundaryPadding.represent,
-        BB6.Agent2BoundaryBZero.regularSection,
+        BB6.Agent2BoundaryBZero.regularSection, endpointTwo,
         List.replicate_zero]
       have hword : CryptidBoundary.oppairs 4 =
           [false,true,false,true,false,true,false,true] := by decide
@@ -165,7 +165,7 @@ theorem regularEndpointFloor_sourceSection
           (List.replicate n true ++
             [false,true,false,true,false,true,false,true]) 1)
     have hsec :=
-      BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
+      regularSection_sourceSection
         n 4 0 hn2
     rw [h2]
     rw [hsec] at hreg
