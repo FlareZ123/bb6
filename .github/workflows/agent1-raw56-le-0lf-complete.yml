@@ -1,0 +1,64 @@
+name: Agent1 Raw56 E0=0LF complete source Cover
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  complete_0lf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Load source-accepted 2046-to-1 parent closure
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LF-partial1-source-accepted
+          path: /tmp/raw56-le0lf-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46112103663'
+      - name: Reconstruct leaf3613 fixed point and check full Cover
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          mkdir -p /tmp/raw56-le0lf-full
+          python im-results/agent1-raw56/le/prove_motif_3613.py /tmp/raw56-le0lf-full | tee /tmp/raw56-le0lf-3613-gen.log
+          cp im-results/agent1-raw56/le/Raw56LE0LFFull.lean /tmp/raw56-le0lf-full/
+          export LEAN_PATH="/tmp/raw56-le0lf-full:/tmp/raw56-le0lf-base"
+          lean -o /tmp/raw56-le0lf-full/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-le0lf-fastbidfa.log
+          (cd /tmp/raw56-le0lf-full && lean -o Raw56LE0LFMotif3613.olean Raw56LE0LFMotif3613.lean) 2>&1 | tee /tmp/raw56-le0lf-3613-axioms.log
+          (cd /tmp/raw56-le0lf-full && lean -o Raw56LE0LFFull.olean Raw56LE0LFFull.lean) 2>&1 | tee /tmp/raw56-le0lf-full-axioms.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le0lf-3613-axioms.log --require BB6.Agent1Raw56.LE0LFMotif3613.M3613.never
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le0lf-full-axioms.log --require BB6.Agent1Raw56.LE0LFFull.cover
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le0lf-fastbidfa.log /tmp/raw56-le0lf-3613-axioms.log /tmp/raw56-le0lf-full-axioms.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw56-le0LF-complete-progress
+          path: |
+            /tmp/raw56-le0lf-*.log
+            /tmp/raw56-le0lf-full/*.json
+            /tmp/raw56-le0lf-full/*.lean
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le0LF-complete-source-accepted
+          path: |
+            /tmp/raw56-le0lf-full/*.lean
+            /tmp/raw56-le0lf-full/*.olean
+            /tmp/raw56-le0lf-full/*.json
+            /tmp/raw56-le0lf-*.log
+          retention-days: 30
+          if-no-files-found: error
