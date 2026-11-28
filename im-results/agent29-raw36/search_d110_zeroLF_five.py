@@ -48,8 +48,6 @@ def worker(item):
         try:
             ok,n,*_=replay(machine,(*p,None))
             assert ok
-            signal.signal(signal.SIGALRM,signal.SIG_IGN)
-            signal.setitimer(signal.ITIMER_REAL,0)
             found={"index":index,"table":table,"params":list(p),
                    "reachable":n,"tries":j,"seconds":round(time.monotonic()-start,2)}
             print("CANDIDATE_FOUND",json.dumps(found),flush=True)
@@ -58,8 +56,11 @@ def worker(item):
                 ZeroDivisionError,RecursionError,OverflowError,TimeoutError):
             pass
         finally:
-            signal.signal(signal.SIGALRM,signal.SIG_IGN)
+            # Cancel the one-shot timer before changing the handler.  The
+            # reverse order can race with SIGALRM and raise from finally,
+            # discarding successful candidates already found by this worker.
             signal.setitimer(signal.ITIMER_REAL,0)
+            signal.signal(signal.SIGALRM,signal.SIG_IGN)
             signal.signal(signal.SIGALRM,timed_out)
         if j%300==0:
             print("SCAN index",index,"tested",j,"elapsed",
