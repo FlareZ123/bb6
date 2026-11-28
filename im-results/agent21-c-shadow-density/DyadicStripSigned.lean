@@ -26,12 +26,12 @@ theorem signed_strip_word (x y : Int) (r b : Nat) (w : List Nat)
     rw [hone]
     exact hv.2
   obtain ⟨z',hz'⟩ := hdiv
-  refine ⟨z',hv.1,hz',?_⟩
+  refine ⟨z',hv.1,hz'.symm,?_⟩
   have hdiv' : P (b-r+r)∣signedZ x y+acc (signedS x y) (r::w) := by
     simpa only [show b-r+r=b by omega] using hd
   exact (word_strip_dvd_iff
     (signedS x y) (signedZ x y) (signedS x y+shift r)
-    z' r (b-r) w rfl hz').mp hdiv'
+    z' r (b-r) w rfl hz'.symm).mp hdiv'
 
 /-- Every genuinely nonzero b-bit adjusted sum with an OpenAt
     witness has an exact signed *child* OpenAt at strictly lower

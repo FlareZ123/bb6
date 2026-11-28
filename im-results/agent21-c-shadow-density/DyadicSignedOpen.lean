@@ -18,7 +18,10 @@ theorem signed_singleton_numer (x y : Int) (r : Nat)
 theorem signed_open_if_divisible (x y : Int) (n : Nat)
     (hn : 0<n) (hq : P n∣x+y+(x+y)%2) :
     OpenAt (signedS x y) (signedZ x y) n := by
-  have hneg : P n∣-(x+y+(x+y)%2) := dvd_neg.mpr hq
+  have hneg : P n∣-(x+y+(x+y)%2) := by
+    obtain ⟨k,hk⟩ := hq
+    refine ⟨-k,?_⟩
+    rw [hk,Int.mul_neg]
   by_cases hpar : (n:Int)%2=(y+1)%2
   · left
     refine ⟨[n],by simp [Positive,hn],by simp [cost],?_⟩
