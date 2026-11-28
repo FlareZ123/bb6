@@ -117,6 +117,25 @@ Kgerac{15}{2}sum j_i
 ]
 provided `K≥15`. The old necessary inequality was only `K>6sum j_i`. This is a strict improvement to the primitive-cycle obstruction. The new sharp bound does **not** imply that an infinite admissible mixed-path orbit cannot exist; it addresses a finite distinct-source family and source-independent arithmetic, not the missing authentic blank-to-terminal ancestor quantifier.
 
+### Corollary: an integer-slope obstruction without the parity hypothesis
+
+Let `W` be a nonempty typed E/S pair-word whose **positive gap sequence** `(j_1,...,j_a)` has primitive period equal to its whole word length, and suppose at least one `j_i>1`. Put `J=∑j_i` and `T=∑(3j_i+2)` for E letters or `∑(3j_i+4)` for S letters. Then there is **no** nonzero cyclic integer sequence `s_1,...,s_a` satisfying
+[
+0<3s_i<T,qquad 4^{j_i}s_{i+1}=s_i+T
+]
+(indices modulo `a`). This applies to arbitrary E/S type allocations and does **not** assume the slopes `s_i` are even.
+
+**Proof.** By the exact predecessor-uniqueness argument already formalized in [`ValuationPrimitive.lean`](../im-results/agent22-429-signed-drift/ValuationPrimitive.lean), equal slope sources at two phases of a cyclic path force equality of every preceding exponent; a primitive exponent period therefore makes the `s_i` pairwise distinct. Applying the sharp packing theorem with `K=T`, for `T≥15` we obtain
+[
+15Jle2Tle14J,
+]
+impossible since `J>0`. The last inequality follows termwise from `3j+4≤7j` for each `j≥1`.
+
+If `T<15`, the condition that some `j>1` leaves **exactly seven** possible typed words, irrespective of primitive-period status (their order matters):
+`E2` (`T=8,J=2`), `S2` (`10,2`), `E3` (`11,3`), `S3` (`13,3`), `E4` (`14,4`), `E1,E2` (`13,3`), and `E2,E1` (`13,3`). Their exact valuation capacities `U(T)` are respectively `0,1,1,2,2,2,2`, all **strictly below J**. Since any distinct-edge cycle would imply `J≤U(T)`, none exists. Thus the conclusion holds for all possible `T`. `□`
+
+**Connection to finite powers.** If enough consecutive copies of a typed word have an exact affine first-coordinate transfer, the finite second-difference argument in [`FinitePowerObstruction.md`](../im-results/agent22-429-signed-drift/FinitePowerObstruction.md) forces a positive integer slope `s` with `(M-1)s=A T`. The direct coefficient identity `M-1-3A=∑(4^{j_i}-4)·prefixScale` yields `3s<T` whenever some `j_i>1`. The slope difference transported through each letter satisfies `4^{j_i}s_{i+1}=s_i+T`, so the new corollary **excludes a sufficiently large finite power of any primitive-gap typed word without relying on parity at all**. This inference remains a paper-level combination; Lean acceptance of the finite source bridges is a separate obligation. Words whose typed period is *twice* their primitive gap period require the separate parity/half-rank argument from the prior [cyclic note](../im-results/agent22-429-signed-drift/FiniteTripleNoGo.md). There is no full inverse-path termination claim here.
+
 ### Reproducibility and formalization target
 
 Run
