@@ -37,3 +37,7 @@ Root outputs, with no sorryAx or ofReduceBool or native_decide:
 The delayed certificate now uses a smaller direct bridge, Run0LastHole. This avoids evaluating either the massive run or the sparse delay graph, and requires only SweepPumping and SparseBlankDelay. The general bound theorem uses source kernel `terminal_delay_le_five`; any halting completion must halt at the reached slot, because assigning that slot a normal move produces a completely nonhalting table. No other one-hole literal is assumed to behave this way unless its run0 prefix and all remaining ordinary rows are proved. D100Delayed line 168 is corrected to normalize U 1 explicitly; the checked source matches the original reconstructed proof blob.
 
 Parent assembly still needs literal-bank integration and accepted parent Cover. No global residual count change is asserted here.
+
+## Final F1 exposure
+
+`D100FiniteF1.lean` blob `3abafd56a971aa7dbacbab9cc340acb7a9531e0c`; `D100FiniteF1Trace.lean` blob `5f8d39eaa8b9015f40cd1691561a2393f924a26b`. Compiled with the same original-source closure and Lean 4.36.0-rc2. `BB6.Agent7D100FiniteF1.reached` axioms `[propext, Quot.sound]`; `BB6.Agent7D100FiniteF1.bound` axioms `[propext, Classical.choice, Quot.sound]`. Exact first query F1 after 4672258 transitions, weighted bound 4672264. No `sorryAx`.

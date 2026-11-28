@@ -1,0 +1,3 @@
+# D100 exceptional roster closed (individual literal theorems)
+
+The final previously open finite F1 case now has an exact 22-epoch Lean proof at `im-results/agent7-opaque-tail-pump/D100FiniteF1Trace.lean`, root `BB6.Agent7D100FiniteF1.bound` at weighted bound 4672264. All seven exceptional exact keys now have original-source proofs: 3 previous CI jobs and 4 local kernel-checked source roots. See consolidated README and SOURCE-CHECK.md. The conservative common bound can be 53257978073992281 (the E0 exposure plus six); it must be at least the actual halting score 53257978073992276. Remaining task is certification/assembly of 2218 archived candidates and complete exhaustive parent, not further literal search. Please coordinate integration with shared CI gate.
