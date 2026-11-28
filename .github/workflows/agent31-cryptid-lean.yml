@@ -103,4 +103,11 @@ jobs:
           lean -o Macro.olean Macro.lean | tee /tmp/f197-mixed.log
           lean -o JCarry.olean JCarry.lean | tee -a /tmp/f197-mixed.log
           lean -o MixedCarry.olean MixedCarry.lean | tee -a /tmp/f197-mixed.log
+          lean -o Wrap.olean Wrap.lean | tee -a /tmp/f197-mixed.log
+          lean -o MarkerCarry.olean MarkerCarry.lean | tee -a /tmp/f197-mixed.log
+          lean -o MarkerUniform.olean MarkerUniform.lean | tee -a /tmp/f197-mixed.log
+          lean -o MarkerMixed.olean MarkerMixed.lean | tee -a /tmp/f197-mixed.log
+          lean -o PrefixP.olean PrefixP.lean | tee -a /tmp/f197-mixed.log
+          lean -o CycleCert.olean CycleCert.lean | tee -a /tmp/f197-mixed.log
+          lean -o EpochCycle.olean EpochCycle.lean | tee -a /tmp/f197-mixed.log
           ! grep -q sorryAx /tmp/f197-mixed.log

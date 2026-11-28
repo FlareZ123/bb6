@@ -20,7 +20,7 @@ For arbitrary right continuation R whose first bit is 1, scanner token pushes on
 
 F197.MixedCarry.sandwich proves the arbitrary-list statement uniformly for arbitrary aligned R. This single induction removes the previous need for separate adjacent-token case lists or a specific oldest base marker. Base decoding at R=e costs 27+4f. All equations are direct primitive-run equalities; no bounded simulation hypothesis. The TTJ insertion lemma additionally gives a return whenever T Y parses as the four-token family: B(TTJ Y,e) -> B(T P H(f) E1...Em X,e), cost 209+68m+14t, exactly +5 bits.
 
-Local Lean 4.36.0-rc2 checked MixedCarry.lean and JCarry.lean using a literal-definition and run-add/decomposition slice of the existing Macro.lean. The local axiom profiles of sandwich, family, and familyJ are [propext, Quot.sound]; individual core equalities depend only on Quot.sound. Full original repository import/CI is still unverified.
+Local Lean 4.36.0-rc2 checked MixedCarry.lean and JCarry.lean using a literal-definition and run-add/decomposition slice of the existing Macro.lean. The local axiom profiles of sandwich, family, and familyJ are [propext, Quot.sound]; individual core equalities depend only on Quot.sound. Full original repository import passed [CI 46084690743](https://github.com/FlareZ123/bb6/actions/runs/46084690743), at commit 719dfc78ef7621ffc52903c97e7a1783b6ec102b, including Macro.lean, JCarry.lean and MixedCarry.lean, without sorryAx.
 
 ## Scope
 

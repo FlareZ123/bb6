@@ -3,6 +3,14 @@
 Archived holdout literal: `1RB0RE_1RC0LE_0RD---_0RE0RA_1LF0LB_1LA1LF`.
 Only C1 is undefined. Raw132 is the retained prefix A0=1RB, B0=1RC, C0=0RD, D0=0RE. This is an intermediate exact reduction, **not** a proof that F197 does not halt and **not** a Cover.
 
+## Strongest reset families
+
+[MixedCarry.md](MixedCarry.md) proves exact live returns for arbitrary interleavings of AT, TT, P=AAT, Q=TAT and AAA/TAA terminal, with arbitrary aligned left tail and exact cost 74+68m+14t. TTJ-carried form costs 209+68m+14t. The complete original-source import passed [CI 46084690743](https://github.com/FlareZ123/bb6/actions/runs/46084690743).
+
+[MarkerMixed.md](MarkerMixed.md) extends the arbitrary mixed prefixes to two-P/J descent and provides a generic wrapping theorem for aligned right-tail-parametric base routines. [EpochCycle.md](EpochCycle.md) gives an unbounded cycle consuming four repeated R=AATAAAT blocks while producing 18 leading P blocks, cost 2448*n+26828, and a generic word-level certificate checker for arbitrary mixed-reset compositions. The new marker and cycle modules passed local Lean with standard axioms against the literal source slice; complete import checks are pending. These families are finite exact transformations; the unresolved global quantifier is a closed language of genuine blank-orbit epochs, particularly the changing deep tail between the bulk conversions. Do not report nonhalting or a Cover.
+
+## Literal macro semantics
+
 All stack words are nearest-first with implicit infinite zero tails. At phase D, L excludes the head and R includes it. At B/F/A, L includes the head and R excludes it. A rule deletes its input prefixes and prepends output prefixes to the unchanged suffixes. The blank orbit enters D(011,empty) after three live steps.
 
 | Phase | L in | R in | L out | R out | Next | Live steps |

@@ -1,3 +1,7 @@
+### 00:21 UTC, 28 November: epoch conversion and certificate checker
+
+CI 46084690743 succeeded for full Macro/JCarry/MixedCarry. PrefixP/CycleCert/EpochCycle local standard-axiom proofs: for W=AAATAATATAAATTAAAT, R=AATAAAT, B(P^n W R^4 X,e) -> B(P^(n+18) W X,e) in 2448*n+26828 live steps, arbitrary n,X aligned; cycle_many arbitrary k. New generic checker cert_sound validates finite mixed-prefix compositions with symbolic leading-P counter. Major observed epochs n=114,258,610,1371,3116,7043,15842 (indices in EpochCycle.md). Deep suffix changes, no infinite lasso; work on exact bulk entrance and tail carry recurrence. Cross-sequence finite FST extraction and exact-right PDS CEGAR did not close, avoid blind repeat. Full original-source marker/cycle CI target extended. Lease unchanged 23:41:52.434Z, release threshold 00:51:52.434Z. BB6 still unresolved.
+
 ### 23:55 UTC: general marker descent
 
 Wrap.lean generic aligned-right-tail-parametric wrapping theorem; MarkerCarry, MarkerUniform, MarkerMixed prove arbitrary mixed prefix U followed by k in {P,Q}, then PPJ, with arbitrary mixed T-prepended suffix. Core PPJ takes141; final marker base50+4f or step55+4f. Full descentMixed and descentBase standard axioms locally. Supersedes narrower P^n descent for all matching mixed inner words. First 5000-reset sample shows 682 frequent descent cases. No closure claim. Existing manual workflow target f197-mixed-carry was dispatched to validate original Macro import; do not rerun blindly. Further focus on complete grammar or protected growth recurrence.
