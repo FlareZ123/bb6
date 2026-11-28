@@ -526,7 +526,7 @@ theorem terminal_has_last_anchor_formal_word_head_high_high
       FormalInversePath (D:Int) (.high::.high::w) (R:Int) (c:Int) := by
   rcases terminal_last_anchor_first_two_high h with
     ⟨q,R,c,j,B,C,E,F,hchain,hc,hfirst,hB,hC,
-      hsecond,hE,hF,hrest⟩
+      hsecond,hguard,hE,hF,hrest⟩
   rcases hfRun_terminal_formal hrest with ⟨w,hlen,hw⟩
   have ha1 : 2*(B:Int) = 2*(E:Int) + (F:Int) + 1 := by omega
   have hd1 : 2*(C:Int) = (F:Int) - 3 := by omega
