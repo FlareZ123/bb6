@@ -6,6 +6,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent31-three-hole-tnf'))
 from generate_four_hole import masks,slot,move,refine,parse
+from regex_to_dfa import inv
+from emit_regular import emit
 MOVES=[w+d+q for w,d,q in product('01','LR','ABCDEF')]
 def header(ns):
  return f'''set_option maxRecDepth 100000
@@ -43,14 +45,21 @@ def main():
  far={parse(t):code for t,code in evidence['far']};records=evidence['sweep'];sweeps={parse(rec[1]):rec[0] for rec in records};manual={parse(t):ns for t,ns in evidence.get('manual',[])}
  cycles={parse(t):a for t,a in evidence.get('cycle',[])}
  assert not evidence.get('missing'),evidence.get('missing')
- allsets=[set(far),set(sweeps),set(manual),set(cycles)];assert sum(map(len,allsets))==len(set().union(*allsets))
+ regular={parse(t):j for j,(t,L,R) in enumerate(evidence.get('regular',[]))}
+ allsets=[set(far),set(sweeps),set(manual),set(cycles),set(regular)];assert sum(map(len,allsets))==len(set().union(*allsets))
  manual_imports=''.join(f'import {ns.removeprefix("BB6.Agent29")}\n' for ns in sorted(set(manual.values())))
  assert len(far)==len(evidence['far']) and len(sweeps)==len(records) and not set(far)&set(sweeps) and not (set(far)|set(sweeps))&set(manual)
+ regular_imports=''
+ for j,(t,L,R) in enumerate(evidence.get('regular',[])):
+  I=inv(t,L,R);assert I,(t,'not closed')
+  mod=f'{stem}Regular{j:02d}'
+  (out/f'{mod}.lean').write_text('import ChunkRegularRay\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n'+emit(j,t,L,R,I,NS+'Regular'))
+  regular_imports+=f'import {mod}\n'
  inp=out/f'{stem}SweepRecipes.jsonl';inp.write_text(''.join(json.dumps(r)+'\n' for r in records))
  subprocess.run([sys.executable,str(ROOT.parent/'agent7-raw49'/'emit_sweep_recipes.py'),str(inp),OPEN_NS,str(out/f'{stem}Sweeps.lean')],check=True)
  got=json.loads(a.tree.read_text() if a.tree else subprocess.check_output(['node',str(ROOT/'canonical_search.cjs'),P,str(cut),'tree'],text=True))
  B=evidence['bound'];assert got['parent']==P and got['cut']==cut and got['stats']['score']<=B
- assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)
+ assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)|set(regular)
  tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
  used={}
  def render(p,c,t):
@@ -62,6 +71,8 @@ def main():
   if tag=='open':
    assert p==parse(x[0]) and p not in used
    if p in far:used[p]='FAR';return farterm(p,far[p])
+   if p in regular:
+    used[p]='regular';ns=f'{NS}Regular.M{regular[p]}';return f'.proven {ns}.table {ns}.never'
    if p in cycles:
     used[p]='late-cycle';e,k,r,b=cycles[p];return f'.cycle {e} {k} {str(r).lower()} ({b})'
    if p in manual:used[p]='manual';ns=manual[p];return f'.proven {ns}.table {ns}.never'
@@ -85,7 +96,7 @@ def main():
    body.append(f'def {name} : Audit := .split {n} {slot(s)} (byMove {xs})\ntheorem {name}_checked : BB6.Agent29CanonicalFast.check {B} {pexpr} {c} {name} = true :=\n  split24 {B} {pexpr} {c} {n} {slot(s)} {xs} (by rfl)\n    '+'\n    '.join(proofs)+'\n');return name
   c=max(cut,i%6+1);mv=move(MOVES[i]);pexpr=f'(b1Child {mv})';emit(refine(parse(P),s,MOVES[i]),c,t,pexpr,nm)
   body.append(f'theorem {nm}_bound : ∀ m, compatible {pexpr} m → WeightedBound {B} m :=\n  BB6.Agent29CanonicalFast.bound {B} {pexpr} {c} {nm} (by decide) (supportOK_sound _ _ (by decide)) (b1Child_root {mv}) (b1Child_nohalt {mv}) {nm}_checked\n#print axioms {nm}_bound\n')
-  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+HEAD+'\n'.join(body)+END)
+  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+regular_imports+HEAD+'\n'.join(body)+END)
   print(nm,size(t),counter,flush=True)
  (out/f'{stem}Base.lean').write_text('import CanonicalPrefixFast\nimport Raw36Cut\n'+HEAD+base(a.index,cut,n,s)+END)
  terms=[];proofs=[];imports=[]
