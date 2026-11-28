@@ -115,12 +115,23 @@ function residualLeaf(p){
   return {kind:"residual",row:j};
 }
 function leafFor(p,stats){
-  const c=certFor(p);
-  if(["halt","side","closed"].includes(c.kind)){
+  assert.equal(p.filter(x=>x===0).length,0);
+  const r=trace(p),w=sideWitness(r.hist);
+  let c=null;
+  if(w)c={kind:"side",...w};
+  else if(r.kind==="halt" && r.t+1<=128)c={kind:"halt",n:r.t};
+  else{
+    const closed=closedReachable(p);
+    if(closed)c={kind:"closed",ss:closed};
+    else{
+      const rr=trace(p,127);
+      if(rr.kind==="halt" && rr.t+1<=128)c={kind:"halt",n:rr.t};
+    }
+  }
+  if(c){
     stats["leaf_"+c.kind]=(stats["leaf_"+c.kind]??0)+1;
     return {kind:"cert",cert:c};
   }
-  assert.equal(c.kind,"long");
   stats.leaf_residual=(stats.leaf_residual??0)+1;
   return residualLeaf(p);
 }
