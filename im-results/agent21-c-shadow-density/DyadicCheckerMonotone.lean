@@ -35,9 +35,12 @@ theorem excluded_monotone_congr (b c : Nat) (hbc : b≤c)
     (hx : Cong b s.x t.x) (hy : Cong b s.y t.y)
     (hb : excluded b s=true) : excluded c t=true := by
   have hs : residue b s=residue b t := by
-    apply Pair.ext
-    · exact cong_mod hx
-    · exact cong_mod hy
+    cases s with
+    | mk sx sy =>
+      cases t with
+      | mk tx ty =>
+        simp only [residue]
+        rw [cong_mod hx,cong_mod hy]
   have heq : excluded b s=excluded b t := by
     unfold excluded
     rw [hs]
