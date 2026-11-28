@@ -158,3 +158,62 @@ The complete exact generated source from artifact 15194448129 was imported with 
 The minimal source repair converts just Raw420RBRun1570 to [FastBiDFA](FastBiDFA.lean) via [convert_bidfa.py](convert_bidfa.py). On the exact tracked checker bytes (Git blob 9cc8be5b1b4afcd3c9cd87865b8a1e94095f1a2f), that leaf compiled with `lean -j1` in 21.63 seconds, peak 2,374,076 KB RSS. The containing exact refinement `pRoot_16_17_12` also has an independently exported [local Cover](Raw420RBRecoveredRoot.lean). To bound memory on large ordinary modules, [split_small42.py](split_small42.py) partitions the exact declaration blocks and retains each original module name as an import-only facade. Apply it to the six group-5 stems 22_05,18_16,16_08,04_22,16_16,22_04 (prefix Raw420RBClosedRoot_, suffix Small.lean). No declarations in the seven accepted shard closures are modified. The workflow's new `recover_rb5` variant restores precisely these artifacts, verifies nonoverlap, compiles only group 5 and the final consumer, and exports the shard before composition. Remote acceptance completed in CI 46051022197; the exported exact final Cover artifact is 15225325950. The earlier recovery run 46039522796 failed from a duplicate FastBiDFA module name; the repaired run pins the exact Raw42 checker.
 
 Historical failures: run 45967480182 lacked reconstructed sources; 45968320615 was killed (exit 143); group 5 of 45994080192 failed. Neither is a mathematical counterexample. The original list BiDFA proof of leaf1570 consumed over 3.5 GB RSS after 56 seconds; the trie checker and split-module recovery avoid that blocker without a fresh search. Remaining objective: close the other retained children and use Raw42CanonicalJoin at a common weighted bound. No global roster reduction is claimed here.
+
+
+## 2026-11-28 Agent17 closure and global-integration push
+
+The whole Raw42 parent is still conditional until all twelve first-level child Covers
+are source accepted and composed.  Seven children were already accepted before this
+push: 0LA, 0RA, 0RB, 0RE, 1LA, 1RA, and 1RB.  The remaining five are now on one
+nonduplicated recovery path each:
+
+| child | authoritative run | mechanism |
+|---|---:|---|
+| 0LE | 46142039950 | existing discovery 45993809389 + complete block-witness bank |
+| 1LB | 46142051345 | targeted part-2 recovery; oversized Run5137 split by FastBiDFA checker row |
+| 1LC | 46142055224 | oversized NGram855 split by asymmetric-NGram checker row |
+| 1LE | 46142043725 | existing discovery 45993809389 + complete block/subtree witness bank |
+| 1RE | 46142047495 | existing discovery 45993809389 + six exact hard-tail block witnesses |
+
+The first untouched-branch assembly attempts exposed a generator bug rather than a
+mathematical holdout: leaf-emitter stdin ended with the literal characters `\\n`,
+so integer widths such as `8\\n` could not parse.  `gen_assembly42.py` now appends
+`chr(10)`.  Do not rerun discovery.
+
+Large certificate recovery is source-preserving:
+- `emit_ngram42_rows.py` / `rewrite_ngram42_rows.py` keep the same NGram
+  transition table, saturated certificate, and theorem, but kernel-check the twelve
+  state/symbol rows independently.
+- `FastBiDFARows.lean` adds `check_of_rows` in a separate extension module, and
+  `rewrite_run42_rows.py` converts the frozen list witness using the existing exact
+  list-to-trie converter before checking each row.  The shared `FastBiDFA.lean`
+  source was restored unchanged so new artifacts do not acquire an avoidable shared
+  module-identity conflict with accepted children.
+
+The final local composition path is already staged:
+- `Raw42NamedJoin.lean` exposes the exact twelve canonical B1 moves and a generic
+  monotone Cover lift.
+- `Raw42GlobalBridge.lean` joins the actual mixed child bounds (0RA/0RB at 1006,
+  ten others at 100006), identifies the resulting parent with the literal Raw42
+  table, and lifts to 6766859.
+- `Raw42AcceptedParent.lean` is the concrete twelve-child wrapper.
+- `merge_child_artifacts42.py` and
+  `.github/workflows/agent17-raw42-parent-compose.yml` strictly merge source,
+  module-identity, compiler, and object hashes before compiling only the parent.
+  Conflicts are errors; no first-wins object selection is allowed.
+
+Global consumption is also staged rather than inferred from raw indices:
+- `Raw42Canonical40Membership.lean` proves exact literal membership in Canonical40.
+- `Raw42Canonical39Membership.lean` proves exact membership in the accepted Raw39
+  Canonical39 lineage.
+- `Raw42Canonical39Conditional.lean` and
+  `Raw42Canonical39FromNamed.lean` expose a conditional 39→38 removal from the
+  twelve named child Covers.
+- If Agent3 direct Raw39+Raw47 Canonical38 run 46136413104 becomes accepted,
+  `Raw42Canonical38DirectConditional.lean` and
+  `Raw42Canonical38DirectFromNamed.lean` stage the stronger conditional 38→37
+  removal.  The authenticated checker/workflow is prepared but must not be
+  dispatched against an unaccepted predecessor.
+
+Until a parent artifact is source accepted, none of these conditional roster
+successors changes the accepted global residual count.
