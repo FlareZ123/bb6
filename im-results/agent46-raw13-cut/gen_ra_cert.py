@@ -23,3 +23,7 @@ for gi,start in enumerate(range(0,n,1000)):
 s='import Raw13RAWitness\n'+''.join('import '+name+'\n' for name,_ in groups)+head+'open BB6.Agent13BlankDelay\n'
 s+=f'theorem raw13OneRA_assigned : PackedOK {z(0)} count {z(n)} :=\n  {join([g for _,g in groups])}\n\ntheorem raw13OneRA_cover : Cover (WeightedBound bound) p :=\n  packed_cover raw13OneRA_assigned (by decide) (by decide)\n\ntheorem raw13OneRA_bound (m : Machine) (hm : compatible p m) : WeightedBound bound m :=\n  raw13OneRA_cover.sound m hm\n\ntheorem raw13OneRA_halts : HaltsAfter (weightedTNFDefaultCompletion p) count :=\n  packed_halts raw13OneRA_assigned (by decide) (by decide)\n#print axioms raw13OneRA_halts\n#print axioms raw13OneRA_bound\n#print axioms raw13OneRA_assigned\n#print axioms raw13OneRA_cover\nend {ns}\n'
 (out/'Raw13RAFinal.lean').write_text(s)
+
+# Guided sparse prefixes replace expensive full-word parsing during kernel replay.
+import subprocess
+subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name("gen_ra_guided.py")),str(trace),str(out)],check=True)
