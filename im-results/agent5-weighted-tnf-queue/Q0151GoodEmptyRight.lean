@@ -36,8 +36,9 @@ theorem c_blank_bad (s : SegmentSummary) (h : s.last ≠ 3) :
 theorem good_c_blank_last_three (s : SegmentSummary)
     (hc : Good (mkControl false emptyRight s)) :
     s.last = 3 := by
-  by_contra h
-  exact good_no_bad _ hc (c_blank_bad s h)
+  by_cases h : s.last = 3
+  · exact h
+  · exact False.elim (good_no_bad _ hc (c_blank_bad s h))
 
 theorem good_c_blank_physical_trim (s : List Bool)
     (hs : BB6.Agent5Q0151SegmentGrammar.SegGood s)
