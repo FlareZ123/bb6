@@ -44,8 +44,9 @@ def main():
  stem=f'Raw36D1{i:02d}' if a.direct else f'Raw36B1{i:02d}';NS=f'BB6.Agent29{stem}';OPEN_NS=NS+'Sweep';HEAD=header(NS);END=f'\nend {NS}\n'
  P=('1RB---_1RC---_0RD---_0LD'+MOVES[i]+'_------_------') if a.direct else ('1RB---_1RC'+MOVES[i]+'_0RD---_0LD1LB_------_------');cut=max(4,i%6+1)
  got=json.loads(a.tree.read_text() if a.tree else subprocess.check_output(['node',str(ROOT/'canonical_search.cjs'),P,str(cut),'tree'],text=True))
- if a.direct:
-  fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/f'direct-{i:02d}-compact.json.xz.b64').read_text())))
+ if a.direct or i==22:
+  prefix='direct' if a.direct else 'd1'
+  fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/f'{prefix}-{i:02d}-compact.json.xz.b64').read_text())))
   keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
   assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest']
   evidence={'bound':fixture['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'active':[],'missing':[]}
@@ -72,6 +73,10 @@ def main():
  if 'BB6.Agent29Raw36B1LBCycle' in manual.values():
   from emit_phase0lb import generate
   generate(out/'Raw36B1LBCycle.lean')
+ for j in (150,153):
+  if f'BB6.Agent29Raw36B122Phase{j}' in manual.values():
+   from importlib import import_module
+   import_module(f'emit_b122_{j}').generate(out/f'Raw36B122Phase{j}.lean')
  regular_imports=''
  for j,(t,L,R) in enumerate(evidence.get('regular',[])):
   I=inv(t,L,R);assert I,(t,'not closed')
