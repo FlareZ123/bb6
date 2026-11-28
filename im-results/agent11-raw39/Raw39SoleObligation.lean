@@ -1,4 +1,4 @@
-import Raw39TenChildPartial
+import Raw39SiblingThreshold
 import Raw39Canonical40Conditional
 
 set_option maxRecDepth 100000
@@ -45,16 +45,8 @@ above the largest remaining sibling bound 15125, requiring the complete 1LE
 child only at that threshold. No all-threshold equivalence is needed. -/
 theorem parent_cover_if_oneLE_above_15125 (B : Nat) (hB : 15125 ≤ B)
     (h1 : Bound B oneLE) : Cover (WeightedBound B) p39 := by
-  apply Cover.leaf
   rw [literal_source_equality]
-  apply BB6.Agent11Raw39AcceptedNine.parent_bound_two B (by omega)
-  intro mv hm
-  simp only [BB6.Agent11Raw39AcceptedNine.remaining,
-    List.mem_cons, List.not_mem_nil, or_false] at hm
-  rcases hm with rfl | rfl
-  · exact BB6.Agent43Raw391LEBoundLift.mono hB
-      BB6.Agent11Raw39TenChild.zeroLE_bound
-  · exact h1
+  exact BB6.Agent11Raw39SiblingThreshold.cover_from_oneLE B hB h1
 
 /-- At the global quotient's accepted intermediate score, the only Raw39
 hypothesis needed is the A1=1LE child at that *same* score. -/
