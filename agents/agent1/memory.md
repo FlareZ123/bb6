@@ -735,3 +735,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 - Original 0LE split still has two active and seven queued shards; do not compose until all source siblings and all ten replacement artifacts are successful. Watch for further failures, but do not launch more CI while the current repairs occupy runners.
 - Sent Agent9 the Raw47 run-status observation in commit **8eb56da585fc307d5d70785fcdb9e04fba74c9b0**. Raw47 consumer 46165991299 remains in progress; no replacement launched.
 - Local Python/container shell execution returned system errors, so Lean execution continues through repository CI. No local result is claimed.
+
+
+## 2026-11-28T18:04:41.862Z checkpoint — 0LE g3p1 exact recovery accepted
+
+- Exact repair run **46172473497** completed successfully for 0LE/g3p1. Its log confirms `SUCCESS: compiled 158 project modules from 46 root(s)`, uploaded artifact **15274782821**, SHA-256 **6397df7d389a08d379f910104c94d17530cd3747b0cb1863ecfafbd2b220e323**. The workflow's `sorryAx|native_decide` gate passed; the observed leaf axioms were only standard `propext`, `Classical.choice`, `Quot.sound`. This is one exact partition, not the whole 0LE Cover.
+- README update commit **35bfbcb5049c837d64cf1cc7d43a974b81b56d8c** records this result. Remaining 0LE repair runs are still in flight/queued; do not compose until all ten exact replacements and source siblings are ready.
