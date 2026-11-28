@@ -1,0 +1,203 @@
+name: Agent11 Raw39 1LE final-shard recovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+# Source, generator, manifest and proof provenance are pinned to the exact
+# source commit of the 4/5-accepted producer run 46111417557. Re-running
+# those accepted shards is unnecessary. Dispatch ONLY if its g5b job fails.
+jobs:
+  recover_g5b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: aafec68362a0fb2f508023c133bde7264236c32a
+      - name: Install source-accepted Lean version
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate exact pinned 1LE group without touching the other four shards
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent11-raw39
+          python "$root/prepare_raw39_semantic_children.py" 1LE
+          python - "$root/shards-1LEsemantic.json" <<'PY'
+          import json,sys
+          from pathlib import Path
+          p=Path(sys.argv[1]);j=json.loads(p.read_text())
+          assert 'g5b' in j['groups'] and set(j['groups'])=={'gold','g1a','g1b','g5a','g5b'}
+          j['artifact_prefix']='raw39-1LE-semantic-shard'
+          p.write_text(json.dumps(j,indent=2)+'\n')
+          print('g5b modules',len(j['groups']['g5b']))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw39-1LE-old-accepted-union
+          run-id: 46111417557
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/a11-1le-old-union
+      - name: Compile ONLY missing g5b with extended timeout
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          mapfile -t modules < <(python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('im-results/agent11-raw39/shards-1LEsemantic.json').read_text())
+          print('\n'.join(j['groups']['g5b']))
+          PY
+          )
+          test "${#modules[@]}" -gt 0
+          roots=()
+          for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a11-semantic-shard --jobs 2 \
+            --manifest /tmp/a11-semantic-shard/manifest.json \
+            --precompiled-manifest /tmp/a11-1le-old-union/manifest.json \
+            --precompiled-dir /tmp/a11-1le-old-union \
+            --label raw39-1LE-semantic-shard-g5b \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
+            --artifact-name raw39-1LE-semantic-shard-g5b \
+            --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39_semantic_children.py" \
+            --provenance-input "$root/blockgram_regen.py" \
+            --provenance-input "$root/minimize_bi.py" \
+            --provenance-input "$root/1LA-frontier.json.xz.b64" \
+            --provenance-input "$root/1RE-frontier.json.xz.b64" \
+            --provenance-input "$root/1LE-frontier.json.xz.b64" \
+            --provenance-input "$root/0LE-frontier.json.xz.b64" \
+            --provenance-input "$root/gen4084_packed.py" \
+            --provenance-input "$root/prepare_le_residual.py" \
+            --provenance-input "$root/prepare_raw39la_frontier.py" \
+            --provenance-input "$root/rungram_regen.py" \
+            --provenance-input "$root/la-frontier.json" \
+            --provenance-input "$root/lb-witnesses.json" \
+            --provenance-input "$root/Raw39LBProofs.json.xz.b64" \
+            --provenance-input "$root/shards-1LEsemantic.json" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent32-raw59/ngram_asym.cpp \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            --provenance-input tools/lean_compile_closure.py \
+            "${roots[@]}" 2>&1 | tee /tmp/a11-recover-g5b.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-recover-g5b.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw39-1LE-semantic-shard-g5b
+          path: /tmp/a11-semantic-shard/
+          if-no-files-found: warn
+          retention-days: 30
+
+  assemble:
+    needs: recover_g5b
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: aafec68362a0fb2f508023c133bde7264236c32a
+      - name: Install source-accepted Lean version
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate exact 1LE source and original manifest
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent11-raw39
+          python "$root/prepare_raw39_semantic_children.py" 1LE
+          python - "$root/shards-1LEsemantic.json" <<'PY'
+          import json,sys
+          from pathlib import Path
+          p=Path(sys.argv[1]);j=json.loads(p.read_text())
+          j['artifact_prefix']='raw39-1LE-semantic-shard'
+          p.write_text(json.dumps(j,indent=2)+'\n')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 46111417557
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: raw39-1LE-semantic-shard-*
+          path: /tmp/a11-semantic-shards
+      - name: Prefer the new independently compiled g5b
+        run: rm -rf /tmp/a11-semantic-shards/raw39-1LE-semantic-shard-g5b
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw39-1LE-semantic-shard-g5b
+          path: /tmp/a11-semantic-shards/raw39-1LE-semantic-shard-g5b
+      - name: Merge five source-authenticated groups and compile complete 1LE bound
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-semantic-shards /tmp/a11-semantic-union "$root/shards-1LEsemantic.json"
+          read -r table bound < <(python -c 'import json,sys; j=json.load(open(sys.argv[1])); print(j["table"],j["bound"])' "$root/shards-1LEsemantic.json")
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a11-semantic-complete --jobs 2 \
+            --manifest /tmp/a11-semantic-complete/manifest.json \
+            --label raw39-1LE-semantic-complete \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
+            --artifact-name raw39-1LE-semantic-proof \
+            --theorem BB6.Agent11Raw391LE.all1LE \
+            --parent-table "$table" --weighted-bound "$bound" \
+            --precompiled-manifest /tmp/a11-semantic-union/manifest.json \
+            --precompiled-dir /tmp/a11-semantic-union \
+            --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39_semantic_children.py" \
+            --provenance-input "$root/blockgram_regen.py" \
+            --provenance-input "$root/minimize_bi.py" \
+            --provenance-input "$root/1LA-frontier.json.xz.b64" \
+            --provenance-input "$root/1RE-frontier.json.xz.b64" \
+            --provenance-input "$root/1LE-frontier.json.xz.b64" \
+            --provenance-input "$root/0LE-frontier.json.xz.b64" \
+            --provenance-input "$root/gen4084_packed.py" \
+            --provenance-input "$root/prepare_le_residual.py" \
+            --provenance-input "$root/prepare_raw39la_frontier.py" \
+            --provenance-input "$root/rungram_regen.py" \
+            --provenance-input "$root/la-frontier.json" \
+            --provenance-input "$root/lb-witnesses.json" \
+            --provenance-input "$root/Raw39LBProofs.json.xz.b64" \
+            --provenance-input "$root/shards-1LEsemantic.json" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent32-raw59/ngram_asym.cpp \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            --provenance-input tools/lean_compile_closure.py \
+            "$root/Raw391LEComplete.lean" 2>&1 | tee /tmp/a11-recovered-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-recovered-complete.log BB6.Agent11Raw391LE.all1LE
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-recovered-complete.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw39-1LE-semantic-proof
+          path: /tmp/a11-semantic-complete/
+          if-no-files-found: warn
+          retention-days: 30
