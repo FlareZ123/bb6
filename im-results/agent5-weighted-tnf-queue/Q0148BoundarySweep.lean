@@ -774,6 +774,58 @@ theorem anotherBlankCycle (tok : LeftChunk) (chunks : List LeftChunk)
   have h := join0 h1 (join0 h2 (join0 h3 h4))
   simpa [rs,f,Nat.add_assoc,List.append_assoc] using h
 
+
+/-- Uniformly close an E0 right-sweep with the first 110 marker after
+    any number of 10 tokens, without evaluating the missing transition. -/
+theorem ERightFirstMarker (n : Nat) (L R : List Bool) :
+    run0 p (2*n+2)
+      ⟨4,[false] ++ L,rep [true,false] n ++ [true,true] ++ R⟩ =
+    some ⟨4,[true,false,true] ++ rep [false,true] n ++ L,R⟩ := by
+  have h1 := rightEAltSweep n L ([true,true] ++ R)
+  have h2 := Auto.knownRun_sound p 2 rightEMarker
+    (rep [false,true] n ++ L) R
+  have h := join0 h1 h2
+  simpa [Auto.extend,List.append_assoc,Nat.add_assoc] using h
+
+/-- The left-edge A0 starts with 10 then reaches E0; any extra 10
+    tokens before a 110 marker terminate in a safe E1. -/
+theorem ARightFirstMarker :
+    Auto.knownRun p 2 ⟨0,[false],[true,false]⟩ =
+      some ⟨4,[false,false,true],[]⟩ := by
+  decide +kernel
+
+theorem ARightToEOne (n : Nat) (L R : List Bool) :
+    run0 p (2*n+6)
+      ⟨0,[false] ++ L,
+        [true,false,true,false] ++ rep [true,false] n ++
+          [true,true,false] ++ R⟩ =
+    some ⟨4,[true,false,true] ++
+          rep [false,true] (n+1) ++ [false,true] ++ L,
+          [false] ++ R⟩ := by
+  have h1 : run0 p 2
+     ⟨0,[false] ++ L,
+        [true,false,true,false] ++ rep [true,false] n ++
+          [true,true,false] ++ R⟩ =
+     some ⟨4,[false,false,true] ++ L,
+              rep [true,false] (n+1) ++ [true,true,false] ++ R⟩ := by
+    simpa [Auto.extend,rep,List.append_assoc] using
+      Auto.knownRun_sound p 2 ARightFirstMarker L
+       ([true,false] ++ rep [true,false] n ++ [true,true,false] ++ R)
+  have h2 : run0 p (2*(n+1)+2)
+      ⟨4,[false,false,true] ++ L,
+         rep [true,false] (n+1) ++ [true,true,false] ++ R⟩ =
+      some ⟨4,[true,false,true] ++ rep [false,true] (n+1) ++
+                 [false,true] ++ L,[false] ++ R⟩ := by
+    simpa [List.append_assoc] using
+      ERightFirstMarker (n+1) ([false,true] ++ L) ([false] ++ R)
+  have h := join0 h1 h2
+  have ht : 2 + (2*(n+1)+2) = 2*n+6 := by omega
+  simpa only [ht,List.append_assoc] using h
+
+#print axioms ERightFirstMarker
+#print axioms ARightFirstMarker
+#print axioms ARightToEOne
+
 #print axioms rightEdgeTwo
 #print axioms secondCarryShape
 #print axioms anotherBlankCycle
