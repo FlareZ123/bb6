@@ -3,6 +3,7 @@ import Raw56LE17557RightLevel
 
 namespace BB6.Agent1Raw56.LE17557AbstractEpoch
 open BB6.Agent1Raw56.LE17557FrameMachine
+open BB6.Agent1Raw56.LE17557ActionGrammar
 open BB6.Agent1Raw56.LE17557RightLevel
 
 /-- The two now-proved algebraic halves of physical epoch k (C_(k+2) to
