@@ -111,6 +111,14 @@ For **q>=3** and `2*(M-1)` not dividing `A*T`, a legal q-th power additionally r
 
 Here the quotient `M^(q-2)/2` is integral because `M=4^J` and J>=1. Indeed if the right-side bound failed, then `M^(q-2)>2*floor((r0+2T)/3)`, forcing the impossible even slope by the theorem. This is an **exact exponential delay for every fixed non-even-slope typed word**, not a probabilistic large-scale extrapolation. It also provides a computable upper bound on the repetition exponent at any fixed starting half-rank.
 
+**Weighted onset bound along an entire signed path.** Let an initial signed pair half-rank be `r_init`. Let `I` be the sum of the positive exponents j in all typed letters *before* a repeated W, and let `J=sum_(x in W)j_x`. Since each typed letter's rank cost is at most 7j, the starting half-rank of W satisfies `r0<=r_init+7I` and the cost of W satisfies `T<=7J`. Thus whenever the even-slope divisor fails, any q>=3 repetitions of W necessarily obey the **exact integer inequality**
+
+```text
+           14*I + 28*J + 2*r_init >= 3*4^(J*(q-2)). (13)
+```
+
+This bounds the earliest *weighted inverse position* of a q-th power exponentially in its run-gap weight and q-2. Under the separate paper primitive-period valuation no-go, a shortest typed period containing j>1 always has the required divisor failure, giving an unconditional (within that still uncompiled paper composition) power-onset restriction for such words. It remains consistent with high-complexity aperiodic infinite symbolic paths and is not a whole-machine verdict.
+
 The bounds are *necessary only*. Real paths face additional E/S guards, Bad leaves, and authentic-root ancestry constraints, so they may be impossible even at ranks above (10)–(12). For example, the nonempty legitimate signed prefix E2³ exists from `(u,D)=(183,32)`, `r0=565`: its paired inputs `(183,32)->(47,864)->(39,928)->(39,944)` satisfy the finite recurrence. E2⁴ fails from that same input at the next F divisibility. This is a concrete reminder that the quantitative no-go does **not** prohibit every finite cube.
 
 ## A strict finite slope-cone lemma (missing justification now made explicit)
