@@ -161,19 +161,19 @@ for i in range(0,len(segments),size):
         print(f'  exact h{len(segs)-1}\nend F197.Agent2Self',file=f)
 if GENERIC_CUT:
     with (root/'RootTheorem.lean').open('w') as f:
-        print('import GenericBasin\\n'+'\\n'.join('import '+n for n in names),file=f)
-        print('set_option maxRecDepth 100000\\nset_option maxHeartbeats 20000000\\nnamespace F197.Agent2Self\\nopen Agent2Counter',file=f)
-        print(f'theorem blank_to_generic : Reach blankStart rootC{len(segments)} := by\\n  have h0 : Reach blankStart rootC0 := seed_first',file=f)
+        print('import GenericBasin\n'+'\n'.join('import '+n for n in names),file=f)
+        print('set_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter',file=f)
+        print(f'theorem blank_to_generic : Reach blankStart rootC{len(segments)} := by\n  have h0 : Reach blankStart rootC0 := seed_first',file=f)
         for j in range(len(names)):
             print(f'  have h{j+1} := reach_trans h{j} rootPart{j}',file=f)
-        print(f'  exact h{len(names)}\\n',file=f)
+        print(f'  exact h{len(names)}\n',file=f)
         q=GENERIC_INFO['q']
         y=GENERIC_INFO['Y']
         r='rootR'+str(ropes[json.dumps(states[-1][2])])
         i=len(segments)
-        print(f'theorem blank_nonhalt : ∀ t, run t blankStart ≠ none := by\\n  let y : Word := {word_expr(y)}\\n  have hq : 45 ≤ {q} := by decide +kernel\\n  have hy : okHead y = true := by decide +kernel\\n  have hr : ropeOK {r} = true := by decide +kernel',file=f)
+        print(f'theorem blank_nonhalt : ∀ t, run t blankStart ≠ none := by\n  let y : Word := {word_expr(y)}\n  have hq : 45 ≤ {q} := by decide +kernel\n  have hy : okHead y = true := by decide +kernel\n  have hr : ropeOK {r} = true := by decide +kernel',file=f)
         print(f'  have hstate : rstate (2*(2*{q}+2)+1) (M++GS++y) {r} = rootC{i} := by decide +kernel',file=f)
-        print(f'  have hnon := generic_odd_basin_live {q} y {r} hq hr hy\\n  rw [hstate] at hnon\\n  exact nohalt_of_reach blank_to_generic hnon\\n#print axioms blank_nonhalt\\nend F197.Agent2Self',file=f)
+        print(f'  have hnon := generic_odd_basin_live {q} y {r} hq hr hy\n  rw [hstate] at hnon\n  exact nohalt_of_reach blank_to_generic hnon\n#print axioms blank_nonhalt\nend F197.Agent2Self',file=f)
 else:
     with (root/'RootTheorem.lean').open('w') as f:
         print('import SelfTheorem\n'+'\n'.join('import '+n for n in names),file=f)
