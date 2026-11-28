@@ -51,6 +51,74 @@ theorem transparentRight (n L R : Nat) :
     some ⟨0,cat [false] (repCat [false,true] n L),cat [false] R⟩ :=
   sweepRP p 0 [false] [false] [true,false] [false,true] 6 n L R rightOne
 
+
+/-- A separated 110 marker and its preceding 10 guard are transferred
+    during a five-step leftward pass, with exact source semantics. -/
+theorem leftMarkerOne :
+    Auto.knownRun p 5 ⟨2,[false,true,true,false,true,false],[]⟩ =
+      some ⟨2,[false],[true,true,false,true,false]⟩ := by decide +kernel
+
+/-- Blocks in the leftward tape orientation.  The marker constructor
+    incorporates the mandatory separating 10 token. -/
+inductive LeftChunk where
+  | alternating
+  | separatedMarker
+  deriving DecidableEq, Repr
+
+def chunkBits : LeftChunk → List Bool
+  | .alternating => [true,false]
+  | .separatedMarker => [true,true,false,true,false]
+
+def chunkCost : LeftChunk → Nat
+  | .alternating => 2
+  | .separatedMarker => 5
+
+def inputBits : List LeftChunk → List Bool
+  | [] => []
+  | c::cs => chunkBits c ++ inputBits cs
+
+def outputBits : List LeftChunk → List Bool
+  | [] => []
+  | c::cs => outputBits cs ++ chunkBits c
+
+def scanCost : List LeftChunk → Nat
+  | [] => 0
+  | c::cs => chunkCost c + scanCost cs
+
+/-- One block, with arbitrary unobserved left/right tape tails. -/
+theorem scanOne (c : LeftChunk) (L R : List Bool) :
+    run0 p (chunkCost c)
+      ⟨2,[false] ++ chunkBits c ++ L,R⟩ =
+      some ⟨2,[false] ++ L,chunkBits c ++ R⟩ := by
+  cases c with
+  | alternating =>
+      simpa [chunkCost,chunkBits,Auto.extend,List.append_assoc] using
+        Auto.knownRun_sound p 2 leftOne L R
+  | separatedMarker =>
+      simpa [chunkCost,chunkBits,Auto.extend,List.append_assoc] using
+        Auto.knownRun_sound p 5 leftMarkerOne L R
+
+/-- Exact full *leftward half-sweep* for an arbitrary finite sequence of
+    alternating and separated-marker chunks, all with arbitrary tails.
+    This is a mathematical all-length statement, not finite simulation. -/
+theorem scanChunks (cs : List LeftChunk) (L R : List Bool) :
+    run0 p (scanCost cs)
+      ⟨2,[false] ++ inputBits cs ++ L,R⟩ =
+      some ⟨2,[false] ++ L,outputBits cs ++ R⟩ := by
+  induction cs generalizing R with
+  | nil =>
+      simp [scanCost,inputBits,outputBits,run0]
+  | cons c cs ih =>
+      have h1 := scanOne c (inputBits cs ++ L) R
+      have h2 := ih (chunkBits c ++ R)
+      have h := join0 h1 h2
+      simpa only [scanCost,inputBits,outputBits,List.cons_append,
+        List.nil_append,List.append_assoc] using h
+
+#print axioms leftMarkerOne
+#print axioms scanOne
+#print axioms scanChunks
+
 #print axioms leftOne
 #print axioms transparentLeft
 #print axioms rightOne
