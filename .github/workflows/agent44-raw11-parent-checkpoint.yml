@@ -45,6 +45,11 @@ on:
         required: false
         default: ''
         type: string
+      packed_extra132:
+        description: Replace the frozen Extra132 giant FAR leaf by the exact bit-packed split checker
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -169,6 +174,26 @@ jobs:
           test -s /tmp/parent-source/TwoSidedAutomataRows.lean
           echo "row_split_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
 
+      - name: Repack the exact Extra132 giant FAR leaf
+        if: inputs.parent_id == '132' && inputs.packed_extra132
+        run: |
+          set -euo pipefail
+          cp im-results/agent13-raw10-box17/BitPackedStack.lean /tmp/parent-source/BitPackedStack.lean
+          cp im-results/agent44-raw11-extra28/BitPackedSplit.lean /tmp/parent-source/BitPackedSplit.lean
+          python im-results/agent44-raw11-extra28/repack_extra132.py \
+            /tmp/parent-source /tmp/parent-source | tee /tmp/extra132-packed.log
+          grep -F 'rows [9510, 811, 1696, 11030, 1834, 13603, 11465, 12024, 9152, 0, 5153, 7161]' \
+            /tmp/extra132-packed.log
+          test -s /tmp/parent-source/Extra132PackedSplitProof.lean
+          test -s /tmp/parent-source/BitPackedSplit.lean
+          rm -f \
+            /tmp/parent-out/Agent5Raw11Extra132Sub_root_12_root_19_root_21.olean \
+            /tmp/parent-out/Agent5Raw11Extra132Sub_root_12_root_19.olean \
+            /tmp/parent-out/Agent5Raw11Extra132Sub_root_12.olean \
+            /tmp/parent-out/Agent5Raw11Extra132Kid12.olean \
+            /tmp/parent-out/Agent5Raw11Extra132.olean
+          echo "packed_source_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
+
       - name: Split the resource-heavy Extra140 aggregate
         if: inputs.split_extra140_aggregate && inputs.parent_id == '140'
         run: |
@@ -229,6 +254,7 @@ jobs:
             echo "target_module=${RAW11_REPAIR_TARGET}"
             echo "split_extra140_aggregate=${{ inputs.split_extra140_aggregate }}"
             echo "split_extra132_rows=${{ inputs.split_extra132_rows }}"
+            echo "packed_extra132=${{ inputs.packed_extra132 }}"
             echo "head_sha=${GITHUB_SHA}"
             echo "lean_version=$(lean --version)"
           } > /tmp/parent-out/checkpoint-provenance.txt
