@@ -1,0 +1,31 @@
+name: Agent24 Raw45 third-level 1645 translated nonhalting cylinders
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-certificate:
+    name: "Raw45 third-depth source proof bank ${{ matrix.shard }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check original-source translated lasso certificates and axioms
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          TARGET="im-results/agent24-raw45/Raw45Depth3Cycles${{ matrix.shard }}.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/agent24-d3 --jobs 4 "$TARGET" 2>&1 | tee /tmp/agent24-d3.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent24-d3.log
