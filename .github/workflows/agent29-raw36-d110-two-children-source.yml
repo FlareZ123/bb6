@@ -1,0 +1,79 @@
+name: Agent29 Raw36 D1=0RE two full E0 children original-source six-live proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 115
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reclaim SDK disk for many authenticated source modules
+        run: |
+          set -euo pipefail
+          df -h /
+          for p in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$p" ]]; then sudo rm -rf "$p"; fi
+          done
+          df -h /
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a29-d110-census
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-recovered
+          run-id: 46153748009
+          github-token: ${{ github.token }}
+          path: /tmp/a29-d110-far
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-structured-candidates
+          run-id: 46154479283
+          github-token: ${{ github.token }}
+          path: /tmp/a29-d110-struct
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Lean-kernel recheck 53 exact literal witnesses with one shared automata family
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile \
+            im-results/agent29-raw36/generate_direct10_multi.py \
+            im-results/agent29-raw36/compose_direct10_dual04_13.py
+          python -u im-results/agent29-raw36/compose_direct10_dual04_13.py \
+            --census /tmp/a29-d110-census/direct10.json.gz \
+            --far /tmp/a29-d110-far/found.tsv \
+            --structured /tmp/a29-d110-struct/structured.json \
+            --archives /tmp/a29-d110-dual-archives \
+            --work /tmp/a29-d110-dual \
+            | tee /tmp/a29-d110-dual-source.log
+          test -s /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+          cat /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d110-two-e0-children-six-live-source
+          path: |
+            /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+            /tmp/a29-d110-dual/Raw36D110Kid04.lean
+            /tmp/a29-d110-dual/Raw36D110Kid13.lean
+            /tmp/a29-d110-dual/Raw36D110Live6AfterE0LE1LB.lean
+            /tmp/a29-d110-dual/direct10-source-build.log
+            /tmp/a29-d110-dual-source.log
+          if-no-files-found: warn
+          retention-days: 60
