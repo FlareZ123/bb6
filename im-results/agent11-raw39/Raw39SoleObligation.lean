@@ -1,5 +1,5 @@
 import Raw39SiblingThreshold
-import Raw39Canonical40Conditional
+import Raw39Canonical40LooseThreshold
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -63,6 +63,21 @@ theorem exact_at_champion_if_oneLE_at_global
   BB6.Agent11Raw39Canonical40Conditional.conditional_exact_at_champion
     (parent_cover_if_oneLE_at_global h1) hRest
 
+/-- At the *actual global champion score*, rather than at the earlier
+6,766,859 intermediate normalization cutoff, a single 1LE child bound still
+suffices to discharge the entire Raw39 quotient representative. -/
+theorem exact_at_champion_if_oneLE_at_champion
+    (h1 : Bound (proposedTM63Moves + 7) oneLE)
+    (hRest : ∀ e ∈ BB6.Agent11Raw39Canonical40Conditional.roster39,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) := by
+  have hB : 15125 ≤ proposedTM63Moves + 7 := by
+    have hf := BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+    omega
+  exact BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_champion
+    (parent_cover_if_oneLE_above_15125
+      (proposedTM63Moves + 7) hB h1) hRest
+
 theorem exact_at_champion_if_oneLE
     (h1 : Bound 28311 oneLE)
     (hRest : ∀ e ∈ BB6.Agent11Raw39Canonical40Conditional.roster39,
@@ -77,6 +92,7 @@ theorem exact_at_champion_if_oneLE
 #print axioms parent_cover_if_oneLE_above_15125
 #print axioms parent_cover_if_oneLE_at_global
 #print axioms exact_at_champion_if_oneLE_at_global
+#print axioms exact_at_champion_if_oneLE_at_champion
 #print axioms exact_at_champion_if_oneLE
 
 end BB6.Agent11Raw39SoleObligation
