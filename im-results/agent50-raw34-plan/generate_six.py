@@ -19,6 +19,7 @@ def main():
     ap=ArgumentParser();ap.add_argument('--parent',default='1RB---_1RC---_0RD0RE_1LC0LD_------_------')
     ap.add_argument('--far',default='./far');ap.add_argument('--output',default='generated6');ap.add_argument('--name',default='Raw34D1LD_C1RE')
     ap.add_argument('--cap',type=int,default=200);ap.add_argument('--window',type=int,default=40);ap.add_argument('--long-cap',type=int,default=10000)
+    ap.add_argument('--summary-only',action='store_true',help='emit exact discovery census and residuals but no Lean source files')
     args=ap.parse_args();out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
     p=parse(args.parent);first=simulate(p,args.cap,args.window);assert first[0]=='split';s=first[1]
     groups=[];units=[]
@@ -45,13 +46,16 @@ def main():
             else:b.pending.append((i,t))
     for b,t,_ in units:b.finish(t)
     bound=max(1,max(b.bound for b in builders));print('weighted bound',bound,flush=True)
-    for b,t,n in units:emit_child(b,t,n,'BB6.Agent50'+n,bound,out)
+    if not args.summary_only:
+        for b,t,n in units:emit_child(b,t,n,'BB6.Agent50'+n,bound,out)
     children=[];names=[]
     for q,name,slot,us in groups:
         bs=[b for b,_,_ in us];ns=[n for _,_,n in us]
-        if slot is not None:emit_parent(q,slot,bs,ns,['BB6.Agent50'+n for n in ns],bound,out,name)
+        if slot is not None and not args.summary_only:
+            emit_parent(q,slot,bs,ns,['BB6.Agent50'+n for n in ns],bound,out,name)
         children.append(Aggregate(bs));names.append(name)
-    emit_parent(p,s,children,names,['BB6.Agent50'+n for n in names],bound,out,args.name)
+    if not args.summary_only:
+        emit_parent(p,s,children,names,['BB6.Agent50'+n for n in names],bound,out,args.name)
     info={'parent':format_table(p),'weighted_bound':bound,'nodes':sum(len(b.nodes) for b in builders)+26*(1+sum(slot is not None for _,_,slot,_ in groups)),
           'stats':dict(sum((b.stats for b in builders),Counter())),'mass':dict(sum((b.mass for b in builders),Counter())),
           'children':[{'name':n,'parent':format_table(q),'residuals':a.rows()} for (q,n,_,_),a in zip(groups,children)]}
