@@ -248,6 +248,27 @@ theorem resetChain_counterReach {n R c A e : Nat}
       rcases resetEpoch_counterReach he with ⟨m,hm,hgap⟩
       exact ⟨s+(m+1), counterReach_append hs hm⟩
 
+theorem seed_only_equal {A D : Nat}
+    (h : CounterMove 1 1 A D) : A = 6 ∧ D = 1 := by
+  cases h <;> omega
+
+/-- Strip the unique seed equal-move from every positive-time authentic run. -/
+theorem root_tail_from_six_one {n A D : Nat}
+    (h : CounterReach 1 1 (n+1) A D) :
+    CounterReach 6 1 n A D := by
+  induction n generalizing A D with
+  | zero =>
+      cases h with
+      | step hr hm =>
+          cases hr
+          rcases seed_only_equal hm with ⟨rfl,rfl⟩
+          exact CounterReach.nil
+  | succ n ih =>
+      cases h with
+      | step hr hm =>
+          have ht := ih hr
+          exact CounterReach.step ht hm
+
 /-- Canonical reset skeleton: completed reset epochs followed by one
     non-Middle suffix. -/
 def ResetDecomposition (R c A D : Nat) : Prop :=
@@ -268,6 +289,28 @@ theorem counterReach_reset_decomposition
       · exact ⟨q,R0,c0,m+1,hchain,OuterRun.step houter hout⟩
       · refine ⟨q+1,A,D,0,?_,OuterRun.nil A D⟩
         exact ResetChain.step hchain ⟨m,a,d,houter,hreset⟩
+
+/-- Every positive-time authentic root state admits the canonical reset
+    decomposition anchored at the first reset state (6,1). -/
+theorem root_positive_reset_decomposition
+    {n A D : Nat}
+    (h : CounterReach 1 1 (n+1) A D) :
+    ResetDecomposition 6 1 A D :=
+  counterReach_reset_decomposition (root_tail_from_six_one h)
+
+/-- The authentic root decomposition carries an explicit global lower bound on X
+    in terms of the number of completed Middle-reset epochs. -/
+theorem root_reset_count_X_bound
+    {n A D : Nat}
+    (h : CounterReach 1 1 (n+1) A D) :
+    ∃ q R0 c0 m,
+      ResetChain q 6 1 R0 c0 ∧
+      OuterRun m R0 c0 A D ∧
+      6 + 7*q < X A D := by
+  rcases root_positive_reset_decomposition h with
+    ⟨q,R0,c0,m,hchain,houter⟩
+  refine ⟨q,R0,c0,m,hchain,houter,?_⟩
+  exact decomposition_linear_X (by decide) hchain houter
 
 /-- Quantitative consequence of the canonical decomposition: after q completed
     reset epochs, the current diagonal coordinate lies beyond R+7q. -/
