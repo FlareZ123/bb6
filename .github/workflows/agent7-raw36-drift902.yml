@@ -13,9 +13,14 @@ on:
         type: boolean
         default: false
       d100_mod_batch:
-        description: Check five novel Raw36 D1=0LA modular-stack invariants
+        description: Check source-indexed D100 modular/run-length certificates
         type: boolean
         default: false
+      d100_mod_set:
+        description: First five accepted or next six novel certificates
+        type: choice
+        options: ['five','six']
+        default: 'five'
 permissions:
   contents: read
 jobs:
@@ -170,7 +175,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent7-opaque-tail-pump/emit_modular.py \
-            /tmp/a7-d100-census/direct00.json.gz /tmp/a7-d100-mod
+            /tmp/a7-d100-census/direct00.json.gz /tmp/a7-d100-mod ${{ inputs.d100_mod_set }}
       - name: Kernel-check original TwoSidedAutomata source and five theorems
         run: |
           set -euo pipefail
@@ -178,11 +183,11 @@ jobs:
             --workdir /tmp/a7-d100-mod-proof \
             --source-root /tmp/a7-d100-mod --jobs 2 \
             --manifest /tmp/a7-d100-mod-proof/manifest.json \
-            --label raw36-d100-five-modular-stack-quotients \
-            --artifact-name raw36-d100-five-modular-source \
+            --label raw36-d100-modular-stack-quotients-${{ inputs.d100_mod_set }} \
+            --artifact-name raw36-d100-modular-${{ inputs.d100_mod_set }}-source \
             --provenance-input im-results/agent7-opaque-tail-pump/emit_modular.py \
-            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-modular.json \
-            /tmp/a7-d100-mod/Raw36D100ModAutomata00.lean \
+            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-modular${{ inputs.d100_mod_set == 'six' && '-extra' || '' }}.json \
+            /tmp/a7-d100-mod/Raw36D100${{ inputs.d100_mod_set == 'six' && 'Extra' || 'Mod' }}Automata00.lean \
             2>&1 | tee /tmp/a7-d100-mod-audit.log
           while IFS= read -r theorem; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-mod-audit.log "$theorem"
@@ -191,7 +196,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw36-d100-five-modular-source
+          name: raw36-d100-modular-${{ inputs.d100_mod_set }}-source
           path: |
             /tmp/a7-d100-mod/
             /tmp/a7-d100-mod-proof/
