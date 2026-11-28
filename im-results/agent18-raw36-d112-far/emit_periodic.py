@@ -48,6 +48,23 @@ def gram_push(k,delay,mod,mode):
         return n,s,phase,seen
     return f
 
+def prefix_blocks(base,k,delay,mode,phase_mod=1):
+    mask=(1<<k)-1
+    @lru_cache(maxsize=50000)
+    def f(x,b):
+        if x==0:
+            return (1,1,0,0,0,0,0) if b else 0
+        n0,basebits,n,s,ph,seen,other=x
+        if n0<base:return (n0+1,basebits*2+b,n,s,ph,seen,other)
+        s=(s<<1)|b;n+=1
+        if n>delay+k:
+            a=(s>>(n-k))&mask;n-=k;s&=(1<<n)-1
+            assert mode==0
+            seen|=1<<a
+            ph=(ph+1)%phase_mod
+        return n0,basebits,n,s,ph,seen,other
+    return f
+
 def check(p,lp,rp,cap=150000):
     f=[lp,rp];T=[[0],[0]];ids=[{0:0},{0:0}];D=[{},{}];E=[defaultdict(set),defaultdict(set)];wait=[defaultdict(list),defaultdict(list)]
     for e in E:e[0].add((0,0))
@@ -79,18 +96,18 @@ def main(out):
     rem=load('remaining48.txt','e5d19697d18d57280ff8547f3191caa7216f58de9a80742062e13aaa6b41e80a').decode().splitlines()
     specs=json.loads((HERE/'periodic_specs.json').read_text())
     found=set()
-    for name,stem in [('pump','Raw36D112Pump'),('phase','Raw36D112Phase'),('phase2','Raw36D112Phase2')]:
+    for name,stem in [('pump','Raw36D112Pump'),('phase','Raw36D112Phase'),('phase2','Raw36D112Phase2'),('phase3','Raw36D112Phase3')]:
         rows=[]
         for i,s,expected in specs[name]:
             t=old[i];assert t in rem and t not in found;found.add(t)
-            f=mkpush(*s) if name=='pump' else (blockpush(*s[1:]) if s[0]=='b' else gram_push(*s[1:]))
+            f=mkpush(*s) if name=='pump' else (blockpush(*s[1:]) if s[0]=='b' else (prefix_blocks(*s[1:]) if s[0]=='pb' else gram_push(*s[1:])))
             n,l,r=check(parse(t),f,f);assert n==expected,(i,n,expected)
             rows.append([i,t,n,l,r])
         generate(rows,out,stem,chunk=2,compressor=compress)
-    assert len(found)==47
+    assert len(found)==48
     residual=set(rem)-found
-    assert residual=={old[41]}
-    (Path(out)/'remaining1.txt').write_text(old[41]+'\n')
-    print('Generated 47 source-checkable exact witnesses; remaining:',old[41])
+    assert not residual
+    (Path(out)/'remaining0.txt').write_text('')
+    print('Generated 48 source-checkable exact witnesses; no discovery holdouts')
 
 if __name__=='__main__':main(sys.argv[1])

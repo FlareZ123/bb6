@@ -1,3 +1,11 @@
+# Raw36 D1=1LA: all 74 previous discovery holdouts locally kernel-checked
+
+The last literal 1RB0LE_1RC1RC_0RD0RB_0LD1LA_1LF1LD_0LB--- (index 41) is proved nonhalting for every compatible completion by preserving the bottom six bits, then aligned six-bit blocks with delay two and parity. The discovery relation has 8784 rows; the incidence quotient has 1020 rows, 125 left and 40 right states. Lean 4.36.0-rc2 compiled BB6.Agent18Raw36D112Phase300.M41.never against the original dependency objects in artifact 15268397082, standard three axioms only. Source SHA256 e6d4c9684ae33e6e7c4f9122928fb7296811b73bb6a763d4408f2e0fd1d41f43; olean SHA256 5b9ff0743e7b59637994e96e34403b723ed3c1fcb660653a3a3b6e0ba944dcf2.
+
+Run python emit_periodic.py OUT to generate all 48 periodic/block witnesses in 25 modules. Together with 22 trace-learned and four translated-cycle certificates these exhaust the prior 74 literal roster. All 3841 OPEN literals have candidate evidence; whole-parent Cover and global decrement still require inherited-bank and canonical-tree source integration.
+
+## Previous checkpoint (superseded residual count)
+
 # Raw36 D1=1LA — ONE discovery holdout remains
 
 **73 of the 74 previously unresolved literals are now proved nonhalting by local Lean source checks**. This follows two new abstraction families that are transferable to other Raw36 children.
