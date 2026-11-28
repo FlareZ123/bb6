@@ -60,7 +60,7 @@ theorem upstream_trace_to_source {n : Nat} {s : HighLevelState}
     short of deciding the remaining gate classes or global BB(6). -/
 theorem original_blank_halt_implies_mod384_terminal
   (hh : BusyBeaver.IsHalt target) :
-    ∃ d : Nat, d % 384 ∈ possibleGates := by
+    ∃ (d n : Nat), CounterReach 1 1 n (d+1) d ∧ d % 384 ∈ possibleGates := by
   have hc : BusyBeaver.CollatzHalts highLevelNext highLevelStart :=
     isHalt_iff_highLevel_acceleration.mp hh
   obtain ⟨n,s,hr,hs⟩ :=
@@ -77,7 +77,7 @@ theorem original_blank_halt_implies_mod384_terminal
         simpa [decodeUpstream,pairSourceNext] using hstop
       have hterminal : a=d+1 := (sourceNext_none_iff a d).mp hnone
       subst a
-      exact ⟨d,terminal_mod384_candidates d n hreach⟩
+      exact ⟨d,n,hreach,terminal_mod384_candidates d n hreach⟩
 
 #print axioms source_next_upstream
 #print axioms upstream_trace_to_source
