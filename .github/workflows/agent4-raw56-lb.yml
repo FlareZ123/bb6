@@ -11,6 +11,8 @@ on:
         options:
           - all
           - m42763
+          - m23706
+          - m39232
 
 permissions:
   contents: read
@@ -131,7 +133,7 @@ jobs:
           if-no-files-found: error
 
   prepare:
-    if: ${{ inputs.target != 'm42763' }}
+    if: ${{ inputs.target == 'all' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -320,4 +322,123 @@ jobs:
         with:
           name: raw56-lb-six-residual-source-accepted
           path: /tmp/rootpilot-final
+          if-no-files-found: error
+
+  mblock-rows:
+    if: ${{ inputs.target == 'm23706' || inputs.target == 'm39232' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        row: ['0f','0t','1f','1t','2f','2t','3f','3t','4f','4t','5f','5t']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Kernel-check one original-source state-symbol row
+        run: |
+          set -euo pipefail
+          MID='${{ inputs.target }}'
+          ID="${MID#m}"
+          ROW='${{ matrix.row }}'
+          mkdir -p /tmp/mblock
+          cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/mblock/
+          cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/mblock/
+          python im-results/agent4-raw56-root-pilot/m_block_split.py --machine "$ID" --out-dir /tmp/mblock
+          cd /tmp/mblock
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o "M${ID}Data.olean" "M${ID}Data.lean"
+          for R in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+            lean -j1 -o "M${ID}Chunk${ROW}_${R}.olean" "M${ID}Chunk${ROW}_${R}.lean"
+          done
+          lean -j1 -o "M${ID}Row${ROW}.olean" "M${ID}Row${ROW}.lean" | tee "M${ID}Row${ROW}.log"
+          grep -F "row${ROW}" "M${ID}Row${ROW}.log"
+          if grep -Eq 'native_decide|sorryAx|admit' "M${ID}Row${ROW}.log"; then
+            echo "non-kernel proof dependency found" >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-${{ inputs.target }}-row-${{ matrix.row }}
+          path: |
+            /tmp/mblock/M*Chunk${{ matrix.row }}_*.olean
+            /tmp/mblock/M*Row${{ matrix.row }}.olean
+            /tmp/mblock/M*Row${{ matrix.row }}.log
+          if-no-files-found: error
+
+  mblock-final:
+    if: ${{ inputs.target == 'm23706' || inputs.target == 'm39232' }}
+    needs: mblock-rows
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Generate exact source
+        run: |
+          set -euo pipefail
+          MID='${{ inputs.target }}'
+          ID="${MID#m}"
+          mkdir -p /tmp/mblock
+          cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/mblock/
+          cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/mblock/
+          python im-results/agent4-raw56-root-pilot/m_block_split.py --machine "$ID" --out-dir /tmp/mblock
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-${{ inputs.target }}-row-*
+          path: /tmp/mblock
+          merge-multiple: true
+      - name: Assemble source theorem and strict axiom gate
+        run: |
+          set -euo pipefail
+          MID='${{ inputs.target }}'
+          ID="${MID#m}"
+          cd /tmp/mblock
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o "M${ID}Data.olean" "M${ID}Data.lean"
+          lean -j1 -o "M${ID}Base.olean" "M${ID}Base.lean" | tee "M${ID}Base.log"
+          lean -j1 -o "M${ID}Final.olean" "M${ID}Final.lean" | tee "M${ID}Final.log"
+          grep -F "M${ID}.never" "M${ID}Final.log"
+          if grep -Eq 'native_decide|sorryAx|admit' "M${ID}Final.log"; then
+            echo "non-kernel proof dependency found" >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-${{ inputs.target }}-source-accepted
+          path: |
+            /tmp/mblock/M*.lean
+            /tmp/mblock/M*Final.olean
+            /tmp/mblock/M*Base.log
+            /tmp/mblock/M*Final.log
           if-no-files-found: error
