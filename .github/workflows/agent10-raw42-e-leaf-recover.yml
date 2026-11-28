@@ -49,10 +49,10 @@ jobs:
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
           [[ "$PROOF_KIND" =~ ^(run|ngram|diagnose)$ ]]
-          if [[ "$PROOF_KIND" == "ngram" ]]; then
-            [[ "$LEAF" =~ ^[0-9]+(,[0-9]+)*$ ]]
+          if [[ "$PROOF_KIND" == "diagnose" ]]; then
+            [[ "$LEAF" == "0" ]]
           else
-            [[ "$LEAF" =~ ^[0-9]+$ ]]
+            [[ "$LEAF" =~ ^[0-9]+(,[0-9]+)*$ ]]
           fi
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
 
@@ -95,10 +95,13 @@ jobs:
           d=im-results/agent32-raw42
           g="$d/generated-assembly"
           if [[ "$PROOF_KIND" == "run" ]]; then
-            stem="Raw42${BRANCH}Run${LEAF}"
-            test -f "$g/${stem}.lean"
-            python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
-            python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
+            IFS=',' read -ra leaves <<< "$LEAF"
+            for leaf in "${leaves[@]}"; do
+              stem="Raw42${BRANCH}Run${leaf}"
+              test -f "$g/${stem}.lean"
+              python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee -a /tmp/minimize.log
+              python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$leaf"
+            done
           elif [[ "$PROOF_KIND" == "ngram" ]]; then
             IFS=',' read -ra leaves <<< "$LEAF"
             for leaf in "${leaves[@]}"; do
