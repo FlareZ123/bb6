@@ -117,4 +117,124 @@ theorem contiguous_never (m : Machine)
 #print axioms contiguousALeftMany
 #print axioms contiguousGrowth
 #print axioms contiguous_never
+
+/-!
+The companion 15,625-completion cylinder is
+
+  1RB0LF_1RC1RA_0RD---_1LC0LF_------_0LD1LA
+
+again with C1,E0,E1 arbitrary.  Its checkpoints contain k+1 alternating
+10 blocks to the right.  A two-step B/A right sweep converts each remaining
+01 pair into two ones; the fixed ten-step turnaround returns in A; a two-step
+A/F left sweep converts pairs of ones back into 10 blocks.  The family gains
+one block at exact cost 4k+13.
+-/
+
+def alternating : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true  => some (some ⟨false,false,5⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true  => some (some ⟨true,true,0⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 3,false => some (some ⟨true,false,2⟩)
+  | 3,true  => some (some ⟨false,false,5⟩)
+  | 5,false => some (some ⟨false,false,3⟩)
+  | 5,true  => some (some ⟨true,false,0⟩)
+  | _,_ => none
+
+def alternatingWord (k : Nat) : Z0 :=
+  ⟨0,[],rep [true,false] (k+1)++[false,false]⟩
+
+def alternatingCost (k : Nat) : Nat := 4*k+13
+
+theorem alternatingFirst :
+    run0 alternating 9 ⟨0,[],[]⟩ = some (alternatingWord 0) := by
+  decide
+
+theorem alternatingAToB (k : Nat) :
+    run0 alternating 1 (alternatingWord k) =
+      some ⟨1,[true,true],
+        [false]++rep [true,false] k++[false,false]⟩ := by
+  simp [alternatingWord,alternating,run0,step0,move0,rep]
+
+theorem alternatingBRightPair (L R : List Bool) :
+    run0 alternating 2 ⟨1,[true]++L,[false,true]++R⟩ =
+      some ⟨1,[true,true,true]++L,R⟩ := by
+  rfl
+
+theorem alternatingBRightMany (n : Nat) (L R : List Bool) :
+    run0 alternating (2*n)
+      ⟨1,[true]++L,rep [false,true] n++R⟩ =
+      some ⟨1,[true]++rep [true,true] n++L,R⟩ := by
+  have h := sweepR alternating 1 [true] [] [false,true] [true,true] 2
+    alternatingBRightPair n L R
+  simpa only [List.nil_append,List.append_assoc] using h
+
+theorem alternatingTurn (L : List Bool) :
+    run0 alternating 10 ⟨1,[true]++L,[false,false,false]⟩ =
+      some ⟨0,[true]++L,[true,false,false,false]⟩ := by
+  rfl
+
+theorem alternatingALeftPair (L R : List Bool) :
+    run0 alternating 2 ⟨0,[true,true]++L,R⟩ =
+      some ⟨0,L,[true,false]++R⟩ := by
+  rfl
+
+theorem alternatingALeftMany (n : Nat) (L R : List Bool) :
+    run0 alternating (2*n)
+      ⟨0,rep [true,true] n++L,R⟩ =
+      some ⟨0,L,rep [true,false] n++R⟩ := by
+  have h := sweepL alternating 0 [] [] [true,true] [true,false] 2
+    alternatingALeftPair n L R
+  simpa only [List.nil_append,List.append_assoc] using h
+
+theorem alternatingGrowth (k : Nat) :
+    run0 alternating (alternatingCost k) (alternatingWord k) =
+      some (alternatingWord (k+1)) := by
+  have h0 := alternatingAToB k
+  have hr := rotate false [true] k
+  have h1 := alternatingBRightMany k [true] [false,false,false]
+  have h0' : run0 alternating 1 (alternatingWord k) =
+      some ⟨1,[true,true],rep [false,true] k++[false,false,false]⟩ := by
+    rw [← hr]
+    simpa only [List.append_assoc] using h0
+  have h1' : run0 alternating (2*k)
+      ⟨1,[true,true],rep [false,true] k++[false,false,false]⟩ =
+      some ⟨1,[true]++rep [true,true] k++[true],
+        [false,false,false]⟩ := by
+    simpa only [List.append_assoc] using h1
+  have h2 := alternatingTurn (rep [true,true] k++[true])
+  have hone : [true]++rep [true,true] k++[true] =
+      rep [true,true] (k+1) := by
+    have hrot := rotate true [true] k
+    rw [hrot]
+    simpa only [rep,List.append_assoc] using (rep_snoc [true,true] k)
+  have h2' : run0 alternating 10
+      ⟨1,[true]++rep [true,true] k++[true],[false,false,false]⟩ =
+      some ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ := by
+    simpa only [hone] using h2
+  have h3 := alternatingALeftMany (k+1) [] [true,false,false,false]
+  have h3' : run0 alternating (2*(k+1))
+      ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ =
+      some (alternatingWord (k+1)) := by
+    simpa [alternatingWord,rep,List.append_assoc] using h3
+  have H := join0 (join0 (join0 h0' h1') h2') h3'
+  have ht : 1+2*k+10+2*(k+1) = alternatingCost k := by
+    unfold alternatingCost
+    omega
+  simpa only [List.append_assoc,ht] using H
+
+theorem alternating_never (m : Machine)
+    (hm : compatible alternating m) : NeverHalts m := by
+  exact never_of_growth alternating alternatingWord 9 alternatingCost
+    alternatingFirst (by intro k; unfold alternatingCost; omega)
+    alternatingGrowth m hm
+
+#print axioms alternatingFirst
+#print axioms alternatingBRightMany
+#print axioms alternatingTurn
+#print axioms alternatingALeftMany
+#print axioms alternatingGrowth
+#print axioms alternating_never
 end BB6.Agent40Raw34PairQuadratic
