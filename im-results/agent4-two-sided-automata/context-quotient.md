@@ -1,11 +1,7 @@
 # Context-congruent quotient of finite two-stack nonhalting relations
 
-**Status (2026-11-28):** new, reproducible *computational reduction*, not yet a
-kernel-accepted compressed nonhalting theorem. The uncompressed M42763 Lean
-certificate already passed [run 46127222127](https://github.com/FlareZ123/bb6/actions/runs/46127222127).
-The corresponding original-source M23706 and M39232 sharded proofs and the
-minimized-source checks were launched separately; acceptance must be determined
-from their actual final Lean axiom profiles, not from the statistics below.
+**Status (2026-11-28): one compact machine independently source-accepted.**
+The original-source M39232 nonhalting theorem passed [run 46135066154](https://github.com/FlareZ123/bb6/actions/runs/46135066154) using the minimized 3,565-joint stack certificate; artifact **15259831500**, ZIP SHA256 `efcb429a6ff4800525e69beec5610502b60fbce248f4b3001a875c47f4af810d`. The strict axiom gate accepted the compiled `M39232.never` theorem with only the standard axioms. Python quotient reproducibility passed [run 46134998195](https://github.com/FlareZ123/bb6/actions/runs/46134998195). The original-size M42763 theorem independently passed [run 46127222127](https://github.com/FlareZ123/bb6/actions/runs/46127222127); its 791-joint minimized counterpart remains an unaccepted computational candidate. The minimized M23706 original-source theorem awaits independent Lean acceptance. A complete E1=1LB Cover also depends on the six-residual parent join; **neither this algorithm nor the single accepted M39232 leaf establishes that Cover**.
 
 ## Mathematical construction
 
@@ -94,8 +90,4 @@ steps required to recheck their soundness.
   Lean original-source acceptance), and
   `.github/workflows/agent4-raw56-lb.yml` (fallback 16-way row sharding).
 
-**No theorem-status upgrade follows from the raw program's assertions,
-source generation, this note, or a queued CI run.** Only successful
-original-source kernel compilation and the strict standard-axiom gate
-establish an accepted nonhalting theorem. A full Raw56 1LB Cover additionally
-requires all six originals and the six-residual parent join.
+**Only M39232's minimized original-source `never` theorem has passed the final kernel and standard-axiom gate so far.** No acceptance follows from a Python assertion, a generated Lean file, or a queued CI run. A full Raw56 1LB Cover still requires M23706 and the six-residual parent join.
