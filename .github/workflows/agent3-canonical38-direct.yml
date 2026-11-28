@@ -1,0 +1,63 @@
+name: Agent3 direct Raw39 plus Raw47 Canonical38
+run-name: Direct Canonical40 -> 38 using accepted Raw39 and Raw47 parents
+
+on:
+  workflow_dispatch:
+    inputs:
+      raw47_run_id:
+        description: Source-accepted Raw47 whole-parent producer
+        type: string
+        default: '46068688341'
+        required: true
+      onele_run:
+        description: Source-accepted Raw39 final 1LE producer
+        type: string
+        default: '46114235329'
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Join both accepted whole parents directly on Canonical40
+        env:
+          GH_TOKEN: \${{ github.token }}
+          RAW47_RUN_ID: \${{ inputs.raw47_run_id }}
+          ONELE_RUN: \${{ inputs.onele_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW47_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$ONELE_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent3-canonical38-direct/consume.py
+          python im-results/agent3-canonical38-direct/consume.py \
+            --work /tmp/a3-canonical38-direct \
+            --raw47-run-id "$RAW47_RUN_ID" \
+            --onele-run "$ONELE_RUN" | tee /tmp/a3-canonical38-direct.log
+          test -s /tmp/a3-canonical38-direct/canonical38-raw39-raw47-direct-delta/delta.json
+          cat /tmp/a3-canonical38-direct/canonical38-raw39-raw47-direct-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical38-raw39-raw47-direct-delta
+          path: |
+            /tmp/a3-canonical38-direct/canonical38-raw39-raw47-direct-delta/**
+            /tmp/a3-canonical38-direct/raw39-kernel-replay/**
+            /tmp/a3-canonical38-direct/raw47-kernel-replay/**
+            /tmp/a3-canonical38-direct.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
