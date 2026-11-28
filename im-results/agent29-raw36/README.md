@@ -1,6 +1,8 @@
-# Raw36: source-checked B1 parent cover and exact four-child complement
+# Raw36: source-checked parent cover reduction to thirteen concrete cylinders
 
 **Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. For its seven-hole D1=1LB descendant `1RB---_1RC---_0RD---_0LD1LB_------_------`, the locally compiled original-source theorem `BB6.Agent29Raw36.d1_cover_from_four` reduces the entire weighted Cover to **four** exact B1 cylinders: **0LB, 0LE, 1LE, 1RE**. It consumes all eleven other retained representatives, the five closed cycles, the four E/F aliases and the real halt choice. It holds for any common weighted threshold B ≥ 1022. This is a conditional theorem; no remaining child or full Raw36 parent is claimed solved by it.
+
+`Raw36ParentComplement.lean` now lifts that reduction through the original eight-hole `Raw36Cut.cover`. The locally kernel-compiled `parent_cover_from_thirteen` requires exactly thirteen explicit original partial tables at a common B ≥ 1022: nine direct D1 moves (0LA, 1LA, 0LB, 0LC, 1LC, 0LE, 0RE, 1LE, 1RE), plus the four B1 moves above under D1=1LB. `remaining_explicit` proves equality to the actual original 24-entry residual list by definitional reduction; `parentComplement_count` proves the count 13; the parent theorem uses only standard axioms. Source SHA-256 `f8bccb830d981c1bd01d2e8fcd80aa314d7609c50ae06ea3d73fdd3700ea4756`; compiled object `67425f04cc5ea1ec2115dcf1c2b8038350fe0d51452e280e86aa3569e528ea72`. No count-only inference or unproved classifier is involved.
 
 ## Closed B1 cylinders
 
@@ -32,6 +34,6 @@ All twenty corrected child roots passed [46085477064](https://github.com/FlareZ1
 
 ## Remaining research
 
-Close B1=0LB, 0LE, 1LE and 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close other D1 descendants from `Raw36Cut.lean`, whose original eight-hole parent remains open. The global Canonical40 frontier is unchanged by this local refinement.
+Close B1=0LB, 0LE, 1LE and 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close the nine direct D1 descendants in `parentComplement` and apply `parent_cover_from_thirteen` to close the original eight-hole parent. The global Canonical40 frontier is unchanged by this local refinement.
 
 Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.
