@@ -1,0 +1,48 @@
+name: Agent 8 Raw54 1RD chunked exact late first-hole certificates
+
+on:
+  workflow_dispatch:
+    inputs:
+      indices:
+        description: 'JSON indices of three late first-hole partial machines [0,1,2]'
+        required: true
+        default: '[0,1,2]'
+
+jobs:
+  original-source-late-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        index: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate and check all source-level zipper segments
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          IDX='${{ matrix.index }}'
+          MOD=Raw54OneRDZipLate$IDX
+          NAMESPACE=BB6.Agent8Raw54.OneRDZipLate$IDX
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate_onerd_zipchunk.py" --index "$IDX" --out "$D/$MOD.lean"
+          W=/tmp/raw54-zipchunk-$IDX
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-zipchunk-$IDX.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-zipchunk-$IDX.log "$NAMESPACE.cover"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-zipchunk-${{ matrix.index }}
+          path: |
+            /tmp/raw54-zipchunk-${{ matrix.index }}.log
+            im-results/agent8-raw54/Raw54OneRDZipLate*.lean
+          if-no-files-found: ignore
+          retention-days: 90
