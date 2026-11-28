@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Split one frozen PhaseTree automata leaf into row-checked TwoSidedAutomata modules.
+"""Factor the largest singleton TwoSidedAutomata leaf inside a frozen PhaseTree module.
 
-Input is an already-generated Lean module whose checked Tree is exactly one
-`.automata <Cert>` leaf.  The rewrite preserves the literal PartialMachine and
-literal certificate data, but places the two stacks and twelve trie rows in
-separate modules and checks the twelve state/symbol rows independently.
+The target may contain many leaf proofs.  This script selects the largest
+`.automata <Cert>` literal, requires that its enclosing `def cert... : Tree`
+is exactly that one automata leaf, and replaces only that cert/checked/safe
+triple by a same-table theorem backed by row-split checking of the identical
+literal certificate.  Sibling declarations stay untouched.
 
-The original target module is replaced by a tiny same-table wrapper exporting
-the same `parent` and `safe` names expected by its importers.
+Usage:
+  split_two_sided_leaf.py TARGET.lean TABLE
+where TABLE is the exact 12-slot transition string for the selected cert.
 """
 from __future__ import annotations
 
@@ -59,25 +61,6 @@ def split_top_level(text: str) -> list[str]:
     return out
 
 
-def extract_parent_expr(source: str) -> str:
-    marker = "def parent : PartialMachine :="
-    pos = source.index(marker) + len(marker)
-    return balanced_expr(source, pos)[0]
-
-
-def extract_single_automata_cert(source: str) -> str:
-    marker = "(.automata "
-    starts = [m.start() for m in re.finditer(re.escape(marker), source)]
-    if len(starts) != 1:
-        raise ValueError(f"expected exactly one automata literal, found {len(starts)}")
-    pos = starts[0] + len(marker)
-    cert, end = balanced_expr(source, pos)
-    tail = source[end:].lstrip()
-    if not tail.startswith(")"):
-        raise ValueError("automata literal is not closed immediately after certificate")
-    return cert
-
-
 def parse_cert(cert: str) -> tuple[str, str, list[str]]:
     if not (cert.startswith("⟨") and cert.endswith("⟩")):
         raise ValueError("certificate is not a Cert constructor")
@@ -91,6 +74,29 @@ def parse_cert(cert: str) -> tuple[str, str, list[str]]:
     if len(row_parts) != 12:
         raise ValueError(f"expected twelve state/symbol rows, got {len(row_parts)}")
     return left, right, row_parts
+
+
+def table_expr(table: str) -> str:
+    t = table.replace("_", "")
+    if len(t) != 36:
+        raise ValueError(f"expected 12 three-character slots, got {len(t)} chars")
+    toks = [t[i:i + 3] for i in range(0, 36, 3)]
+    lines = ["(fun (q,b) => match q.val,b with"]
+    for j, tok in enumerate(toks):
+        if tok == "---":
+            continue
+        if not re.fullmatch(r"[01][LR][A-F]", tok):
+            raise ValueError(f"bad table token {tok!r}")
+        q, b = divmod(j, 2)
+        write = "true" if tok[0] == "1" else "false"
+        right = "true" if tok[1] == "R" else "false"
+        nxt = ord(tok[2]) - ord("A")
+        lines.append(
+            f"  | {q},{str(bool(b)).lower()} => "
+            f"some (some ⟨{write},{right},{nxt}⟩)"
+        )
+    lines.append("  | _,_ => none)")
+    return "\n".join(lines)
 
 
 def write_module(out: Path, name: str, imports: list[str], namespace: str, body: str) -> None:
@@ -107,33 +113,71 @@ def write_module(out: Path, name: str, imports: list[str], namespace: str, body:
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: split_two_sided_leaf.py <target-module.lean>")
+    if len(sys.argv) != 3:
+        raise SystemExit("usage: split_two_sided_leaf.py TARGET.lean TABLE")
     target = Path(sys.argv[1]).resolve()
+    literal_table = sys.argv[2]
     source = target.read_text(encoding="utf-8")
-    module = target.stem
 
-    ns_match = re.search(r"^namespace\s+(BB6\.[A-Za-z0-9_]+)\s*$", source, re.M)
-    if not ns_match:
-        raise ValueError("target namespace not found")
-    target_ns = ns_match.group(1)
+    # Select the exact largest automata literal.
+    autos: list[tuple[int, int, int, str]] = []
+    marker = "(.automata "
+    for m in re.finditer(re.escape(marker), source):
+        cert, end = balanced_expr(source, m.end())
+        tail = source[end:].lstrip()
+        if not tail.startswith(")"):
+            raise ValueError("automata literal not closed after Cert")
+        autos.append((len(cert.encode()), m.start(), end, cert))
+    if not autos:
+        raise ValueError("no automata literal found")
+    autos.sort(reverse=True)
+    cert_bytes, auto_start, cert_end, cert_expr = autos[0]
+    if cert_bytes < 1_000_000:
+        raise ValueError(f"largest automata certificate unexpectedly small: {cert_bytes}")
 
-    bounds = {int(x) for x in re.findall(r"WeightedBound\s+(\d+)", source)}
-    if len(bounds) != 1:
-        raise ValueError(f"expected one literal WeightedBound, found {sorted(bounds)}")
-    bound = next(iter(bounds))
+    # Find the exact cert declaration whose Tree expression contains the giant.
+    defs = list(re.finditer(r"^\s*def\s+(cert[A-Za-z0-9_]*)\s*:\s*Tree\s*:=\s*", source, re.M))
+    candidates = [m for m in defs if m.start() < auto_start]
+    if not candidates:
+        raise ValueError("enclosing cert declaration not found")
+    d = candidates[-1]
+    cert_name = d.group(1)
+    tree_expr, tree_end = balanced_expr(source, d.end())
+    expected = "(.automata " + cert_expr + ")"
+    compact = lambda s: re.sub(r"\s+", "", s)
+    if compact(tree_expr) != compact(expected):
+        raise ValueError(
+            f"giant cert is not a singleton Tree leaf in {cert_name}; "
+            "regenerate with RAW11_REPAIR_CERT_THRESHOLD=1"
+        )
 
-    parent_expr = extract_parent_expr(source)
-    cert_expr = extract_single_automata_cert(source)
+    suffix = cert_name[len("cert"):]
+    checked_name = "checked" + suffix
+    safe_name = "safe" + suffix
 
-    # Ensure the checked Tree really is just the one automata leaf.  Replacing
-    # a larger tree by the leaf theorem would be unsound.
-    if not re.search(
-        r"def\s+cert\w*\s*:\s*Tree\s*:=\s*\(\.automata\s+",
-        source,
-        re.S,
-    ):
-        raise ValueError("target automata literal is not the root of a checked Tree certificate")
+    checked = re.search(
+        rf"^\s*theorem\s+{re.escape(checked_name)}\b", source[tree_end:], re.M
+    )
+    if not checked:
+        raise ValueError(f"{checked_name} not found after {cert_name}")
+    checked_start = tree_end + checked.start()
+
+    safe = re.search(
+        rf"^\s*theorem\s+{re.escape(safe_name)}\s*:\s*∀\s+m,\s*compatible\s+"
+        rf"([A-Za-z0-9_]+)\s+m\s*→\s*WeightedBound\s+(\d+)\s+m\s*:=\s*",
+        source[checked_start:],
+        re.M,
+    )
+    if not safe:
+        raise ValueError(f"{safe_name} header not found")
+    safe_start = checked_start + safe.start()
+    p_name = safe.group(1)
+    bound = int(safe.group(2))
+
+    # End the replaced block at the next declaration after the safe header.
+    after_header = checked_start + safe.end()
+    next_decl = re.search(r"^\s*(?:def|theorem|#print|end)\b", source[after_header:], re.M)
+    block_end = len(source) if not next_decl else after_header + next_decl.start()
 
     left, right, rows = parse_cert(cert_expr)
     out = target.parent
@@ -141,61 +185,55 @@ def main() -> None:
     if not companion.is_file():
         raise FileNotFoundError(companion)
     out.joinpath("TwoSidedAutomataRows.lean").write_bytes(companion.read_bytes())
+
     prefix = "Agent44Extra132Giant"
     proof_ns = "BB6.Agent44Extra132Giant"
 
-    write_module(
-        out, prefix + "Left", ["TwoSidedAutomata"],
-        proof_ns,
-        "def left : BB6.Agent4Automata.Stack := " + left,
-    )
-    write_module(
-        out, prefix + "Right", ["TwoSidedAutomata"],
-        proof_ns,
-        "def right : BB6.Agent4Automata.Stack := " + right,
-    )
+    write_module(out, prefix + "Left", ["TwoSidedAutomata"], proof_ns,
+                 "def left : BB6.Agent4Automata.Stack := " + left)
+    write_module(out, prefix + "Right", ["TwoSidedAutomata"], proof_ns,
+                 "def right : BB6.Agent4Automata.Stack := " + right)
 
     row_mods: list[str] = []
     for j, row in enumerate(rows):
         name = prefix + f"RowData{j:02}"
         row_mods.append(name)
-        write_module(
-            out, name, ["TwoSidedAutomata"],
-            proof_ns,
-            f"def row{j:02} : BB6.Agent1NGram.Trie := {row}",
-        )
+        write_module(out, name, ["TwoSidedAutomata"], proof_ns,
+                     f"def row{j:02} : BB6.Agent1NGram.Trie := {row}")
 
     data_name = prefix + "Data"
-    imports = [prefix + "Left", prefix + "Right", *row_mods]
-    data_body = (
+    write_module(
+        out, data_name, [prefix + "Left", prefix + "Right", *row_mods], proof_ns,
         "open BB6.Agent4Automata\n"
-        f"def table : PartialMachine := {parent_expr}\n"
-        "def cert : BB6.Agent4Automata.Cert := "
-        "⟨left,right,#["
-        + ",".join(f"row{j:02}" for j in range(12))
-        + "]⟩"
+        f"def table : PartialMachine := {table_expr(literal_table)}\n"
+        "def cert : BB6.Agent4Automata.Cert := ⟨left,right,#["
+        + ",".join(f"row{j:02}" for j in range(12)) + "]⟩",
     )
-    write_module(out, data_name, imports, proof_ns, data_body)
 
     checked_mods: list[str] = []
     for j in range(12):
-        q = j // 2
-        a = "true" if j % 2 else "false"
+        q, abit = divmod(j, 2)
+        a = "true" if abit else "false"
         name = prefix + f"RowCheck{j:02}"
         checked_mods.append(name)
-        body = f"""open BB6.Agent4Automata
+        write_module(
+            out, name, [data_name], proof_ns,
+            f"""open BB6.Agent4Automata
 theorem row{j:02}_checked :
     (row cert ({q} : Fin 6) {a}).all
       (fun i => stateStepOK table cert ({q} : Fin 6) {a}
         (i/cert.right.edges.size) (i%cert.right.edges.size)) = true := by
   decide +kernel
 #print axioms row{j:02}_checked
-"""
-        write_module(out, name, [data_name], proof_ns, body)
+""",
+        )
 
     proof_name = prefix + "Proof"
-    rows_cases = "\n".join(f"  · exact row{j:02}_checked" for j in range(12))
-    proof_body = f"""open BB6Coverage BB6.Agent13BlankDelay BB6.Agent4Automata
+    row_cases = "\n".join(f"  · exact row{j:02}_checked" for j in range(12))
+    write_module(
+        out, proof_name, ["TwoSidedAutomataRows", data_name, *checked_mods],
+        proof_ns,
+        f"""open BB6Coverage BB6.Agent13BlankDelay BB6.Agent4Automata
 theorem allRows (q : Fin 6) (a : Bool) :
     (row cert q a).all
       (fun i => stateStepOK table cert q a
@@ -203,7 +241,7 @@ theorem allRows (q : Fin 6) (a : Bool) :
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases a
-{rows_cases}
+{row_cases}
 
 theorem checked : check table cert = true :=
   BB6.Agent44TwoSidedRows.check_of_rows
@@ -218,43 +256,28 @@ theorem weighted (B : Nat) : Cover (WeightedBound B) table :=
 #print axioms checked
 #print axioms never
 #print axioms weighted
-"""
-    write_module(
-        out, proof_name,
-        ["TwoSidedAutomataRows", data_name, *checked_mods],
-        proof_ns, proof_body,
+""",
     )
 
-    # Preserve the exact module/namespace/export interface expected by the rest
-    # of the frozen Extra132 repair DAG.
-    target.write_text(
-        f"""import PhaseTree
-import PhaseFrontier
-import {proof_name}
-set_option maxHeartbeats 0
-set_option maxRecDepth 100000
-namespace {target_ns}
-open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree
-
-def parent : PartialMachine := {parent_expr}
-
-theorem safe : ∀ m, compatible parent m → WeightedBound {bound} m := by
+    replacement = f"""theorem {safe_name} : ∀ m, compatible {p_name} m → WeightedBound {bound} m := by
   intro m hm
-  have hEq : parent = BB6.Agent44Extra132Giant.table :=
+  have hEq : {p_name} = BB6.Agent44Extra132Giant.table :=
     BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)
   rw [hEq] at hm
   exact Cover.sound (BB6.Agent44Extra132Giant.weighted {bound}) m hm
 
-#print axioms safe
-end {target_ns}
-""",
-        encoding="utf-8",
-    )
+"""
+    patched = source[:d.start()] + replacement + source[block_end:]
+    if not re.search(rf"^import\s+{re.escape(proof_name)}\s*$", patched, re.M):
+        patched = f"import {proof_name}\n" + patched
+    target.write_text(patched, encoding="utf-8")
 
     print(
-        f"row-split {module}: bound={bound}, "
-        f"left={len(left.encode())}, right={len(right.encode())}, "
-        f"rows={[len(x.encode()) for x in rows]}, support={2+12+1+12+1}",
+        f"row-split {target.name}: cert={cert_name} safe={safe_name} "
+        f"machine={p_name} bound={bound} cert_bytes={cert_bytes} "
+        f"left={len(left.encode())} right={len(right.encode())} "
+        f"rows={[len(x.encode()) for x in rows]} "
+        f"remaining_automata={patched.count('(.automata ')}",
         flush=True,
     )
 
