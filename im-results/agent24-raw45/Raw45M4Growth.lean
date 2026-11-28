@@ -59,7 +59,6 @@ theorem growth (n : Nat) :
   have h2 : run0 table 1 ⟨3,[true],ones (3*n+6)⟩ =
       some ⟨1,[true,true],ones (3*n+5)⟩ := by
     have ha : ones (3*n+6) = [true]++ones (3*n+5) := by
-      rw [show 3*n+6=1+(3*n+5) by omega]
       rfl
     simpa only [ha] using dturn (ones (3*n+5))
   have h3 : run0 table 2 ⟨1,[true,true],ones (3*n+5)⟩ =
@@ -82,7 +81,7 @@ theorem growth (n : Nat) :
       some (phase (n+1)) := by
     have ha : zeros (3*(n+1)+6) =
         [false,false,false]++zeros (3*n+6) := by
-      rw [show 3*(n+1)+6=3+(3*n+6) by omega]
+      rw [show 3*(n+1)+6=(3*n+6)+3 by omega]
       rfl
     simpa only [phase,ha,List.append_assoc] using
       finish (zeros (3*n+6)++[true])
