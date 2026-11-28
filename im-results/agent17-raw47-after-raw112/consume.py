@@ -19,6 +19,7 @@ A9 = SIBLINGS / "agent9-raw112-then-raw47"
 A50 = SIBLINGS / "agent50-raw47-canonical41"
 sys.path.insert(0, str(A32))
 sys.path.insert(0, str(A17))
+sys.path.insert(0, str(A50))
 
 import check_canonical39_after_raw39 as raw39
 import assemble_canonical58_raw112_graft as raw112
@@ -27,6 +28,11 @@ spec = importlib.util.spec_from_file_location("a17_raw47_consumer", A50 / "consu
 raw47 = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(raw47)
+
+# Reuse the already-audited Raw47 collision transport.  Its chunked
+# trust-level-zero replay relocates incompatible declarations (for example
+# SweepData) rather than weakening the exact kernel comparison.
+import consume_after_canonical40 as raw47_transport
 
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 
@@ -214,15 +220,34 @@ def main():
     )
     raw47_copied = []
     raw47_audit = {}
-    raw47.selected.add_family(
-        raw47_spec, raw47_dirs, canonical, raw47_copied, raw47_audit
+    raw47_transport.kernel_replay_raw47(
+        raw47_spec, raw47_dirs, canonical, raw47_copied, raw47_audit,
+        work, evidence, chunked=True
     )
-    assert (canonical / "Raw47Complete.olean").is_file()
+    assert (canonical / "Raw47KernelBridge.olean").is_file()
     shutil.rmtree(raw47_work, ignore_errors=True)
 
+    # Compile the same integration theorem against the relocated, independently
+    # replayed Raw47 bridge.  The literal table agreement and the global
+    # Canonical38 geometry are rechecked in this exact environment.
+    relocated = work / "Raw47AfterRaw112IntegratedRelocated.lean"
+    text = (HERE / "Raw47AfterRaw112Integrated.lean").read_text()
+    assert "import Raw47Complete" in text
+    assert "BB6.Agent50Raw47Depth3Cut.parent" in text
+    assert "BB6.Agent50Raw47Complete.cover_at" in text
+    text = text.replace("import Raw47Complete", "import Raw47KernelBridge")
+    text = text.replace(
+        "BB6.Agent50Raw47Depth3Cut.parent",
+        "BB6.Agent50Raw47Bridge.parent",
+    )
+    text = text.replace(
+        "BB6.Agent50Raw47Complete.cover_at",
+        "BB6.Agent50Raw47Bridge.cover_at",
+    )
+    relocated.write_text(text)
+
     final_root, current = raw39.source_check(
-        HERE / "Raw47AfterRaw112Integrated.lean",
-        canonical, evidence, FINAL_TARGETS
+        relocated, canonical, evidence, FINAL_TARGETS
     )
     roots[final_root.name] = raw39.sha(final_root)
     profiles.update(current)
