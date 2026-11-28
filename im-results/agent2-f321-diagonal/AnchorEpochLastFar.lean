@@ -8,7 +8,6 @@ namespace BB6.Agent2F321AnchorEpochLastFar
 
 open BB6.Agent31F321Density
 open BB6.Agent31F321AnchorShape
-open BB6.Agent31F321TerminalWordOneFarGeneral
 open BB6.Agent2F321AnchorEpoch
 
 private theorem pureHigh_length (b : Nat) :
