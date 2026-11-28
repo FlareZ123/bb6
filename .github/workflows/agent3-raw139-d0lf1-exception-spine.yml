@@ -1,0 +1,30 @@
+name: Agent 3 Raw139 D0=1LF two-exception spine
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exception-spine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce exact finite query tree and two-exception partition
+        run: |
+          set -euo pipefail
+          python3 im-results/agent3-raw139-e1-zeroRD/plan-two-exception-spine.py --out /tmp/raw139-d0lf1-spine.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/raw139-d0lf1-spine.json'))
+          assert len(p['exception_paths']) == 2
+          assert len(p['spine']) <= 24
+          assert sum(r['open'] for r in p['ordinary_regions']) == 4873
+          assert all(r['table'].count(24) >= 1 for r in p['ordinary_regions'])
+          print('Exact partition: ', len(p['spine']), 'special path nodes;',
+                len(p['ordinary_regions']), 'disjoint ordinary regions')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent3-raw139-d0lf1-two-exception-spine
+          path: /tmp/raw139-d0lf1-spine.json
+          retention-days: 30
