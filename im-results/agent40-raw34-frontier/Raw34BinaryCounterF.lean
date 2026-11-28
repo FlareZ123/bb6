@@ -32,10 +32,14 @@ def permPartial (p : PartialMachine) : PartialMachine := fun slot =>
 
 theorem source_eq_perm :
     BB6.Agent40Raw34BinaryCounter.p = permPartial pf := by
+  -- Avoid the unavailable fin_cases tactic: this is a 12-entry
+  -- decidable equality of the exact original tables.
+  have h : ∀ (s : Fin 6) (b : Bool),
+      BB6.Agent40Raw34BinaryCounter.p (s,b) = permPartial pf (s,b) := by
+    decide
   funext slot
   rcases slot with ⟨s,b⟩
-  fin_cases s <;> cases b <;>
-    rfl
+  exact h s b
 
 theorem perm_compatible (m : Machine) (hm : compatible pf m) :
     compatible (permPartial pf) (renameTable ef m) := by
