@@ -28,7 +28,7 @@ from stage_relocate import relocate, sha, write_lines
 
 def relocate_chunked(*, producer_files, base, work, root_module, root_names,
                      prefix, tool, comparator=None, comparator_batch=None,
-                     allow_compatible=False, chunk_size=64):
+                     allow_compatible=False, chunk_size=64, resume_from=None):
     if chunk_size < 1:
         raise ValueError("chunk_size must be >= 1")
     producer_files = [Path(x).resolve() for x in producer_files]
@@ -105,7 +105,60 @@ def relocate_chunked(*, producer_files, base, work, root_module, root_names,
                LEAN_PATH=os.pathsep.join([str(output), str(base)]))
     old_stage = None
     groups = []
-    for offset in range(0, len(affected_order), chunk_size):
+    start_offset = 0
+    if resume_from is not None:
+        resume_from = Path(resume_from).resolve()
+        prior_path = resume_from / "report.json"
+        if not prior_path.is_file():
+            raise FileNotFoundError("missing resumable replay report " + str(prior_path))
+        prior = json.loads(prior_path.read_text())
+        stable = (
+            "root_module", "prefix", "root_names", "source_modules",
+            "affected_modules", "selected_declarations", "collisions",
+            "kernel_comparison",
+        )
+        for key in stable:
+            if prior.get(key) != report.get(key):
+                raise ValueError("resume plan mismatch at " + key)
+        prior_groups = prior.get("chunks", [])
+        if not isinstance(prior_groups, list):
+            raise ValueError("resume chunks must be a list")
+        max_groups = (len(affected_order) + chunk_size - 1) // chunk_size
+        if len(prior_groups) > max_groups:
+            raise ValueError("resume has more chunks than reconstructed plan")
+        for chunk_no, prior_group in enumerate(prior_groups):
+            offset = chunk_no * chunk_size
+            expected_group = affected_order[offset:offset + chunk_size]
+            stage = prefix + "Chunk" + format(chunk_no, "04d")
+            if prior_group.get("stage") != stage:
+                raise ValueError("resume stage mismatch at chunk " + str(chunk_no))
+            if prior_group.get("module_count") != len(expected_group):
+                raise ValueError("resume module count mismatch at " + stage)
+            if prior_group.get("source_modules") != expected_group:
+                raise ValueError("resume source-module mismatch at " + stage)
+            source = resume_from / "objects" / (stage + ".olean")
+            if not source.is_file():
+                raise FileNotFoundError("missing resumed stage object " + str(source))
+            digest = sha(source)
+            if digest != prior_group.get("olean_sha256"):
+                raise ValueError("resume object hash mismatch at " + stage)
+            dest = output / source.name
+            shutil.copy2(source, dest)
+            groups.append(prior_group)
+            old_stage = stage
+        start_offset = len(groups) * chunk_size
+        if groups:
+            report["staged_root"] = groups[-1]["stage"]
+            report["chunks"] = groups
+            (work / "report.json").write_text(
+                json.dumps(report, indent=2, sort_keys=True) + "\n")
+            print(
+                f"resumed {len(groups)} authenticated kernel chunks "
+                f"({start_offset}/{len(affected_order)} affected modules)",
+                flush=True,
+            )
+
+    for offset in range(start_offset, len(affected_order), chunk_size):
         group = affected_order[offset:offset + chunk_size]
         chunk_no = offset // chunk_size
         stage = prefix + "Chunk" + format(chunk_no, "04d")
@@ -168,13 +221,15 @@ def main():
     p.add_argument("--comparator-batch", type=Path)
     p.add_argument("--allow-compatible", action="store_true")
     p.add_argument("--chunk-size", type=int, default=64)
+    p.add_argument("--resume-from", type=Path)
     a = p.parse_args()
     report, _, _ = relocate_chunked(
         producer_files=a.producer_objects.read_text().splitlines(),
         base=a.base, work=a.work, root_module=a.root_module,
         root_names=a.root_name, prefix=a.prefix, tool=a.tool.resolve(),
         comparator=a.comparator, comparator_batch=a.comparator_batch,
-        allow_compatible=a.allow_compatible, chunk_size=a.chunk_size)
+        allow_compatible=a.allow_compatible, chunk_size=a.chunk_size,
+        resume_from=a.resume_from)
     print(json.dumps({
         "complete": report["complete"], "mode": report["mode"],
         "staged_root": report["staged_root"],
