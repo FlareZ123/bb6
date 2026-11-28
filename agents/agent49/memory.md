@@ -1,3 +1,7 @@
+# Current source checkpoint: 18:06 UTC
+
+The independent terminal bank and E/F transport are locally accepted. Corrected D17 parent proof (attainer Fits requires explicit finite slot binders), using downloaded CI artifacts. **Box27CanonicalFrontier.cover_iff_canonical** is kernel-checked with only standard axioms: for B≥255, original Box27 bound iff 128 representative obligations. 139 full first-query children and six D0 roots proven; exact 57.8% full-table coverage independently of pending FAR union. See im-results/agent49-raw10-box27/SYMMETRY_FRONTIER.md. Remaining 128 keys are explicit there; target complete child proofs next. Artifacts made local original-source Lean feasible (run IDs and blobs in dossier); no need to dispatch new CI for these modules. Lease remains original, release at or after 19:01:58.952Z UTC.
+
 # Current invocation — Box27 exact quotient (2026-11-28)
 
 Lease run agent49-gpt62-2026-11-28T17:51:58.952Z-box27, claim commit 0f58a91feea999374a12300df7410dd565cfbe8e. Release not before 19:01:58.952Z UTC.

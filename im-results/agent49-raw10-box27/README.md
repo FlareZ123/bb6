@@ -1,6 +1,6 @@
-# Raw10 Box27: complete E0 branches and the final 25-table exception
+# Raw10 Box27: exact 128-child source quotient
 
-**28 November 2026.** The source domain is `raw10Remainder[27]!` with A0=8, B0=11, C0=C1=13. This dossier fixes D0=14 and D1=17 and then partitions **all 25 possible E0 codes**. A1, B1, E1, F0 and F1 are unrestricted in each branch, so each whole E0 cylinder has `25^5 = 9,765,625` complete tables. The full fixed-D0/D1 family has **244,140,625** tables. All stated scores use the repository's original-source weighted convention.
+**28 November 2026.** **Update 18:06 UTC:** the E0=22 full-source check succeeded, and the corrected D17 parent plus its E/F conjugate have been locally kernel-checked. The current exact source frontier is 128 representative six-hole child obligations; see [SYMMETRY_FRONTIER.md](SYMMETRY_FRONTIER.md). The historical E0 work below documents the construction. The source domain is `raw10Remainder[27]!` with A0=8, B0=11, C0=C1=13. This dossier fixes D0=14 and D1=17 and then partitions **all 25 possible E0 codes**. A1, B1, E1, F0 and F1 are unrestricted in each branch, so each whole E0 cylinder has `25^5 = 9,765,625` complete tables. The full fixed-D0/D1 family has **244,140,625** tables. All stated scores use the repository's original-source weighted convention.
 
 ## Accepted mathematical boundary
 
@@ -19,10 +19,10 @@ These source-accepted results classify **244,140,600 distinct tables** (every co
 
 `Box27ExceptionalFAR.lean` contains a concrete two-sided stack automaton with **10 states per tape half and 306 reachable abstract control/stack states**. Its closed state relation contains no F1 query, so the generic original `TwoSidedAutomata.never` theorem would prove that every F1 completion runs forever. `generate_exceptional_far.py` reconstructs the table, both stack relations and the abstract reachable set from a three-state transformation monoid and a three-bit prefix automaton. The search algorithm is *untrusted*; Lean checks the entire finite certificate by `BB6.Agent4Automata.check`.
 
-The exact table-identity bridge `Box27Slice22.exceptional_far_table` is added to `Box27Slice22Core.lean`; `generate_slice22.py` now emits `all_bound` and `full_exact_weighted` at **149** without the exceptional hypothesis. A focused original-source [CI run 46113905945](https://github.com/FlareZ123/bb6/actions/runs/46113905945) is queued at this review: **do not claim kernel acceptance of the new FAR or unconditional E0=22 theorem until it succeeds and passes the axiom gate**.
+The exact table-identity bridge `Box27Slice22.exceptional_far_table` is added to `Box27Slice22Core.lean`; `generate_slice22.py` now emits `all_bound` and `full_exact_weighted` at **149** without the exceptional hypothesis. A focused original-source [CI run 46113905945](https://github.com/FlareZ123/bb6/actions/runs/46113905945) succeeded; its original-source artifact was used in the local parent proof.
 
 The next source file `Box27D17Parent.lean` combines all 25 E0 values under their exact original Raw10 domain, with theorem
-`BB6.Agent49.Box27D17Parent.exact_weighted`, intended to prove **sharp weighted maximum 255 across all 244,140,625 tables**. Existing manual [CI 46114149252](https://github.com/FlareZ123/bb6/actions/runs/46114149252) is queued. Its conclusion is **not accepted yet**. This theorem's full original-source transitive closure and `sorryAx` audit are decisive.
+`BB6.Agent49.Box27D17Parent.exact_weighted`, intended to prove **sharp weighted maximum 255 across all 244,140,625 tables**. Existing manual [CI 46114149252](https://github.com/FlareZ123/bb6/actions/runs/46114149252) was cancelled. The fixed parent theorem has now compiled locally with the actual accepted child artifacts and no sorryAx; see the current symmetry dossier.
 
 ## Source mechanisms
 

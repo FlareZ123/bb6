@@ -51,7 +51,11 @@ theorem bound255 (m : Machine)
 
 /-- E0=24 provides the sharp halting lower witness for the entire D0/D1 slice. -/
 theorem attainer_fits :
-    Fits raw10Remainder[27]! BB6.Agent49.Box27Slice24.attainer := by decide
+    Fits raw10Remainder[27]! BB6.Agent49.Box27Slice24.attainer := by
+  intro s
+  rcases s with ⟨q,b⟩
+  revert q b
+  decide
 theorem attainer_d0 :
     BB6.Agent49.Box27Slice24.attainer (3,false) = decode 14 := by decide
 theorem attainer_d1 :
