@@ -108,44 +108,81 @@ const acceptedMass=countUnionWithin(FULL,accepted).covered;
 const portfolioMass=countUnionWithin(FULL,portfolio).covered;
 assert.equal(acceptedMass,97539062500n);
 assert.equal(portfolioMass,123226284000n);
-const SAFE=mask([...moves('ACD'),'1RB']); // 13 actions
-const GUARD_E=mask(['0LE','1LE']); // B1=>E, left, any write
-const eDomain=[SAFE,SAFE,GUARD_E,SAFE,ALL,SAFE,ALL,ALL];
-const eHalt=eDomain.slice();eHalt[4]=bit('HALT');
-const E=countUnionWithin(eDomain),EH=countUnionWithin(eHalt);
-assert.equal(E.universe,892531250n);
-assert.equal(E.covered,878135700n);
-assert.equal(E.universe-E.covered,14395550n);
-assert.equal(EH.universe,35701250n);
-assert.equal(EH.covered,32597500n);
-assert.equal(EH.universe-EH.covered,3103750n);
-
-// Label-symmetric F counterpart is an *exploratory* arithmetic diagnostic.
-// It is NOT added to the certified claim until a true F-source proof exists.
+const SAFE_B=mask([...moves('ACD'),'1RB']); // 13 actions into A,C,D or marked B
+const SAFE_D=mask([...moves('ABC'),'0RD']); // 13 actions into A,B,C or zero-guard D
+const GUARD_E=mask(['0LE','1LE']);
 const GUARD_F=mask(['0LF','1LF']);
-const fDomain=[SAFE,SAFE,GUARD_F,SAFE,ALL,ALL,ALL,SAFE];
-const FH=fDomain.slice();FH[6]=bit('HALT');
-const F=countUnionWithin(fDomain),Fhalt=countUnionWithin(FH);
-function str(x){return String(x)}
+
+// A/B/C-side predecessor-one guard: arbitrary E0 or F0 is never read.
+const oneE=[SAFE_B,SAFE_B,GUARD_E,SAFE_B,ALL,SAFE_B,ALL,ALL];
+const oneF=[SAFE_B,SAFE_B,GUARD_F,SAFE_B,ALL,ALL,ALL,SAFE_B];
+const oneEHalt=oneE.slice();oneEHalt[4]=bit('HALT');
+const oneFHalt=oneF.slice();oneFHalt[6]=bit('HALT');
+
+// C0->D 0RD: D's left cell is unconditionally zero. D1 moves left
+// into E/F scanning that zero, so E1/F1 can be HALT.
+const zeroE=[GUARD_E,SAFE_D,SAFE_D,SAFE_D,SAFE_D,ALL,ALL,ALL];
+const zeroF=[GUARD_F,SAFE_D,SAFE_D,SAFE_D,ALL,ALL,SAFE_D,ALL];
+const zeroEHalt=zeroE.slice();zeroEHalt[5]=bit('HALT');
+const zeroFHalt=zeroF.slice();zeroFHalt[7]=bit('HALT');
+
+// Exact two-sweep source classes (E1/F0/F1 and E0/E1/F1 free,
+// respectively). Both have a 28n+44 period in the original zipper.
+const twoE=table('1RB0LB_1RC1RE_0RD0LA_1LC0LD_0RA---_------');
+const twoF=table('1RB0LB_1RC1RF_0RD0LA_1LC0LD_------_0RA---');
+
+const families=[
+ ['marked_B_E0',oneE,oneEHalt],
+ ['marked_B_F0',oneF,oneFHalt],
+ ['zero_D_E1',zeroE,zeroEHalt],
+ ['zero_D_F1',zeroF,zeroFHalt],
+ ['two_sweep_E',twoE,null],
+ ['two_sweep_F',twoF,null]
+];
+
+// Pairwise disjoint by D1 or B1 action. Therefore summing each
+// family's *new* contributions (outside the same prior portfolio)
+// does not double count a physical completion.
+for(let i=0;i<families.length;i++)
+  for(let j=0;j<i;j++){
+    const a=families[i][1],b=families[j][1];
+    assert(a.some((m,k)=>(m&b[k])===0),
+      `families ${families[i][0]} and ${families[j][0]} are not disjoint`);
+  }
+const detailed={};
+let unionMass=portfolioMass;
+for(const [name,domain,special] of families){
+  const total=countUnionWithin(domain),nu=total.universe-total.covered;
+  unionMass+=nu;
+  detailed[name]={
+    table_count:total.universe.toString(),
+    previous_portfolio_intersection:total.covered.toString(),
+    additional_outside_portfolio:nu.toString(),
+    recursion_memo_states:total.memo_states
+  };
+  if(special){
+    const ex=countUnionWithin(special);
+    detailed[name].protected_instruction_equals_HALT={
+      total:ex.universe.toString(),
+      old_portfolio_overlap:ex.covered.toString(),
+      new_nontrivial:(ex.universe-ex.covered).toString()
+    };
+  }
+}
+assert.equal(detailed.marked_B_E0.additional_outside_portfolio,'14395550');
+assert.equal(detailed.marked_B_E0.protected_instruction_equals_HALT.new_nontrivial,'3103750');
+assert.equal(detailed.zero_D_E1.additional_outside_portfolio,'52905450');
+assert.equal(detailed.zero_D_F1.additional_outside_portfolio,'145517450');
+assert.equal(detailed.two_sweep_E.additional_outside_portfolio,'3125');
+assert.equal(detailed.two_sweep_F.additional_outside_portfolio,'3125');
 console.log(JSON.stringify({
- status:'exact finite arithmetic, source theorem separately requires Lean acceptance',
- raw34_size:str(25n**8n),
+ status:'Exact BigInt finite arithmetic; new NeverHalts source claims require Lean acceptance',
+ raw34_size:String(25n**8n),
  accepted_prior_cylinders:accepted.length,
- accepted_previous_mass:str(acceptedMass),
- agent40_nine_graph_plus_previous:str(portfolioMass),
- guarded_E:{size:str(E.universe),
-   inside_old_and_graph:str(E.covered),
-   new_outside_old_and_graph:str(E.universe-E.covered),
-   new_portfolio_total_if_source_accepted:str(portfolioMass+E.universe-E.covered),
-   E0_is_HALT:{size:str(EH.universe),
-     old_and_graph:str(EH.covered),
-     new_nontrivial:str(EH.universe-EH.covered)}},
- guarded_F_exploratory_only:{size:str(F.universe),
-   inside_old_and_graph:str(F.covered),
-   new_outside_old_and_graph:str(F.universe-F.covered),
-   F0_is_HALT:{size:str(Fhalt.universe),
-     old_and_graph:str(Fhalt.covered),
-     new_nontrivial:str(Fhalt.universe-Fhalt.covered)}},
- unique_portfolio_patterns:portfolio.length,
- E_memo_states:E.memo_states
+ accepted_previous_mass:String(acceptedMass),
+ agent40_nine_graph_plus_previous:String(portfolioMass),
+ families:detailed,
+ arithmetic_union_if_all_sources_accepted:String(unionMass),
+ arithmetic_uncovered_within_raw34_if_all_sources_accepted:String(25n**8n-unionMass),
+ unique_prior_portfolio_patterns:portfolio.length
 },null,2));
