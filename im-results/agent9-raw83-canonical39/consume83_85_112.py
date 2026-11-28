@@ -166,6 +166,25 @@ def main():
     roots[root.name] = raw39.sha(root)
     profiles.update(final_profiles)
 
+    # Preserve the lightweight replay receipt and reclaim authenticated
+    # temporary source bundles before downloading Raw112 (>1 GiB).
+    old_report = work / "raw39-staged" / "report.json"
+    if old_report.is_file():
+        shutil.copy2(old_report, evidence / "raw39-transport-report.json")
+    before_free = shutil.disk_usage(work).free
+    for transient in (
+        work / "raw39-parent", work / "raw39-staged",
+        work / "raw83-parent", work / "raw85-parent",
+    ):
+        shutil.rmtree(transient)
+    after_free = shutil.disk_usage(work).free
+    print(
+        f"Authenticated cleanup before Raw112: "
+        f"{(after_free-before_free)//(1024**2)} MiB reclaimed; "
+        f"{after_free//(1024**2)} MiB available",
+        flush=True,
+    )
+
     # Authenticate the complete 25^6 Raw112 parent proof from the accepted
     # original-source run and import the precise declaration closure into the
     # SAME Canonical39/Raw83/Raw85 environment before compiling the last cut.
@@ -212,7 +231,7 @@ def main():
         "raw112_copied_modules": [str(p) for p in raw112_copied],
         "theorems": profiles,
         "roots": roots,
-        "exact_at_champion_score": NS + ".exact_at_champion_score",
+        "exact_at_champion_score": NS36 + ".exact_at_champion_score",
     }
     (evidence / "raw83-raw85-raw112-after-raw39-canonical36.json").write_text(
         json.dumps(report, indent=2, sort_keys=True) + "\n")
