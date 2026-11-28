@@ -1,0 +1,42 @@
+name: Agent17 Raw42 named/global bridge source check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile tracked Raw42 join and global bridge closure
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a17-raw42-bridge --jobs 4 \
+            --manifest /tmp/a17-raw42-bridge/manifest.json \
+            --label raw42-named-global-bridge \
+            im-results/agent32-raw42/Raw42GlobalBridge.lean \
+            | tee /tmp/a17-raw42-bridge.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/a17-raw42-bridge.log
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/a17-raw42-bridge.log \
+            BB6.Agent17Raw42GlobalBridge.parent_eq_literal \
+            BB6.Agent17Raw42GlobalBridge.global_cover_from_named
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-named-global-bridge-source
+          path: |
+            /tmp/a17-raw42-bridge/manifest.json
+            /tmp/a17-raw42-bridge.log
+          if-no-files-found: warn
+          retention-days: 30
