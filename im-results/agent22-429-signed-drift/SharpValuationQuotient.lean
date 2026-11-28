@@ -14,12 +14,14 @@ def upperQuotient {K : Nat} (e : Edge K) : Nat :=
 
 theorem upperQuotient_eq {K : Nat} (e : Edge K) :
     4*upperQuotient e = e.v+K := by
-  have hj : e.j=e.j-1+1 := by omega
+  have hj : e.j=e.j-1+1 := by
+    have hjpos := e.jpos
+    omega
   have hp : 4^e.j=4*4^(e.j-1) := by
     calc
       4^e.j=4^((e.j-1)+1) := by rw [← hj]
       _=4^(e.j-1)*4 := by rw [Nat.pow_succ]
-      _=4*4^(e.j-1) := by omega
+      _=4*4^(e.j-1) := by ac_rfl
   calc
     4*upperQuotient e = (4*4^(e.j-1))*e.next := by
       unfold upperQuotient
