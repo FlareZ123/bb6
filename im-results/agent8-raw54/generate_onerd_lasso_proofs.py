@@ -7,7 +7,7 @@ This deliberately does not rely on precompiled discovery assertions.
 """
 from __future__ import annotations
 import argparse
-import ast
+import json
 from pathlib import Path
 
 PARENT = "1RB---_1RC---_0RD---_1LD0LE_---1RD_------"
@@ -48,7 +48,7 @@ def read(path: Path):
         if spec in seen:
             raise ValueError(f"duplicate {spec}")
         seen.add(spec)
-        item = ast.literal_eval(payload)
+        item = json.loads(payload)
         if not isinstance(item,list) or not item:
             raise ValueError((spec,item))
         if item[0] == "cycle":
