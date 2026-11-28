@@ -4,7 +4,7 @@ import WeightedTNF
 
 namespace BB6.Agent3Leaf2265Bridge
 open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay
-open BB6.Agent3Leaf2265 (Cfg cons tail table terminalCfg terminalRun terminalRead blankCfg)
+open BB6.Agent3Leaf2265 (Cfg cons tail table blankCfg)
 
 def ctr : PartialMachine := fromCodes [7,20,11,1,14,11,22,16,24,13,2,12]
 
