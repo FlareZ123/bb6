@@ -812,3 +812,32 @@ jobs:
           path: /tmp/a8-raw54-canonical40/evidence/
           if-no-files-found: error
           retention-days: 90
+
+
+  raw54_onerd_deep_residual:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-deep-residual'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          run-id: '46130169999'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-generated
+      - name: Deepen only the 671 explicit 1RD residual cylinders
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          g++ -std=c++17 -O3 "$D/oneRD_residual_deep.cpp" -o /tmp/raw54-onerd-deep
+          /tmp/raw54-onerd-deep "$D/oneRD_leancert_bank.txt" /tmp/raw54-onerd-generated/open.txt /tmp/raw54-onerd-deep-map.tsv 39447 | tee /tmp/raw54-onerd-deep.log
+          grep -q 'roots=671 bank=169 bound=39447 initial_mass=24575' /tmp/raw54-onerd-deep.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw54-onerd-deep-residual
+          path: |
+            /tmp/raw54-onerd-deep-map.tsv
+            /tmp/raw54-onerd-deep.log
+          if-no-files-found: error
+          retention-days: 90
