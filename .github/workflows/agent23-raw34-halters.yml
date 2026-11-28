@@ -147,10 +147,14 @@ jobs:
           set -euo pipefail
           W=/tmp/agent23-raw34-halters
           mkdir -p "$W"
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 im-results/agent40-raw34-frontier/Raw34FLongSideCycles.lean 2>&1 | tee "$W/audit.log"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 \
+            im-results/agent40-raw34-frontier/Raw34FLongSideCycles.lean \
+            im-results/agent40-raw34-frontier/Raw34ELongSideCycles.lean \
+            2>&1 | tee "$W/audit.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/audit.log"
           ! grep -Eq 'sorryAx|native_decide' "$W/audit.log"
           grep -F "'BB6.Agent40Raw34FLongSideCycles.all_never'" "$W/audit.log"
+          grep -F "'BB6.Agent40Raw34ELongSideCycles.all_never'" "$W/audit.log"
       - name: Rank exact Raw34 complement after source-generatable F side cycles
         if: inputs.mode == 'cycle-rank'
         run: |
