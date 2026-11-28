@@ -50,6 +50,42 @@ def all_pair_orders():
         print('v=',v, {w:result[v,w] for w in W if w!=v})
     return result
 
+def affine_residue_step(v, w, residue):
+    """Necessary/sufficient odd-modulus transfer for a genuine v-edge."""
+    M=D(w)
+    return (pow(D(v), -1, M)*(2**(v+1)*residue+3*(d(w)-d(v))))%M
+
+def restricted_valuation_return():
+    """Exact reachable-residue frontier for inverse words avoiding w."""
+    all_results={}
+    for w in W:
+        residues={0}
+        sizes=[1]
+        first=None
+        for k in range(1,9):
+            residues={affine_residue_step(v,w,z)
+                      for z in residues for v in W if v!=w}
+            sizes.append(len(residues))
+            if 0 in residues:
+                first=k
+                break
+        all_results[w]=(first,sizes)
+    assert all_results[14]==(7,[1,6,36,216,1278,6962,24940,32765])
+    assert all_results[17][0]==5
+    print('restricted mixed-word first returns and frontier sizes:',all_results)
+    # Source-faithful explicit 7-edge return witness for valuation 14.
+    x=99417925155886663006208
+    B=x
+    for v in (11,3,4,17,6,4,6):
+        assert B%2**v==0
+        t=B//2**v
+        assert t>=3 and t%2==1
+        B=B+v+3*((t-3)//2+1)
+    assert B==148040327779734176791202
+    assert available(x,14) and available(B,14)
+    print('w14 first mixed return at length 7: start',x,'target',B)
+    return all_results
+
 def audit():
     # Every pair of distinct source valuations in W has a modular gap:
     # any target with both incoming edges forbids a switch at the first
@@ -90,6 +126,7 @@ def audit():
         assert available(cur,3) == (j%18==0)
     print('5->3 resonance: first possible mixed edge depth 18, B=',B)
     all_pair_orders()
+    restricted_valuation_return()
     print('PASS')
 
 if __name__ == '__main__':
