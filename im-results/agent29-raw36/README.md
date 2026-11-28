@@ -36,8 +36,21 @@ All twenty corrected child roots passed [46085477064](https://github.com/FlareZ1
 
 The direct seven-hole cylinder `1RB---_1RC---_0RD---_0LD0LC_------_------` has a new exact canonical discovery tree (773737 nodes, 32241 split nodes, 593100 cycles, 12497 FAR, 135774 last-hole nodes, 125 OPEN literals; weighted halt candidate threshold 172). The 125 sorted OPEN literals have SHA-256 `570f28e662feade63e755b77541f09dfeff21657eeb3028e887f0392009e06ee`. The compact exact-table candidate bank `direct-02-compact.json.xz.b64` supplies 103 FAR certificates, 21 regular-ray certificates and one manual theorem. The manual theorem `BB6.Agent29Raw36D1LCExceptional.never` is locally kernel checked against original `SweepPumping` objects, axiom profile `[propext, Quot.sound]`. It applies to every A1 completion of `1RB---_1RC1RF_0RD1RE_0LD0LC_1LF0RA_0LA0LE`; blank entry 11 reaches state A with empty left zipper and right `0 (1010)^n 10100` at n=0, exact recurrence cost `14*n+25` increments n. The other 124 certificates and whole direct parent still require source composition; no parent Cover is claimed here yet.
 
+## New exact leaf closures and descendant certificates (28 November)
+
+The B1=0LB branch now has a source-accepted weighted Cover at 315 ([run 46095057554](https://github.com/FlareZ123/bb6/actions/runs/46095057554), artifact 15243776901). It is not yet consumed into the 13-cylinder parent theorem.
+
+For direct D1=1LC, all 250 formerly OPEN literal tables are locally kernel-checked against the original TwoSidedAutomata semantics (184 ngram, 46 run-length, 20 modular active inverse-stack certificates). All 250 match the complete canonical discovery tree exactly; the proposed full weighted bound is 366. The full parent closure is dispatched, not yet accepted.
+
+For D1=1LB/B1=1RE, the 187 OPEN leaves now have a complete exact-key certificate bank (126 FAR, 46 sweep, 8 active inverse-stack, 3 late-cycle, 2 regular-ray, 2 manual). The last two were solved symbolically, with local original-source Lean proofs:
+
+* `1RB1LE_1RC1RE_0RD1RF_0LD1LB_1LD0RE_0RA---`: at time 1207, state A has left zipper 0011 and right zipper 0010(00010)^(2+n)000001000010101 T at n=0 and T empty. The same configuration family returns with n+1 and T replaced by 1::T in 144n+758 primitive steps. The recurrence is universal in T. See emit_b122_153.py; growth and never use only propext and Quot.sound.
+* `1RB1LE_1RC1RE_0RD0RF_0LD1LB_1LD0RE_1RA---`: let X and Y be state A, left zipper 0101, right zipper respectively 0100010(0010)^n0100 T and 0100010(0010)^n11 T. X(n,T) -> Y(n+1,T) costs 34n+114; Y(n,1^k0U) -> X(n,0^k1U) costs 34n+2k+90, including the implicit blank case Y(n,1^k) -> X(n,0^k1). Blank entry at 221 is Y(1,[]). See emit_b122_150.py; all three transitions and never use only propext and Quot.sound.
+
+Both manual proofs hold for every completion of their F1 hole. The full B1=1RE weighted bound 332 remains pending source closure. The exact compact banks are direct-14-compact.json.xz.b64 and d1-22-compact.json.xz.b64; active_cert.py independently replays the active-edge witnesses and emits kernel certificates. The global Canonical40 frontier is unchanged.
+
 ## Remaining research
 
-Close B1=0LB, 0LE, 1LE and 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close the nine direct D1 descendants in `parentComplement` and apply `parent_cover_from_thirteen` to close the original eight-hole parent. The global Canonical40 frontier is unchanged by this local refinement.
+Consume the accepted B1=0LB proof; close B1=0LE, 1LE and the pending source closure of 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close the nine direct D1 descendants in `parentComplement` and apply `parent_cover_from_thirteen` to close the original eight-hole parent. The global Canonical40 frontier is unchanged by this local refinement.
 
 Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.
