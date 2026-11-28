@@ -1,0 +1,150 @@
+name: Agent1 Raw56 E1=0LE seven-sibling plus leaf17557 assembly
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/le-seven/base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RB
+          path: /tmp/le-seven/rb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RC
+          path: /tmp/le-seven/rc
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-two-source-accepted
+          path: /tmp/le-seven/two
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LB-source-accepted
+          path: /tmp/le-seven/lb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095334604'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le1LA-source-accepted
+          path: /tmp/le-seven/la
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095337775'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le1RA-source-accepted
+          path: /tmp/le-seven/ra
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095340906'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-five-source-accepted
+          path: /tmp/le-seven/five
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46109884602'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LF-partial1-source-accepted
+          path: /tmp/le-seven/lfbase
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46112103663'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LF-complete-source-accepted
+          path: /tmp/le-seven/lf
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46122584096'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le1LF-partial1-source-accepted
+          path: /tmp/le-seven/oneLF
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46123920848'
+      - name: Merge accepted closures and check seven-sibling plus exact-leaf theorem
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/le-seven/union
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          root=Path('/tmp/le-seven'); dst=root/'union'; counts={}
+          for name in ('base','rb','rc','two','lb','la','ra','five','lfbase','lf','oneLF'):
+              files=list((root/name).rglob('*.olean'))
+              assert files,(name,root/name)
+              counts[name]=len(files)
+              for p in files:
+                  q=dst/p.name
+                  if not q.exists(): shutil.copy2(p,q)
+          needed=['Raw56RootConsumer','Raw56E1LECut',
+                  'Raw56LE0RBAll','Raw56LE0RCAll','Raw56LE0LBAll','Raw56LE1LAAll','Raw56LE1RAAll',
+                  'Raw56LE0LFPartialAll','Raw56LE1LFPartialAll']
+          assert all((dst/(n+'.olean')).exists() for n in needed),[n for n in needed if not (dst/(n+'.olean')).exists()]
+          print('accepted union',counts,'total',len(list(dst.glob('*.olean'))))
+          PY
+          cp im-results/agent32-raw59/FastBiDFA.lean /tmp/le-seven/union/
+          for n in Raw56LE0LFMotif3613 Raw56LE0LFFull; do
+            src="$(find /tmp/le-seven/lf -name "$n.lean" -print -quit)"
+            test -n "$src"
+            cp "$src" /tmp/le-seven/union/
+          done
+          cp im-results/agent1-raw56/le/Raw56E1LE{FourCut,FiveCut,FiveClosed,SixCut,SixClosed,SevenPlus17557}.lean /tmp/le-seven/union/
+          export LEAN_PATH=/tmp/le-seven/union
+          cd /tmp/le-seven/union
+          lean -o FastBiDFA.olean FastBiDFA.lean 2>&1 | tee checker.log
+          lean -o Raw56LE0LFMotif3613.olean Raw56LE0LFMotif3613.lean 2>&1 | tee lf-leaf.log
+          lean -o Raw56LE0LFFull.olean Raw56LE0LFFull.lean 2>&1 | tee lf-full.log
+          lean -o Raw56E1LEFourCut.olean Raw56E1LEFourCut.lean 2>&1 | tee four-cut.log
+          lean -o Raw56E1LEFiveCut.olean Raw56E1LEFiveCut.lean 2>&1 | tee five-cut.log
+          lean -o Raw56E1LEFiveClosed.olean Raw56E1LEFiveClosed.lean 2>&1 | tee five-closed.log
+          lean -o Raw56E1LESixCut.olean Raw56E1LESixCut.lean 2>&1 | tee six-cut.log
+          lean -o Raw56E1LESixClosed.olean Raw56E1LESixClosed.lean 2>&1 | tee six-closed.log
+          lean -o Raw56E1LESevenPlus17557.olean Raw56E1LESevenPlus17557.lean 2>&1 | tee seven-plus.log
+          cat checker.log lf-leaf.log lf-full.log four-cut.log five-cut.log five-closed.log six-cut.log six-closed.log seven-plus.log > all.log
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' all.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound7_plus_17557
+          mkdir -p /tmp/le-seven/output
+          cp Raw56E1LESevenPlus17557.{lean,olean} all.log /tmp/le-seven/output/
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le-seven-plus-17557-source-accepted
+          path: /tmp/le-seven/output/**
+          if-no-files-found: error
+          retention-days: 30
