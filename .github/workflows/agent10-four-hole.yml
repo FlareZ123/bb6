@@ -2549,7 +2549,7 @@ jobs:
           python im-results/agent29-raw36/build_closure_manifest.py --work /tmp/final --root Raw36D102 \
             --label raw36-d1-02 --artifact-name raw36-d1-02-proof \
             --theorem BB6.Agent29Raw36D102.cover --bound 172 \
-            --parent-table '1RB---_1RC---_0RD0LC_0LD---_------_------' \
+            --parent-table '1RB---_1RC---_0RD---_0LD0LC_------_------' \
             --provenance 'artifact=15249355743,run=46097780398,sha256=0c2dbb14ac6fc18b3d1b9feac6ff5ec78439e54b5fc8c7a97ecef80722b056fe'
           cp /tmp/d102-root.log /tmp/final/audit.log
       - name: Retain source-checked D1=0LC closure
