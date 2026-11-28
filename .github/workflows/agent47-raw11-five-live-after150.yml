@@ -1,0 +1,97 @@
+name: Agent47 Raw11 five-live-parent crosswalk after 150
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Download accepted Raw11 150 object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46120220611
+          name: agent47-raw11-exact-299-to-150-extra28
+          path: /tmp/q0150accepted
+
+      - name: Download accepted Raw11 151 object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46111781717
+          name: raw11-exact-299-to-151-q0root53
+          path: /tmp/q0151accepted
+
+      - name: Download accepted Raw11 152 predecessor
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152accepted
+
+      - name: Recover exact transitive source objects
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/build
+          for id in             15144626755             15159003899 15161045625             15159257293 15154832729 15154568902             15154569169 15154663882 15158958272             15017647753 15014940132 15166284252             15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"               -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/q0150accepted -name Raw11Extra28After151.olean -print -quit)"
+
+      - name: Kernel-check exact 150-to-145 crosswalk
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/build
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find /tmp/deps /tmp/q0152accepted /tmp/q0151accepted /tmp/q0150accepted                     -type f -name '*.olean' | sort)
+          export LEAN_PATH
+
+          src=im-results/agent47-raw11-adapter/Raw11FiveLiveAfter150.lean
+          lean -j1 -o /tmp/build/Raw11FiveLiveAfter150.olean "$src"             | tee /tmp/build/Raw11FiveLiveAfter150.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/build/Raw11FiveLiveAfter150.log; then
+            exit 1
+          fi
+          for theorem in             "'BB6.Agent47Raw11FiveLiveAfter150.literal_codes' depends on axioms:"             "'BB6.Agent47Raw11FiveLiveAfter150.all_members_in_150' depends on axioms:"             "'BB6.Agent47Raw11FiveLiveAfter150.exact_census' depends on axioms:"             "'BB6.Agent47Raw11FiveLiveAfter150.raw11_cover_from_145' depends on axioms:"; do
+            grep -F "$theorem" /tmp/build/Raw11FiveLiveAfter150.log
+          done
+          sha256sum "$src" > /tmp/build/source-sha256.txt
+          lean --version > /tmp/build/toolchain.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent47-raw11-five-live-after150
+          path: |
+            /tmp/build
+            im-results/agent47-raw11-adapter/Raw11FiveLiveAfter150.lean
+          if-no-files-found: warn
+          retention-days: 30
