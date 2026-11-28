@@ -147,7 +147,6 @@ theorem neverBlank (t : Nat) : run t (A z z) ≠ none := by
     contradiction
   · rw [←show 53+(t-53)=t by omega,run_add,init,Option.bind_some] at h
     exact neverPhase _ 4 _ (by decide) h
-#print axioms neverBlank
 open BB6Coverage
 open Box17 (index decode)
 def codes : List (Fin 25) := [8,22,11,2,1,13,17,1,24,6,4,0]
