@@ -1,4 +1,4 @@
-# F321: exact logarithmic high-branch accelerator and halting-gate arithmetic
+# F321: exact binary/quaternary bulk accelerators and finite inverse grammar
 
 **Status:** source-derived elementary arithmetic and a reproducible BigInt experiment, not a Lean-accepted original-machine nonhalting theorem and not a Raw132 Cover. Literal machine: `1RB---_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD`, historic F321, with A1 undefined. Its blank-run counter seed after 70 ordinary steps is `(a,d)=(1,1)`.
 
@@ -37,9 +37,37 @@ When the incoming `a=4u+6` (the output of either `a<d` branch), halting requires
 
 For every nonhalting counter-map transition the parameter sum `a+d` **strictly increases**: by 1 in the high branch; by 5 if `a=d` (new pair `(2a+4,1)`); by 6 if `a<d` and `d>=3a+1` (new pair `(4a+6,d-3a)`); and by at least 8 in the middle `a<d<3a+1` branch (new pair `(4a+6,b)`, `b=2` when `d-a` even and `b=1` otherwise). In the middle case `d<=3a`; equality forces `b=2`, otherwise `d<=3a-1`. Thus no wholly live counter orbit is periodic; this does **not** rule out future halting.
 
+## Dual quaternary far-run theorem and inverse
+
+The second repeated branch of the same upstream map is `(a,d)->(4a+6,d-3a)` when `d>=3a+1` (which implies `a<d`). For `k` consecutive far steps define
+```
+A_k = (a+2) 4^k - 2
+D_k = d - (a+2)(4^k - 1) + 6k
+E_k = D_k - 3A_k - 1 = d+a+7+6k - (a+2)4^(k+1).
+```
+Induction proves the first two formulas; `E_(k+1)-E_k=6-3(a+2)4^(k+1)<=-18`. Thus the unique *maximal far-run exit* is `K=min{k>=0:E_k<0}`, computable by exact doubling and binary search in `O(log(K+1))` BigInt shifts/comparisons. No intermediate far step can halt, since its guard forces the far transition.
+
+At fixed `a`, every `d>=0` belongs to a unique **quaternary chamber**:
+```
+J_0(a) = [0, 3a]
+J_k(a) = [(a+2)4^k-a-1-6k, (a+2)4^(k+1)-a-8-6k], k>=1.
+```
+The intervals are adjacent; the k-th chamber runs exactly k far steps. For `k>=1`, the exit has fixed `A_k` and `D_k` ranges bijectively across **all** integers `1<=D_k<=3A_k`; for k=0 it ranges over `0<=D_0<=3a`. The exit reaches the next-step halt condition `A_k=D_k+1` at the single chamber input
+```
+d = 2(a+2)4^k-a-5-6k.
+```
+For `k=0,a=0` this value is negative and there is no danger; for every `k>=1` it is legal. Again these one-run halting seeds form a sparse (exponentially spaced) set at any fixed `a`, not a global nonhalting proof.
+
+The far-run map also has a **complete finite inverse**: for an output `(A,D)` with `0<=D<=3A`, every predecessor is uniquely indexed by a `k>=0` such that `4^k | (A+2)`, `(A+2)/4^k>=2`, and `D>=1` when `k>=1`:
+```
+a = (A+2)/4^k - 2
+d = D + A - a - 6k.
+```
+All such predecessors are nonnegative and valid. Thus the inverse fan-in is at most `floor(v2(A+2)/2)+1`. Both exact inverse enumerators are implemented in `f321-bulk.cjs` and tested against exhaustive small forward inputs and direct uncompressed execution. Combining them with the two remaining exceptional transition rules yields a finite-branching inverse specification for any *fixed* counter endpoint; there is still an unbounded family of possible terminal endpoints.
+
 ## Executable evidence and limitations
 
-`node f321-bulk.cjs 100000` runs an exact BigInt implementation. The independent direct and bulk high calculations agree on all 4,000 pairs with `0<=a<100, 0<=d<40`, three enormous cases and the first 500 authentic epochs; strict growth is tested on those 4,000 pairs. The arithmetic is derived from, but does not independently authenticate, the original Lean Turing-machine reduction.
+`node f321-bulk.cjs 100000` runs an exact BigInt implementation. The independent direct and bulk high/far calculations agree on all 4,000 pairs with `0<=a<100, 0<=d<40`, three enormous cases and the first 500 authentic epochs; strict growth is tested on those 4,000 pairs. The arithmetic is derived from, but does not independently authenticate, the original Lean Turing-machine reduction.
 
 From `(1,1)`, **100,000 complete nonhalting counter epochs** (a maximal high run plus one nonhigh branch) correspond to **953,789,045 individual counter-map transitions** without a halt, ending at a counter of at most 33,436 binary digits. Nonhigh branch counts: equality 1, far 42,890, middle 57,109; longest high run 33,433. A 30,000-epoch checkpoint gave 84,657,074 counter transitions and 9,956-bit counters. These are *not primitive TM transitions*, and this finite experiment does not establish BB(6), F321 nonhalting, or any physical-machine step lower bound. The strictly increasing sum makes the finite prefix imply an **all-future terminal-parameter exclusion**: because the larger final counter has 33,436 bits, `a+d>=2^33435` at that point. Any later halting gate `a=d+1` must therefore have `2d+1>a+d>=2^33435`, hence **`d>=2^33434`**. In other words, conditional on the exact numerical trace and upstream counter reduction, halts with terminal parameter `d<2^33434` are excluded for the entire blank orbit, not merely within the simulated prefix. This is a computation-assisted parameter cutoff, **not** an infinite-orbit decision.
 
