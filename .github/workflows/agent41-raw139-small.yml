@@ -127,6 +127,12 @@ jobs:
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryQMassGuarded \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryPrefixGrowth \
             --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryPrefixMass \
+            --theorem F421SecondaryLifetimes.lengthSumMass \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryMassTelescoping \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryQSumTelescoping \
+            --theorem F421SecondaryLifetimes.firstSecondaryQMoment \
+            --theorem F421SecondaryLifetimes.firstSecondaryPrefixMoment \
+            --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryPotential \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
@@ -162,6 +168,12 @@ jobs:
             im-results/agent41-f421/F421SecondarySize.lean \
             im-results/agent41-f421/F421SecondarySizeGuard.lean \
             im-results/agent41-f421/F421SecondaryLengthIter.lean \
+            im-results/agent41-f421/F421SecondaryTelescoping.lean \
+            im-results/agent41-f421/F421SecondaryTelescopingGuard.lean \
+            im-results/agent41-f421/F421SecondaryQTelescoping.lean \
+            im-results/agent41-f421/F421SecondaryLifeCount.lean \
+            im-results/agent41-f421/F421SecondaryLifeMass.lean \
+            im-results/agent41-f421/F421SecondaryPotential.lean \
             im-results/agent41-f421/F421MergedDrain.lean \
             im-results/agent41-f421/F421PrimaryEvents.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
