@@ -7,6 +7,8 @@ on:
       run_1LC: {description: 'Successful 1LC recovery run', required: true, type: string}
       run_1LE: {description: 'Successful 1LE assembly run', required: true, type: string}
       run_1RE: {description: 'Successful 1RE assembly run', required: true, type: string}
+      artifact_0LE: {description: '0LE certified artifact name', required: true, type: string, default: 'raw42-certified-0LE'}
+      artifact_1LE: {description: '1LE certified artifact name', required: true, type: string, default: 'raw42-certified-1LE'}
 permissions:
   contents: read
   actions: read
@@ -46,11 +48,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LC }}", name: raw42-certified-1LC-split-recovery, path: /tmp/children/1LC}
       - uses: actions/download-artifact@v4
-        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_0LE }}", name: raw42-certified-0LE, path: /tmp/children/0LE}
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_0LE }}", name: "${{ inputs.artifact_0LE }}", path: /tmp/children/0LE}
       - uses: actions/download-artifact@v4
         with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '45996645063', name: raw42-certified-0RE, path: /tmp/children/0RE}
       - uses: actions/download-artifact@v4
-        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LE }}", name: raw42-certified-1LE, path: /tmp/children/1LE}
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LE }}", name: "${{ inputs.artifact_1LE }}", path: /tmp/children/1LE}
       - uses: actions/download-artifact@v4
         with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1RE }}", name: raw42-certified-1RE, path: /tmp/children/1RE}
       - name: Strictly merge child closures
