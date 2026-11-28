@@ -10,7 +10,6 @@ All non-cycle entries remain explicit `open` residuals.
 from __future__ import annotations
 
 import argparse
-import ast
 import json
 from pathlib import Path
 
@@ -24,7 +23,7 @@ def read_lasso(path: Path) -> dict[str, list]:
             code, payload = raw.split("\t", 1)
         except ValueError as e:
             raise ValueError(f"{path}:{lineno}: expected TAB") from e
-        item = ast.literal_eval(payload)
+        item = json.loads(payload)
         if not isinstance(item, list) or not item:
             raise ValueError(f"{path}:{lineno}: malformed payload")
         if code in out:
