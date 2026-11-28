@@ -120,7 +120,7 @@ jobs:
           python3 "$work/pipeline/compile_groups.py" "$root_abs" "$core_abs" "D9C$CODE" | tee "$work/d9c$CODE/compile.log"
           grep -F "FINAL" "$work/d9c$CODE/compile.log"
           grep -F " 0 []" "$work/d9c$CODE/compile.log"
-          grep -F "'D9C$CODE.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d9c$CODE/src/logs/D9C$CODEParent.log"
+          grep -F "'D9C$CODE.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d9c$CODE/src/logs/D9C${CODE}Parent.log"
           ! grep -REq 'sorryAx|ofReduceBool' "$work/d9c$CODE/src/logs"
       - uses: actions/upload-artifact@v4
         if: always()
