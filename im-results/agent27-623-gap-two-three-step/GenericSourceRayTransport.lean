@@ -31,13 +31,14 @@ successor ray with uniform one-sided error control. -/
 theorem ordinary_source_ray_transport (P Q N u v x y A B : Nat)
     (hhi : min u v+3<3^N)
     (hsep : min u v+N+10≤max u v)
+    (hu : 0<u)
     (hord : OrdinaryStep u v x y)
     (hRayUpper : P*x≤Q*y+A)
     (hRayLower : Q*y≤P*x+B) :
     P*max u v≤(P+3*Q)*min u v+A+(P+4*Q)*N+6*P+20*Q ∧
     (P+3*Q)*min u v≤P*max u v+B+P*N+4*P+4*Q := by
   obtain ⟨r,c,hr,hcl,hcu,hx,hl,hweighted⟩ :=
-    ordinary_step_coupled_envelope N u v x y hhi hsep hord
+    ordinary_step_coupled_envelope N u v x y hhi hsep hu hord
   exact coupled_ray_transport P Q (min u v) (max u v)
     x y N r c A B hr hcl hcu hx hl hweighted hRayUpper hRayLower
 
@@ -47,6 +48,7 @@ proof. This is the reusable induction step for a binary inverse-ray tree.
 theorem ordinary_source_pair_transport (P Q N u v x y A B : Nat)
     (hhi : min u v+3<3^N)
     (hsep : min u v+N+10≤max u v)
+    (hu : 0<u)
     (hord : OrdinaryStep u v x y)
     (hPair : (P*x≤Q*y+A ∧ Q*y≤P*x+B) ∨
       (Q*x≤P*y+A ∧ P*y≤Q*x+B)) :
@@ -55,7 +57,7 @@ theorem ordinary_source_pair_transport (P Q N u v x y A B : Nat)
     (Q*max u v≤(Q+3*P)*min u v+A+(Q+4*P)*N+6*Q+20*P ∧
       (Q+3*P)*min u v≤Q*max u v+B+Q*N+4*Q+4*P) := by
   obtain ⟨r,c,hr,hcl,hcu,hx,hl,hweighted⟩ :=
-    ordinary_step_coupled_envelope N u v x y hhi hsep hord
+    ordinary_step_coupled_envelope N u v x y hhi hsep hu hord
   exact pair_of_inverse_rays P Q (min u v) (max u v)
     x y N r c A B hr hcl hcu hx hl hweighted hPair
 
