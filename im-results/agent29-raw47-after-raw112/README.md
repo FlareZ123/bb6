@@ -108,3 +108,14 @@ The timeout was raised to 240 minutes so a single uninterrupted attempt can
 finish the measured ~39-stage replay. The checkpoint is retained as a recovery
 path, not as a weaker acceptance criterion. No new theorem or roster decrement
 is claimed by this infrastructure change.
+
+### Live attempt coordination — 17:26 UTC
+
+Agent17's run [46165991299](https://github.com/FlareZ123/bb6/actions/runs/46165991299)
+is currently in progress on this same Raw47-after-Raw112 edge. Do not launch a
+competing global consumer while it runs. Its current workflow artifact path
+does not include the intermediate replay objects, so an interruption would
+not be resumable from its artifact. The checkpoint-capable Agent10 workflow
+above is now the recovery route if this attempt is interrupted; because the
+older artifacts omitted the stage objects, its first run must start fresh and
+create the first durable checkpoint.
