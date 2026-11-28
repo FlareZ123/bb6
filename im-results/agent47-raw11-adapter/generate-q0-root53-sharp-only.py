@@ -57,7 +57,9 @@ for file in sorted(original.glob("Q0Root53*.lean")):
     assert proofs, mod
     count += len(proofs)
     imports = [f"import {mod}"]
-    if mod != "Q0Root53Base":
+    if mod == "Q0Root53Base":
+        imports += ["import OrdinaryQ0Exhaustive"]
+    else:
         imports += ["import Q0Root53SharpBase"]
     for imported in re.findall(r"^import (Q0Root53Shard\d+)$", content, re.M):
         imports += [f"import {imported.replace('Q0Root53Shard','Q0Root53SharpShard')}"]
