@@ -88,12 +88,14 @@ theorem concat_run_summary (closed : List Nat) (last : Nat)
   | nil =>
       cases right with
       | nil =>
-          simp [segmentOfRuns,segConcat,rightSig,mergeLast,runCat,
-            emptyRight,hl,plus]
+          have hcat : cat (last+1) ≠ 0 := hl
+          simp [segmentOfRuns,segConcat,rightSig,mergeLast,
+            emptyRight,hcat,plus,runCat,suffixMask]
       | cons first rest =>
           have hh : runCat first ≠ 0 := cat_pos first
           simp [segmentOfRuns,segConcat,rightSig,mergeLast,
-            runCat,hl,hh,plus_merge]
+            hl,hh,plus_merge]
+          simpa [runCat,Nat.add_assoc] using plus_merge last first
   | cons first rest =>
       have hf : runCat first ≠ 0 := cat_pos first
       cases right with
@@ -111,7 +113,7 @@ theorem concat_run_summary (closed : List Nat) (last : Nat)
                     (forward (runWord rest) 1)
                     (pre (runCat last) 4)⟩ := by
                 simp [segmentOfRuns,segConcat,rightSig,
-                  emptyRight,hf,hl,plus]
+                  emptyRight,hf,hl,plus,pairPre]
             _ = ⟨runCat first,suffixMask (rest ++ [last])⟩ := by
                 rw [pair_preimage (runWord rest) _ hpre,htail]
             _ = rightSig ((first::rest) ++ mergeLast last []) := by
@@ -128,6 +130,11 @@ theorem concat_run_summary (closed : List Nat) (last : Nat)
                   (suffixMask rightRest)) := by
             rw [suffixMask_append]
             rfl
+          have hplus : plus (runCat last) (cat (rightFirst+1)) =
+              runCat (last+rightFirst+1) := by
+            simpa [runCat,Nat.add_assoc] using plus_merge last rightFirst
+          have hmerged : runCat (last+rightFirst+1) ≠ 0 :=
+            cat_pos (last+rightFirst+1)
           calc
             segConcat (segmentOfRuns (first::rest) last)
                 (rightSig (rightFirst::rightRest)) =
@@ -137,7 +144,7 @@ theorem concat_run_summary (closed : List Nat) (last : Nat)
                     (pre (runCat (last+rightFirst+1))
                       (suffixMask rightRest))⟩ := by
                 simp [segmentOfRuns,segConcat,rightSig,
-                  hf,hl,hr,plus_merge]
+                  hf,hl,hr,hplus,hmerged,pairPre]
             _ = ⟨runCat first,
                   suffixMask (rest ++ (last+rightFirst+1)::rightRest)⟩ := by
                 rw [pair_preimage (runWord rest) _ hpre,htail]
