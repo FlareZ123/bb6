@@ -57,6 +57,7 @@ def main():
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--onele-run", type=int, default=46114235329)
     ap.add_argument("--chunk-size", type=int, default=64)
+    ap.add_argument("--six-ready-only", action="store_true")
     args = ap.parse_args()
 
     work = args.work.resolve()
@@ -108,6 +109,47 @@ def main():
         root, p = raw39.source_check(source, canonical, evidence, targets)
         roots[root.name] = raw39.sha(root)
         profiles.update(p)
+
+    if args.six_ready_only:
+        names = [
+            "BB6.Agent9Canonical33SixReadyConditional." + name
+            for name in (
+                "p47_count39", "p112_count39", "p106_count39",
+                "p79_count39", "p83_count39", "p85_count39",
+                "parents_pairwise_distinct", "parents_root", "count33",
+                "all_six_removed", "conditional_sound",
+                "conditional_exact_at_champion",
+            )
+        ]
+        source = HERE / "Canonical33SixReadyConditional.lean"
+        root, conditional_profiles = raw39.source_check(
+            source, canonical, evidence, names)
+        profiles.update(conditional_profiles)
+        assert all(set(axioms) <= ALLOWED for axioms in profiles.values())
+        receipt = {
+            "status": "source-checked conditional six-ready cut on accepted Canonical39",
+            "source_revision": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
+            "previous_residual_count": 39,
+            "conditional_residual_count": 33,
+            "unproved_premises": [
+                "Cover (WeightedBound 6766859) " + n
+                for n in ("p47", "p112", "p106", "p79", "p83", "p85")
+            ],
+            "accepted_predecessor": predecessor,
+            "raw39_parent": parent,
+            "raw39_transport_mode": transport["mode"],
+            "root": root.name,
+            "root_sha256": raw39.sha(root),
+            "axioms": profiles,
+        }
+        (evidence / "six-ready-conditional33.json").write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+        print(
+            "PASS: source-checked conditional six-ready Canonical39 to 33",
+            flush=True,
+        )
+        return
 
     # Reuse the source-accepted 93-module Raw83 family from the pinned
     # 2026-11-26 parent proof, not its generated/untrusted search transcript.
