@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Finite exact renormalization audit for Raw56 leaf 17557.
 
-This is evidence for, not a proof of, the infinite nonhalting recurrence.
+Historical prefix check only.  The fixed pointwise rho map is now known to fail at level 10->11; see analyze_17557_defect.cpp.
 
 At A-on-blank triad boundaries in epoch n, write the zipper sides as alternating
 run-length lists (near-to-far on the left; near-to-far on the right).  The
@@ -30,7 +30,7 @@ levels 2->3 through 7->8 (all corresponding triad boundaries in those epochs).
 """
 
 TABLE = "1RB1LA_1RC1RB_0RD0RC_1LD1LE_1LF0LE_0LA---"
-MAX_LEVEL = 8
+MAX_LEVEL = 10
 
 
 def parse(table):
@@ -120,8 +120,8 @@ def main():
         if q == 0 and b == 0:
             for n in range(2, MAX_LEVEL+1):
                 if T(n) <= t <= T(n+1):
+                    # Shared C_(n+1) belongs to both adjacent epochs.
                     returns[n].append((t, sides(tape, head)))
-                    break
         if t == final:
             break
         mv = trans.get((q, b))
@@ -162,8 +162,8 @@ def main():
         for k, c in enumerate(low_word):
             assert high_word[3*k:3*k+3] == sigma(c)
 
-    print(f"PASS {checked} exact boundary renormalization checks through level {MAX_LEVEL}")
-    print("FINITE EVIDENCE ONLY: prove rho∘A=(ABA)∘rho and rho∘B=(BBA)∘rho on the symbolic domain")
+    print(f"PASS fixed-rho prefix: {checked} exact boundary checks through level {MAX_LEVEL}")
+    print("KNOWN LIMIT: fixed rho fails at level 10->11; use analyze_17557_defect.cpp and the defect relation")
 
 
 if __name__ == "__main__":

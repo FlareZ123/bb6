@@ -127,147 +127,142 @@ Equivalently, with A=0 and B=1, a substituted symbol `x` produces
 and exactly `4*3^(n-1)` A-return segments in epoch n. This is the structural
 source of the factor `3^(n-1)` in the observed clock formula.
 
-## Level-raising renormalization
+## Fixed renormalization is false at level 10→11
 
-There is a substantially sharper finite-checked self-similarity. Work in the
-translation-invariant zipper coordinates `Z0`, so absolute head position is
-discarded. At each triad boundary, write the left and right tape as
-near-to-far alternating run-length lists.
+The original level map \`rho\` is an exact finite-prefix phenomenon, not an
+all-level conjugacy. A literal primitive-step replay of the partial machine
+finds the arithmetic obstruction.
 
-For every corresponding boundary checked from epochs 2→3 through 6→7, the
-boundary at position `k` is carried to boundary `3k` at the next level by
-one fixed run-length map `rho`.
+The old left map doubles every 1-run and maps a finite zero-run
+\`z=8*q+r\` by
 
-On the right, for
-`1^a1 0^z1 1^a2 0^z2 ... 1^am` with `m >= 2`:
-
-- `a1 -> 2*a1+2`, `z1 -> 2*z1-1`;
-- if `m=2`, the final `a2 -> 2*a2+4`;
-- if `m>=3`, `a2 -> 2*a2+3`, `z2 -> 2*z2-1`;
-- later nonfinal 1-runs double, later zero-runs map `z -> 2*z+1`;
-- the final 1-run maps `a -> 2*a+1`.
-
-On the left, every 1-run doubles. The deeper audit shows that the earlier
-four-residue description was too narrow. The correct finite-checked zero-run
-map is defined for every nonnegative `z`: write `z=8*q+r` with
-`0 <= r < 8`, then
-
-```
+\`\`\`
 rhoZero(z) = 16*q+r       if r <= 6
 rhoZero(z) = 16*q+15      if r = 7.
-```
+\`\`\`
 
-The second line is equivalently the signed residue `-1` convention. This
-universal residue map agrees with every corresponding left zero-run checked
-through the 7→8 level lift.
+At epoch 10 triad boundary **k=3280**, primitive time **6,134,105**, the
+literal machine is at a B-triad start with
 
-This map sends the checkpoint tape in `C_n` exactly to the checkpoint tape
-in `C_(n+1)`: the three right 1-run lengths transform as
+\`\`\`
+left  = 0^14 1^1024
+right = 1^2 0 1^5 0^5 1^16 0^7 1^32 0^15 1^64 0^31
+        1^128 0^63 1^256 0^127 1^512 0^255 1^3071.
+\`\`\`
 
-```
-2^n-2       -> 2^(n+1)-2
-2^(n+1)-3   -> 2^(n+2)-3
-2^(n+1)-1   -> 2^(n+2)-1.
-```
+The exact B rewrite consumes seven left zeros. At the next low boundary
+**k=3281**, time **6,134,148**, the left side is \`0^7 1^1024\`.
 
-Moreover, the checked macro orbit satisfies the conjugacy pattern
+Its corresponding level-11 boundary is **k=9843=3·3281**, primitive time
+**24,349,044**. Literal replay gives
 
-```
-rho ∘ A = (A B A) ∘ rho
-rho ∘ B = (B B A) ∘ rho
-```
+\`\`\`
+actual high left = 0^7  1^2048
+old-rho prediction = 0^15 1^2048.
+\`\`\`
 
-at every corresponding lower-level boundary through the 7→8 audit. This is
-exactly the same substitution `sigma(A)=ABA, sigma(B)=BBA` seen in the
-branch word. `analyze_17557_renorm.py` reproduces this literal
-primitive-step check.
+The right side agrees with the old \`rho\` prediction exactly:
 
-## Algebraic reduction of the conjugacy
+\`\`\`
+1^6 0 1^13 0 1^16 0^7 1^32 0^15 1^64 0^31
+1^128 0^63 1^256 0^127 1^512 0^255 1^1024 0^511 1^6143.
+\`\`\`
 
-The exact triad formulas still reduce the semantic conjugacy to elementary
-run-length identities, but the residue **role** of a zero-run is part of the
-remaining invariant.
+Thus the fixed-map conjecture fails by exactly **eight cells in one left
+zero-run**. \`analyze_17557_defect.cpp\` dynamically finds the epoch-10 B
+runway with residue 6, replays the literal transition table to the
+corresponding high boundary, and asserts this mismatch. It aborts if the
+undefined F1 slot is reached.
 
-For a normal A-triad, the lower second 1-run in the observed family is
-`b in {13,29,61,125,...}`. The high sequence is `ABA`, and the three
-high macros leave a left zero runway of `2*b-11`. The lower A-triad leaves
-`b-6`, so this part of conjugacy reduces to
+The failure is already forced by the exact local B formula. For \`ell>=7\`,
+fixed conjugacy would require
 
-```
-rhoZero(b-6) = 2*b-11.
-```
-
-For these normal-A values, `b-6 ≡ 7 (mod 8)`, and the universal residue map
-proves the identity immediately.
-
-For a B-triad with left zero runway `ell`, the high sequence `BBA`
-removes `7+7+1=15` zeros. The lower B-triad removes 7, so the left equality
-is
-
-```
+\`\`\`
 rhoZero(ell-7) = rhoZero(ell)-15.
-```
+\`\`\`
 
-This identity is **not** true for arbitrary `ell`; for example the residue-6
-class is exceptional. It holds for every B-role runway in the checked orbit
-through level 8. Proving that B-role runways remain in the allowed residue
-subset is therefore an explicit part of the missing symbolic-domain theorem.
+This holds for every residue of \`ell mod 8\` except **6**. At \`ell=14\`,
+\`rhoZero(7)=15\` whereas \`rhoZero(14)-15=22-15=7\`. The discrepancy is
+exactly 8. Similarly, the A-carry identity
+\`rhoZero(ell-1)=rhoZero(ell)-1\` fails exactly for
+\`ell ≡ 7 (mod 8)\`, again by 8. The normal-A identity
+\`rhoZero(b-6)=2*b-11\` holds on the observed normal-A family
+\`b ≡ 5 (mod 8)\`.
 
-For the A carry case `b=5`, if the lower left begins
-`1^d 0^ell L`, the raised configuration first executes normal A, then B,
-then the `b=5` carry. The merged high left 1-run has length
-`2*d+2*a+4`, so the emitted first right block is
+## The self-similarity survives as a one-defect relation
 
-```
-2*d + 2*a + 10 = 2*(d+a+4)+2,
-```
+The failure is highly structured. Primitive replay through the
+level-11→12 comparison shows that the right-side transformation remains
+exact at every compared boundary, every left 1-run still doubles, and left
+run shape is unchanged. Every discrepant boundary has exactly one zero-run
+shorter than the old \`rhoZero\` prediction by 8.
 
-exactly the first-run rule applied to the lower carry output. The remaining
-left equality is
+The level-10→11 comparison has two marked boundaries, both at zero-run
+position 0. Level 11→12 has 30: 28 at zero-run position 0 and two at
+position 1. A separate macro replay using only the exact A/B triad formulas
+reproduces these primitive results and extends the same relation to
+level 12→13: 250 marked boundaries, 216 at position 0 and 34 at position 1.
+The last count is rewrite-model evidence, not a Lean/source primitive-run
+theorem.
 
-```
-rhoZero(ell-1) = rhoZero(ell)-1.
-```
+The natural replacement for fixed \`rho\` is therefore a relation carrying
+an optional **defect token** on one left zero-run:
 
-This too is role-sensitive rather than universal: residue 7 is exceptional,
-while every carry-role runway in the checked orbit satisfies it.
+\`\`\`
+unmarked zero z  -> rhoZero(z)
+marked zero z    -> rhoZero(z) - 8.
+\`\`\`
 
-The right-side algebra is generic once terminal versus nonterminal final
-1-runs is tracked. For normal A, the three high macros produce
+No tested boundary carries two marked zero-runs. The earliest token is
+created when a B runway enters the exceptional residue-6 class. In the next
+level the token can move from the first to the second zero-run when a carry
+exposes deeper left context.
 
-```
-1^6 0 1^(rho(c)+13) 0^(rho(z)-6) ...
-```
+The earliest finite-state child rules are already small. Write \`-\` for no
+mark, \`0\` for a mark on the first zero-run, \`1\` for a mark on the second,
+and \`C\` for the b=5 A-carry:
 
-which is the right-run renormalization of
-`1^2 0 1^(c+5) 0^(z-2) ...`. For B, `BBA` produces
+\`\`\`
+B, first-zero residue 5, no mark  -> (-,-,0)
+B, first-zero residue 6, no mark  -> (-,0,0)
+C, first-zero residue 7, mark 0   -> (0,1,0).
+\`\`\`
 
-```
-1^6 0 1^13 0^(2*a-3) 1^(rho(b)+3) ...
-```
+Further local states appear later, but the single-token invariant survives
+through the level-12→13 macro replay. The proof target is therefore a finite
+relational transducer for this token, rather than the old pointwise map.
 
-which is the renormalization of
-`1^2 0 1^5 0^(a-1) 1^(b+3) ...`; terminal and nonterminal cases agree
-separately.
+## Right-side level map
 
-So the remaining infinite proof is now sharply stated: define a finite
-**role grammar** for left zero-runs (normal-A, B-runway, A-carry) plus the
-right alternating-run/terminal flag, prove those roles are preserved by the
-exact triad rewrites and by `rho`, and then apply the two conjugacy
-identities. The universal `rhoZero` formula is fixed; what remains is the
-role-residue invariant, not the level map itself.
+The right transformation remains the fixed component. For
+\`1^a1 0^z1 1^a2 0^z2 ... 1^am\`, \`m>=2\`:
+
+- \`a1 -> 2*a1+2\`, \`z1 -> 2*z1-1\`;
+- if \`m=2\`, final \`a2 -> 2*a2+4\`;
+- if \`m>=3\`, \`a2 -> 2*a2+3\`, \`z2 -> 2*z2-1\`;
+- later nonfinal 1-runs double and later zero-runs map \`z -> 2*z+1\`;
+- final \`a -> 2*a+1\`.
+
+The dyadic checkpoints still obey this right transformation and the checked
+triad word still follows \`sigma(A)=ABA\`, \`sigma(B)=BBA\`. The
+counterexample invalidates only the context-free left zero-run map.
 
 ## Remaining proof obligation
 
-The infinite proof has therefore narrowed to a local renormalization theorem:
-define the symbolic domain of reachable triad-boundary zippers, prove it is
-closed under the A/B triad rewrites and under `rho`, and prove the two
-conjugacy identities above on that domain. The base epoch `C_2 -> C_3` is
-finite. Conjugacy would then inductively lift the whole epoch, proving
-`C_n -> C_(n+1)` for every n and simultaneously proving that F1 is never
-queried.
+Define a symbolic relation on paired low/high triad-boundary zippers with:
 
-The finite checkers deliberately stop short of that domain/conjugacy proof.
-Their checkpoint, substitution and renormalization assertions are
-computational evidence; the exact local triad rewrites earlier in this note
-are the transition-level lemmas intended to discharge the remaining proof.
+1. the fixed right-run relation;
+2. doubled left 1-runs;
+3. \`rhoZero\` on unmarked left zero-runs;
+4. at most one marked zero-run using \`rhoZero(z)-8\`;
+5. finite local state sufficient to create, move, and delete the mark through
+   A, B, and A-carry rewrites.
+
+Then prove that one low A or B triad corresponds to \`ABA\` or \`BBA\` on
+the high side while preserving the relation. The finite base epoch
+\`C_2 -> C_3\` is already exact. Such a relational conjugacy would recover
+the all-level checkpoint recurrence while handling the residue-6 B and
+residue-7 carry obstructions correctly.
+
+The old fixed-map route should not be revived. The defect relation is the
+current smallest known proof target for leaf 17557.
