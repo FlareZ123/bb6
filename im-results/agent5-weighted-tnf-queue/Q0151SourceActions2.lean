@@ -31,7 +31,7 @@ open BB6.Agent5Q0151Category
 theorem cut_n6 (rest : List Nat)
     (h : rightType (rightSig (5::rest)) ≠ 0) :
     (6,rightSig rest) ∈ cut (rightSig (5::rest)) := by
-  simpa [cat] using cut_real_next (5::rest) h
+  simpa [cat,actualNext] using cut_real_next (5::rest) h
 
 theorem b_six_refines (s : List Bool) (stack : List (List Bool))
     (rest : List Nat)
