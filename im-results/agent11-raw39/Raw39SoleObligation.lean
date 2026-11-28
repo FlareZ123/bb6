@@ -1,4 +1,4 @@
-import Raw39TenChildPartial
+import Raw39ThresholdReduction
 import Raw39Canonical40Conditional
 
 set_option maxRecDepth 100000
@@ -40,6 +40,24 @@ theorem parent_cover_of_oneLE (h1 : Bound 28311 oneLE) :
 
 /-- The 40-cover global proof is factored into the original 1LE first-hole
 completion and the 39 exact remaining quotient representatives. -/
+/-- At the global quotient's accepted intermediate score, the only Raw39
+hypothesis needed is the A1=1LE child at that *same* score. This is weaker
+than demanding its exact proposed local threshold 28311. -/
+theorem parent_cover_if_oneLE_at_global
+    (h1 : Bound 6766859 oneLE) :
+    Cover (WeightedBound 6766859) p39 := by
+  apply Cover.leaf
+  rw [literal_source_equality]
+  exact (BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE 6766859).mpr h1
+
+theorem exact_at_champion_if_oneLE_at_global
+    (h1 : Bound 6766859 oneLE)
+    (hRest : ∀ e ∈ BB6.Agent11Raw39Canonical40Conditional.roster39,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent11Raw39Canonical40Conditional.conditional_exact_at_champion
+    (parent_cover_if_oneLE_at_global h1) hRest
+
 theorem exact_at_champion_if_oneLE
     (h1 : Bound 28311 oneLE)
     (hRest : ∀ e ∈ BB6.Agent11Raw39Canonical40Conditional.roster39,
@@ -51,6 +69,8 @@ theorem exact_at_champion_if_oneLE
 #print axioms literal_source_equality
 #print axioms parent_bound_of_oneLE
 #print axioms parent_cover_of_oneLE
+#print axioms parent_cover_if_oneLE_at_global
+#print axioms exact_at_champion_if_oneLE_at_global
 #print axioms exact_at_champion_if_oneLE
 
 end BB6.Agent11Raw39SoleObligation
