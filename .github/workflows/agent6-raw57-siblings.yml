@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -552,6 +552,58 @@ jobs:
           path: /tmp/raw56-le-input-src/**
           if-no-files-found: error
           retention-days: 7
+
+  raw56_le_0lb:
+    if: inputs.child == 'raw56-le-0lb'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install source-pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-le0lb-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reconstruct original-source 965-leaf E0=0LB Cover and compile closure
+        run: |
+          set -euo pipefail
+          export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent1-raw56/le/prepare_le0lb.py /tmp/raw56-le0lb > /tmp/raw56-le0lb-prepare.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw56-le0lb-closure --jobs 2 \
+            --precompiled-manifest /tmp/raw56-le0lb-base/a1-raw56-root-consumer/manifest.json \
+            --precompiled-dir /tmp/raw56-le0lb-base/a1-raw56-root-consumer \
+            --source-root /tmp/raw56-le0lb/0LBgen \
+            --manifest /tmp/raw56-le0lb-closure/manifest.json --label raw56-le-e0-0lb \
+            --theorem BB6.Agent1Raw56.LE0LB.all_quotient --weighted-bound 7014 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1LE_0LB0LE_------' \
+            --artifact-name raw56-le0lb-source-accepted \
+            --provenance-input im-results/agent1-raw56/le/prepare_le0lb.py \
+            --provenance-input im-results/agent1-raw56/le/inventory-79.json.gz.b64 \
+            /tmp/raw56-le0lb/0LBgen/Raw56LE0LBAll.lean 2>&1 | tee /tmp/raw56-le0lb-compile.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le0lb-compile.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le0lb-compile.log --require BB6.Agent1Raw56.LE0LB.all_quotient
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le0lb-source-accepted
+          path: |
+            /tmp/raw56-le0lb-closure/**
+            /tmp/raw56-le0lb-prepare.log
+            /tmp/raw56-le0lb-compile.log
+          if-no-files-found: error
+          retention-days: 30
 
   raw56_le_23011:
     if: inputs.child == 'raw56-le-23011'
