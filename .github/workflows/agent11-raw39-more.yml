@@ -460,7 +460,7 @@ jobs:
             table='1RB1LB_1RC---_0RD---_1LD0RA_------_------'
             bound=266
           else
-            read -r table bound < <(python -c 'import base64,lzma,json,sys; j=json.loads(lzma.decompress(base64.b64decode(open(sys.argv[1]).read()))); print(j["child"],j["bound_candidate"])' "$root/${KIND}-frontier.json.xz.b64")
+            read -r table bound < <(python -c 'import json,sys; j=json.load(open(sys.argv[1])); print(j["table"],j["bound"])' "$root/shards-${KIND}semantic.json")
           fi
           python tools/lean_compile_closure.py \
             --workdir "$work" --jobs 2 \

@@ -38,6 +38,11 @@ def main():
     work=(a.work or ROOT/('_build'+branch)).resolve(); out=a.out.resolve()
     work.mkdir(parents=True,exist_ok=True);out.mkdir(parents=True,exist_ok=True)
     data=json.loads(lzma.decompress(base64.b64decode((ROOT/(branch+'-frontier.json.xz.b64')).read_text())))
+    # The frozen 1LE data underestimated its late leaf's incoming blank delay.
+    # Agent43Raw391LELate.parent_not_bound proves 28310 impossible.
+    if branch=='1LE':
+        assert data['bound_candidate']==28310
+        data['bound_candidate']=28311
     custom=custom_le(branch,out)
     original_residual=dict(data['residual'])
     assert set(custom)<=set(original_residual)
@@ -146,7 +151,7 @@ abbrev pChild : PartialMachine := refine p39 (0,true) (some ⟨{bs(w=="1")},{bs(
     groups={f'g{i}':[] for i in range(8)};weights=dict.fromkeys(groups,0)
     for name,size in sorted(leaves,key=lambda x:-x[1]):
         g=min(weights,key=weights.get);groups[g].append(name);weights[g]+=size
-    manifest={'root':root,'conditional':bool(residual),'residual':[[i,original_residual[i]] for i in sorted(residual)],'groups':groups,'weights':weights,'modules':b.modules,'stats':dict(b.stats),'normalized_nodes':tree.size,'open_count':len(ids)}
+    manifest={'root':root,'bound':data['bound_candidate'],'table':data['child'],'conditional':bool(residual),'residual':[[i,original_residual[i]] for i in sorted(residual)],'groups':groups,'weights':weights,'modules':b.modules,'stats':dict(b.stats),'normalized_nodes':tree.size,'open_count':len(ids)}
     (out/('shards-'+branch+('conditional' if residual else 'semantic')+'.json')).write_text(json.dumps(manifest,indent=2)+'\n')
     print('candidate full tree',data['stats'],'far',len(far),'special',len(special),'chunks',len(b.modules),'weights',weights,'bound',data['bound_candidate'],flush=True)
 if __name__=='__main__':main()

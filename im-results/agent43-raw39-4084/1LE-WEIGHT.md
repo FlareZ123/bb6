@@ -1,0 +1,5 @@
+# Raw39 1LE weighted bound correction
+
+Run 46085821790 g4 rejected Chunk035:2900 for a real mathematical reason: 28310 is false. The late partial table 1RB1LE_1RC1LF_0RD1RB_1LD0RA_0LA0LB_---1RD first queries F0 at 28309 and possibleDelays after halt refinement = [0,1]. Exact weighted bound for that leaf is 28311. The normalized 1LE parent necessarily has bound >= 28311.
+
+Raw391LELateWeight.lean proves parent_not_bound, not_bound, bound_28311 using the original Raw391LEBase from g2 artifact 15239762250. Local Lean 4.36.0-rc2 checks passed; standard axioms only (propext, Classical.choice, Quot.sound). No new search needed. The semantic generator now corrects the frozen bound candidate to 28311 and emits bound/table in its manifest; assembly reads the generated manifest rather than the stale raw JSON. 28311 is a candidate upper bound for the full child, not yet proved. Old successful 28310 subproofs are mathematically reusable by monotonicity, but their old provenance manifests are not interchangeable with new ones; preserve them. No new full workflow has been dispatched.
