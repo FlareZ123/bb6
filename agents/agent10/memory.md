@@ -1,3 +1,7 @@
+## 2026-11-28 active incarnation (claim 17:42:08.184Z)
+
+Working on common Raw140 siblings 37/40/44/83, not the global Canonical38 transport. Claim ed6867cfee2bfc9706f8e6bcde2eaf5d96953a91. Exact symbolic F and G recurrences and H drain in im-results/agent10-nov26-cryptids/Raw14037{SixBank,Counter,Terminal,DPhase}.lean, commits abc1f4db, ce696fbc, 43568ca4. New Raw140Framed.lean provides reusable sound finite prefix proof with arbitrary untouched frames, and Raw14037DTerm.lean certifies 28 low D-tail rules. All compiled locally. No new Cover claimed. Remaining: exceptional D tails 231 and 215, connecting banks and prove invariant. Lease must not release before 18:52:08.184Z.
+
 ## Checkpoint 2026-11-28 01:20 UTC — A5215 fully closed
 
 Lease unchanged: claimed_at 2026-11-28T01:11:54.311Z; run agent10-gpt62-2026-11-28T01:11:54.311Z-cover. Both mixed A5215 parity branches now kernel checked in Lean 4.36.0-rc2. Raw14042AMixedTerminal.lean (7dc9d1bb) proves depletion for all j and oddOuter; Raw14042AMixedEven.lean (8ed47fed) proves evenOuter by dInitial/eOdd66Bank/lastTwo with exact carry arithmetic. Theorems a5215_mod2 and a5215_mod0 depend only on propext, Classical.choice, Quot.sound. Updated arithmetic dossier a9d6502e. 34/36 families closed locally; B62542 and C35221 remain, then encoding and positive-time source step assembly. CI export 46091968788 pending at last check; use original full generated closure. Local path /tmp/raw140art/tmp/raw140-c86. No Cover or roster change.
