@@ -58,7 +58,7 @@ def fmt(S):
 
 def cfg(q,d,L,R):return f'boundary {q} {str(bool(d)).lower()} {fmt(L)} {fmt(R)}'
 
-table=[7,21,11,12,15,1,6,18,4,17,17,24]
+table=[7,24,11,12,15,1,6,18,4,17,24,24]
 def exits():
     E={}
     for q in range(6):
@@ -86,8 +86,8 @@ for i,tok in enumerate(seq):
         Xrest=list(L);Yrest=list(R)
         push(R,5,C(0,1));push(L,3,n);push(L,1,C(0,1))
         post=cfg(q,d,L,R);co=f'(19*{n.lean()})';costs.append(co)
-        body.append(f'''  have h{i} : run M37 {co} ({pre}) = some ({post}) := by
-    exact run_ext M37 (fill_extends _ _) _ _ _ (behindMany {n.lean()} {fmt(Xrest)} {fmt(Yrest)})''')
+        body.append(f'''  have h{i} : run base {co} ({pre}) = some ({post}) := by
+    exact behindMany {n.lean()} {fmt(Xrest)} {fmt(Yrest)}''')
         continue
     src=tok.split('^')[0];n=cnt(tok.split('^',1)[1]) if '^' in tok else C(0,1)
     qq=ord(src[0])-65;dd=1 if src[1]=='R' else 0;a=int(src[2]);assert (q,d)==(qq,dd),(tok,q,d)
@@ -97,11 +97,11 @@ for i,tok in enumerate(seq):
     post=cfg(r,z,L,R)
     if '^' in tok:
         assert r==q and z==d,(tok,(r,z),(q,d))
-        co=f'({n.lean()}*{k})';lemma=f'sweep{src[1]} M37 {q} (S {a}) (S {b}) {k} {n.lean()} {fmt(L0)} {fmt(R0)} (by rfl)'
+        co=f'({n.lean()}*{k})';lemma=f'sweep{src[1]} base {q} (S {a}) (S {b}) {k} {n.lean()} {fmt(L0)} {fmt(R0)} (by rfl)'
     else:
-        co=str(k);lemma=f'step{src[1]} M37 {q} {r} {str(bool(z)).lower()} (S {a}) (S {b}) {k} {fmt(L0)} {fmt(R0)} (by rfl)'
+        co=str(k);lemma=f'step{src[1]} base {q} {r} {str(bool(z)).lower()} (S {a}) (S {b}) {k} {fmt(L0)} {fmt(R0)} (by rfl)'
     costs.append(co)
-    body.append(f'''  have h{i} : run M37 {co} ({pre}) = some ({post}) := by
+    body.append(f'''  have h{i} : run base {co} ({pre}) = some ({post}) := by
     simpa only [U, List.replicate_succ, List.replicate_zero, List.cons_append, List.append_assoc, List.append_nil, List.nil_append, Bool.false_eq_true, ite_false, ite_true, rep_cons, Szero, left_zero, right_zero] using {lemma}''')
     q,d=r,z
 
@@ -146,14 +146,18 @@ theorem behindMany (n : Nat) (X Y : List Sym) :
 print(prefix)
 startL=parse('1 1 3^p 5 5 5 5 5 5 X');startR=parse('2 1 5')
 print('theorem section23_raw (p : Nat) (X : List Sym) :')
-print(f'    run M37 ({sumexpr}) ({cfg(1,0,startL,startR)}) =')
+print(f'    run base ({sumexpr}) ({cfg(1,0,startL,startR)}) =')
 print(f'      some ({cfg(1,0,expectedL,expectedR)}) := by')
 print('\n'.join(body))
 print(f'  exact {expr}')
-print('\ntheorem section23 (p : Nat) (X : List Sym) :')
-print(f'    run M37 (132*p+1099) ({cfg(1,0,startL,startR)}) =')
+print('\ntheorem section23_base (p : Nat) (X : List Sym) :')
+print(f'    run base (132*p+1099) ({cfg(1,0,startL,startR)}) =')
 print(f'      some ({cfg(1,0,expectedL,expectedR)}) := by')
 print('  have h := section23_raw p X')
 print(f'  rw [show ({sumexpr}) = 132*p+1099 by omega] at h')
 print('  exact h')
-print('\n#print axioms behindMany\n#print axioms section23\nend Raw14037Section')
+print('\ntheorem section23 (M : Table) (ext : Extends M) (p : Nat) (X : List Sym) :')
+print(f'    run M (132*p+1099) ({cfg(1,0,startL,startR)}) =')
+print(f'      some ({cfg(1,0,expectedL,expectedR)}) := by')
+print('  exact run_ext M ext _ _ _ (section23_base p X)')
+print('\n#print axioms behindMany\n#print axioms section23_base\n#print axioms section23\nend Raw14037Section')
