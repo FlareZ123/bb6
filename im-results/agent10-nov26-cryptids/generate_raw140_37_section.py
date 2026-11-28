@@ -131,7 +131,7 @@ theorem behindOne (X Y : List Sym) :
 theorem behindMany (n : Nat) (X Y : List Sym) :
     run base (19*n) (boundary 4 false (S 1::X) (S 5::(U 1 n ++ Y))) =
       some (boundary 4 false (S 1::(U 3 n ++ X)) (S 5::Y)) := by
-  induction n generalizing X with
+  induction n generalizing X Y with
   | zero => simp [U, run]
   | succ n ih =>
     have h0 := ih X (S 1 :: Y)
