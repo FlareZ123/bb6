@@ -75,7 +75,7 @@ def emit(root, branch, leaf, table, left_width, right_width):
             *defs,
             *moves,
             (
-                "def cert : Cert := "
+                "def cert : BB6.Agent32AsymNGram.Cert := "
                 f"⟨{left_width - 1},{right_width - 1},{left},{right},"
                 f"#[{','.join(state_rows)}]⟩"
             ),
