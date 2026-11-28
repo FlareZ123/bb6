@@ -65,10 +65,10 @@ def source_check(source: Path, linked: Path, evidence: Path, names):
 
 
 def authenticate_accepted39(evidence: Path):
-    run = c.a68.api_json(f"repos/{c.REPO}/actions/runs/{ACCEPTED39_RUN}")
+    run = c.a68.api_json(f"repos/FlareZ123/bb6/actions/runs/{ACCEPTED39_RUN}")
     assert run["conclusion"] == "success"
     assert run["head_sha"] == ACCEPTED39_HEAD
-    arts = c.a68.api_json(f"repos/{c.REPO}/actions/runs/{ACCEPTED39_RUN}/artifacts")
+    arts = c.a68.api_json(f"repos/FlareZ123/bb6/actions/runs/{ACCEPTED39_RUN}/artifacts")
     matches = [x for x in arts["artifacts"]
                if x["id"] == ACCEPTED39_ARTIFACT and not x["expired"]]
     assert len(matches) == 1
