@@ -15,7 +15,10 @@ private theorem pureHigh_length (b : Nat) :
     (pureHigh b).length = b := by
   induction b with
   | zero => rfl
-  | succ b ih => simp [pureHigh, prependHigh, ih]
+  | succ b ih =>
+      have hword : pureHigh (b+1) = .high :: pureHigh b := by rfl
+      rw [hword]
+      simp [ih]
 
 /-- Every inverse word is either entirely High or has a final Far followed
 by a pure-High suffix.  The prefix before that final Far is unrestricted. -/
@@ -39,25 +42,27 @@ theorem split_last_far (w : List InverseLetter) :
 /-- Along an all-High inverse path, the terminal second counter is exactly
 doubled after adding three at every step. -/
 theorem formalInversePath_pureHigh_denominator
-    {b d R c : Nat}
-    (hp : FormalInversePath (d:Int) (pureHigh b) (R:Int) (c:Int)) :
-    (d:Int)+3 = (2:Int)^b * ((c:Int)+3) := by
+    {b : Nat} {d R c : Int}
+    (hp : FormalInversePath d (pureHigh b) R c) :
+    d+3 = (2:Int)^b * (c+3) := by
   induction b generalizing R c with
   | zero =>
-      simp [pureHigh, prependHigh] at hp
+      have hword : pureHigh 0 = [] := by rfl
+      rw [hword] at hp
       cases hp
       simp
   | succ b ih =>
-      simp only [pureHigh, prependHigh] at hp
+      have hword : pureHigh (b+1) = .high :: pureHigh b := by rfl
+      rw [hword] at hp
       cases hp with
-      | stepH hpTail ha hd =>
+      | @stepH w A D A' D' hpTail ha hd =>
           have htail := ih hpTail
-          have hdouble : (D:Int)+3 = 2*((c:Int)+3) := by omega
+          have hdouble : D+3 = 2*(c+3) := by omega
           calc
-            (d:Int)+3 = (2:Int)^b*((D:Int)+3) := htail
-            _ = (2:Int)^b*(2*((c:Int)+3)) := by rw [hdouble]
-            _ = (2:Int)^(b+1)*((c:Int)+3) := by
-              rw [pow_succ]
+            d+3 = (2:Int)^b*(D+3) := htail
+            _ = (2:Int)^b*(2*(c+3)) := by rw [hdouble]
+            _ = (2:Int)^(b+1)*(c+3) := by
+              rw [Int.pow_succ]
               ac_rfl
 
 /-- Every root-reachable terminal inverse path has one of two exact tails:
