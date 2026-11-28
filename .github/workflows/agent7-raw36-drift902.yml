@@ -251,6 +251,10 @@ jobs:
           python im-results/agent7-opaque-tail-pump/emit_exposure_bound.py \
             /tmp/a7-d100-exposure/Raw36D100Exposure.json \
             /tmp/a7-d100-exposure/Raw36D100ExposureBound.lean
+      - name: Restore hash-pinned original BB6Coverage foundation
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
       - name: Compile original zipper source and audit exact exposure theorems
         run: |
           set -euo pipefail
