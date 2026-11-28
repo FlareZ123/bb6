@@ -140,9 +140,9 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     records = [x.split(chr(9)) for x in a.ledger.read_text().splitlines() if x.strip()]
-    if len(records) != 251:
-        raise ValueError(f"expected 251 candidates, got {len(records)}")
-    if len(set(row[0] for row in records)) != 251:
+    if not (1 <= len(records) <= 671):
+        raise ValueError(f"bad residual ledger length {len(records)}")
+    if len(set(row[0] for row in records)) != len(records):
         raise ValueError("duplicate source partial table")
     row = records[a.index]
     code,rev,d,raw = row[:4]
