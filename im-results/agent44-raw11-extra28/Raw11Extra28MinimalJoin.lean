@@ -59,7 +59,7 @@ structure Certificates where
 private theorem each_covered (h : Certificates) :
     ∀ p ∈ covered, ∀ m, compatible p m → WeightedBound 158 m := by
   intro p hp m hm
-  simp only [covered,List.mem_cons,List.mem_singleton] at hp
+  simp [covered] at hp
   rcases hp with h7 | h8 | h9 | h10 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19
   · subst p
     exact liftBound (by decide : 72 ≤ 158) (h.c7 m hm)
