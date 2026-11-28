@@ -10,6 +10,11 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
+
+HERE = Path(__file__).resolve().parent
+SIBLINGS = HERE.parent
+sys.path.insert(0, str(SIBLINGS / "agent50-raw47-canonical41"))
 
 import consume as c
 from consume_after_canonical40 import restore_canonical40
