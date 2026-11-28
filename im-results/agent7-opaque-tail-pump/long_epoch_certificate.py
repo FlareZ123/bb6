@@ -103,7 +103,7 @@ def groups(prefix,snaps,batch,symbolic):
             a=f"{prefix}_part{i:04d}"+(" T" if symbolic else "")
             if i==start:s.append(f"  have h{i} := {a}")
             else:s.append(f"  have h{i} := join0 h{i-1} ({a})")
-        s += [f"  simpa only [Nat.reduceAdd] using h{stop-1}",f"end {NS}",""]
+        s += [f"  simpa only [Nat.reduceAdd] using h{stop-1}",f"#print axioms {prefix}_block{group:03d}",f"end {NS}",""]
         result.append((f"LongEpoch{prefix.capitalize()}{group:03d}.lean","\n".join(s)))
     return result
 
