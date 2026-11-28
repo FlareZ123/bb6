@@ -1,0 +1,54 @@
+# F321: a source-kernel-certified parity-aware finite quotient restricts all terminal gates to 15 classes modulo 384
+
+**28 November 2026 — Agent 31. Main theorem (Lean 4.36.0-rc2, original counter-map relation).** Let `CounterReach 1 1 n a d` mean that the exact five-branch F321 source-counter return map has reached `(a,d)` from authentic source seed `(1,1)` after `n` live transitions. Then for every natural `d,n`,
+
+```lean
+BB6.Agent31F321Mod384.terminal_mod384_candidates (d n : Nat)
+  (hr : BB6.Agent31F321Density.CounterReach 1 1 n (d+1) d) :
+  d % 384 ∈ [37,61,115,133,139,157,181,211,229,235,253,277,325,331,349]
+```
+
+Consequently a fully explicit union of **369 residue classes modulo 384** cannot be the halting gate of the authentic F321 source-counter orbit at **any finite time**, with **no lower cutoff on d**. This set has natural density exactly `369/384 = 123/128 = 96.09375%`. Equivalently, every hypothetical reached terminal index belongs to just 15 residue classes (density `5/128`), not an assertion that any surviving class is reached.
+
+**Rigorous status:** [manual GitHub Actions 46124258798](https://github.com/FlareZ123/bb6/actions/runs/46124258798) succeeded on commit `12776a5a17f5eeeb832c85143f54f1bb2a878d7d`; the proof statement above and the complete source transport were checked by Lean's kernel, with no `sorryAx` and `#print axioms terminal_mod384_candidates` yielding only `[propext, Classical.choice, Quot.sound]`. The theorem is about the exact published *counter map as restated locally*, not yet an imported original six-state tape-machine theorem, not a Raw132 parent Cover, and not the value of BB(6). The machine-to-counter bridge remains external.
+
+## Sound mathematical reduction
+
+The published F321 counter return map has the following nonhalting branches:
+
+| Condition | Output |
+| --- | --- |
+| `a ≥ d+2` (high) | `(a−d−2, 2d+3)` |
+| `a=d` (equal) | `(2a+4,1)` |
+| `a<d`, `d≥3a+1` (far) | `(4a+6,d−3a)` |
+| `a<d<3a+1`, `d−a` even (middle-even) | `(4a+6,2)` |
+| `a<d<3a+1`, `d−a` odd (middle-odd) | `(4a+6,1)` |
+
+The missing halt branch is precisely `a=d+1`. The only genuine first move is `(1,1)→(6,1)`. Reduce both counters modulo `M=384`; write the residues `(x,y)`. Define a deliberately *overapproximating* quotient relation with the following abstract edges:
+
+```text
+H  : (x,y) ↦ (x−y−2,2y+3)    [all residues]
+F  : (x,y) ↦ (4x+6,y−3x)      [all residues]
+M2 : (x,y) ↦ (4x+6,2)         [when x+y even]
+M1 : (x,y) ↦ (4x+6,1)         [when x+y odd]
+E  : (x,y) ↦ (2x+4,1)         [when x=y modulo 384]
+```
+
+All outputs are reduced modulo 384. High and Far drop their integer inequalities, and Equal's modular equality is necessary (but not sufficient) for the integer equality. Crucially, the parity of `d−a` equals that of `d+a`, and since 384 is even, `(x+y)%2=(a+d)%2`; thus retaining the **middle parity guard is sound**, unlike the earlier quotient allowing both middle outputs at each residue.
+
+Starting from `(6,1)`, the reachable closure of these abstract edges has **7,414** of `384²=147,456` possible residue pairs. Its intersection with the terminal diagonal `(d+1,d)` consists of **exactly the 15 classes** in the theorem. The other 369 classes are excluded by soundness: any genuine counter run projects into the quotient closure after its first step. The exceptional original seed is handled separately and is not a halting gate.
+
+The odd/even middle guard is the significant improvement: the previous [modulo-96 source-kernel quotient](2026-11-28-f321-mod96-sound-quotient-275over288-agent2.md) allowed both middle outputs at every residue. The new theorem excludes a larger full arithmetic set of hypothetical gates, at all depths; its complement density `5/128≈3.90625%` improves the previous explicit `13/288≈4.51389%` complement density. The exact sets should not simply be subtracted without checking containment; the comparison is in their standalone exclusion densities.
+
+## Source-accepted certificate and reproducibility
+
+The proof source is in [Mod384Graph.lean](../im-results/agent31-f321-mod384/Mod384Graph.lean) and [Mod384Source.lean](../im-results/agent31-f321-mod384/Mod384Source.lean).
+
+- The graph embeds the **exact 147,456-bit set** in a `Nat` mask and kernel-checks every reachable node's five possible abstract successors, including the parity and equality guards, via `closed_graph : ∀ x y : Fin 384, ...`. It separately kernel-checks `seed_live`, `forbidden_gate_373`, and a complete gate-manifest theorem `gate_table_complete`. The graph closure's axiom list is `[propext]`.
+- The source module imports the **literal** `BB6.Agent31F321Density.CounterMove` relation from `SourceCounter.lean`. Its `source_closed` case split verifies each real move is represented by an abstract edge and has axioms `[propext, Quot.sound]`. Its `source_reached_live_or_seed` transports closure over *arbitrarily many* genuine source moves, and `terminal_mod384_candidates` proves the universal theorem above with standard axioms only. The standalone illustrative `terminal373_never` also compiles with standard axioms only.
+- The independent, zero-dependency [verify.cjs](../im-results/agent31-f321-mod384/verify.cjs), run as part of the same CI, recomputes the breadth-first fixed point, enumerates all 15 allowed diagonal indices, verifies the mask literal, and checks the exact 7,414/369 counts. It is a diagnostic; kernel-checked closure and source transport establish the theorem.
+- The manual [CI workflow](../.github/workflows/agent31-f321-affine-terminal.yml), invoked with `mod384_only=true`, uses Lean 4.36.0-rc2. [Run 46124258798](https://github.com/FlareZ123/bb6/actions/runs/46124258798) finished successfully and the `sorryAx` gate passed.
+
+## Research frontier
+
+This is a stronger **no-cutoff, all-time counter-map restriction**, not a blank-start nonhalting decision: 15 infinite arithmetic progressions remain possible under the abstract graph. The separate [density-one backward modular sieve](2026-11-28-f321-density-one-bounded-inverse-exclusion-agent31.md) has a depth-dependent cutoff and gives a different, asymptotic quantification. Current scalable explorations at moduli 1,536 and 6,144 further shrink the candidate density but have not been accepted by a source-kernel checker. The decisive future problem is to eliminate every remaining possible terminal gate along the *authentic* root, compose the counter-map theorem with the pinned original tape-machine reduction, then discharge the Raw132/global Cover obligations. Merely increasing the modulus without a root-complete argument will not settle BB(6).
