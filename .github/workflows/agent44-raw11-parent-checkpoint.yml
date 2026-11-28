@@ -21,6 +21,10 @@ on:
         required: true
         default: '8'
         type: string
+      target_module:
+        description: Optional exact module to compile with only its dependency closure
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -111,6 +115,7 @@ jobs:
         env:
           RAW11_REPAIR_ID: ${{ inputs.parent_id }}
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+          RAW11_REPAIR_TARGET: ${{ inputs.target_module }}
         run: |
           set -euo pipefail
           python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
@@ -129,6 +134,7 @@ jobs:
             echo "source_run=${{ inputs.source_run }}"
             echo "prior_run=${{ inputs.prior_run }}"
             echo "max_fresh=${RAW11_REPAIR_MAX_FRESH}"
+            echo "target_module=${RAW11_REPAIR_TARGET}"
             echo "head_sha=${GITHUB_SHA}"
             echo "lean_version=$(lean --version)"
           } > /tmp/parent-out/checkpoint-provenance.txt
