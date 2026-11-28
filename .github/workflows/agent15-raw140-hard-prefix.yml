@@ -1,0 +1,34 @@
+name: Agent15 Raw140-37 symbolic hard prefix
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile and audit symbolic hard prefix
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+          python im-results/agent10-nov26-cryptids/generate_raw140_37_section.py > im-results/agent10-nov26-cryptids/Raw14037Section.lean
+          node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
+          node im-results/agent10-nov26-cryptids/generate_raw140_37_er_entry.js
+          python tools/lean_compile_closure.py --workdir /tmp/agent15-raw140-hard-prefix --jobs 3 \
+            im-results/agent15-raw140-hard-prefix/Raw14037HardPrefix.lean 2>&1 | tee /tmp/agent15-raw140-hard-prefix.log
+          for t in section0_to_section13 blank_to_section13 drain_endpoint section13_to_afterBank blank_to_afterBank blank_to_transferOut; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/agent15-raw140-hard-prefix.log "Raw14037HardPrefix.$t"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent15-raw140-hard-prefix-axioms
+          path: /tmp/agent15-raw140-hard-prefix.log
