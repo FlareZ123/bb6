@@ -173,7 +173,7 @@ jobs:
        && inputs.target != 'weighted-tnf-raw55-progress'
       && inputs.target != 'weighted-tnf-raw49-progress'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.target == 'weighted-tnf-raw10-box33-cylinder' && 120 || 60 }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -182,7 +182,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Check one Raw10 box33 cylinder
+      - name: Generate one Raw10 box33 cylinder source
         if: inputs.target == 'weighted-tnf-raw10-box33-cylinder'
         env:
           CYLINDER: ${{ inputs.raw_id }}
@@ -195,7 +195,28 @@ jobs:
           W=/tmp/raw10-box33-cylinder
           python im-results/agent13-coverage/unpack.py
           python "$D/replay_cylinder.py" --d0 "$d" --second "$v" --bound "$b"
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem "BB6.Agent13.$F.sourceBound" --parent-table "Box33D0.child $d $v" --weighted-bound "$b" --artifact-name raw10-box33-cylinder --provenance-input "$D/replay_cylinder.py" --provenance-input "$D/replay_direct.py" "$D/generated/$F/${F}Closure.lean" | tee /tmp/raw10-box33-cylinder.log
+          printf '%s\n' "$GITHUB_SHA" > "$D/generated/$F/source-revision.txt"
+          printf '%s\n' "$CYLINDER" > "$D/generated/$F/cylinder.txt"
+      - uses: actions/upload-artifact@v4
+        if: inputs.target == 'weighted-tnf-raw10-box33-cylinder'
+        with:
+          name: raw10-box33-cylinder-generated-UNACCEPTED
+          path: im-results/agent13-raw10-box33/generated/
+          if-no-files-found: error
+      - name: Kernel check generated Raw10 box33 cylinder
+        if: inputs.target == 'weighted-tnf-raw10-box33-cylinder'
+        env:
+          CYLINDER: ${{ inputs.raw_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CYLINDER" =~ ^([0-9]+),([0-9]+),([0-9]+)$ ]] || exit 2
+          d=${BASH_REMATCH[1]}; v=${BASH_REMATCH[2]}; b=${BASH_REMATCH[3]}
+          D=im-results/agent13-raw10-box33
+          F=Box33D${d}V${v}
+          W=/tmp/raw10-box33-cylinder
+          test "$(cat "$D/generated/$F/source-revision.txt")" = "$GITHUB_SHA"
+          test "$(cat "$D/generated/$F/cylinder.txt")" = "$CYLINDER"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem "BB6.Agent13.$F.sourceBound" --parent-table "Box33D0.child $d $v" --weighted-bound "$b" --artifact-name raw10-box33-cylinder --provenance-input "$D/replay_cylinder.py" --provenance-input "$D/replay_direct.py" --provenance-input "$D/pack_shards.py" "$D/generated/$F/${F}Closure.lean" | tee /tmp/raw10-box33-cylinder.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box33-cylinder.log "BB6.Agent13.$F.sourceBound"
           cp /tmp/raw10-box33-cylinder.log "$W/lean.log"
       - uses: actions/upload-artifact@v4
