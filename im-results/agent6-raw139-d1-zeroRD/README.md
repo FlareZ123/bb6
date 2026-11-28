@@ -78,7 +78,7 @@ The additional C1=17 whole-child Cover is source-accepted by
 artifact 15262091078. `D1EightFour.cover` consumes it, leaving
 only **[2,16,18,19]**. Its entire source and axiom profile are accepted
 as part of [CI 46147351683](https://github.com/FlareZ123/bb6/actions/runs/46147351683).
-A complete D0=8 parent Cover is **not yet** claimed.
+All four remaining children subsequently passed CI (runs 46147044639, 46147047904, 46147051530, 46147054693). `D1EightAll.cover` now compiles locally against their accepted artifacts and proves the **whole D0=8 parent Cover at weighted 3000**, with only standard axioms. This local composition has not yet had a fresh CI source-closure run.
 
 For D0=9, 14 of 20 C1 actions have short-cycle certificates.
 C1=2 and C1=6 have fully checked child Covers (artifacts
@@ -88,8 +88,7 @@ accepted whole-child certificates in the D9 rest bank (C16,C18,C19).
 The remaining C17 job twice hit an external runner shutdown after
 31 successful compiler modules; that does not establish failure or
 success for its whole Cover. A smaller-bank single-worker source run is
-the current exact parent-closure route. The D0=9 parent itself remains
-unaccepted.
+the current exact parent-closure route. `D1NineOne.cover` now compiles locally against accepted C2/6/16/18/19 artifacts, leaving only C17 as a hypothesis. The D0=9 unconditional parent remains unaccepted.
 
 The exact **102-grandchild** conditional reduction for `B≥14` was
 accepted at [CI 46138720868](https://github.com/FlareZ123/bb6/actions/runs/46138720868).
@@ -104,7 +103,7 @@ artifact 15264817299). The exhaustive remaining 96-machine list and
 source theorem are in `D1SecondLevel96.lean` and
 `D1SecondLevel96Bound.lean`. The additional 88-residual
 `D1SecondLevel88OfParents.lean` is **conditional on both D8 and
-D9 full-parent Covers**; these dependencies are unresolved.
+D9 full-parent Covers**; the D8 dependency is locally discharged; D9 C17 is the remaining missing child.
 
 The exact certificate bank is reproducible from [late-source.tar.xz.b64](late-source.tar.xz.b64), containing the untrusted generator and two fixed witness manifests. Extract with `base64 -d late-source.tar.xz.b64 | tar -xJf -`. In the accepted normalized artifact 15093190882 build directory, run `python certify_late.py --roots lateRoots.tsv --children lateChildren.tsv`, then `LEAN_PATH=. lean -o D1Late.olean D1Late.lean`. The generated module SHA-256 is 138dfdbc02d63f28ac39d44d9ec19f7d2baecfaab646be83990f0c40b3c05cf3. Local Lean 4.36.0-rc2 checked `BB6.Agent6D1Late.allLate` with only propext, Classical.choice, Quot.sound. The `tables` list is an exact list of the 85 partial-machine roots, not a statement about the complete census partition.
 
