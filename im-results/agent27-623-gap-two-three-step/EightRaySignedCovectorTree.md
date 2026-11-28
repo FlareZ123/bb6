@@ -57,7 +57,7 @@ The eight rays from [EightRaySource.lean](EightRaySource.lean) become:
 
 Here \`N=n+3\`.
 
-The physical halt theorem is being strengthened to retain the transported scale interval
+The physical halt theorem now retains the transported scale interval
 
 \`\`\`
 n >= 13
