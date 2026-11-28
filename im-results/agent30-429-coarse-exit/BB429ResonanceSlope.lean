@@ -53,7 +53,7 @@ theorem d234_post_jSlope (e : Nat → Bool)
     (hres : (234:Int)=18+216*word4 (fun k => !e k) 4) :
     16*jSlope e 4-576=2496 := by
   have h := resonant_post_jSlope 2 234 e (by simpa using hres)
-  omega
+  grind +ring
 
 #print axioms jSlope_word4
 #print axioms resonant_post_jSlope
