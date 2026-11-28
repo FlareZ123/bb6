@@ -22,7 +22,10 @@ theorem first_gap_parity_and_divides
     have hmul : P r∣P r*acc (S x y+shift r) w :=
       Int.dvd_mul_right _ _
     have hsub := Int.dvd_sub hbig hmul
-    convert hsub using 1 <;> omega
+    have heq : (Z x y+offset (S x y) r)+P r*acc (S x y+shift r) w -
+        P r*acc (S x y+shift r) w = Z x y+offset (S x y) r := by omega
+    rw [heq] at hsub
+    exact hsub
   have htwo : (Z x y+offset (S x y) r)%2=0 := by
     have hh : P 1∣Z x y+offset (S x y) r :=
       Int.dvd_trans (P_dvd 1 r hr) hfirst
