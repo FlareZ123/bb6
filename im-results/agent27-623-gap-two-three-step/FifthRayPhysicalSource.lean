@@ -73,8 +73,9 @@ theorem root_big_first_forces_ordinary_separated
 
 /-- A genuine halt forces one of the eight explicit rational fifth-
 predecessor cones, with a scale interval transported to the authentic
-root state. The lower bound prevents the ray parameter from being chosen
-arbitrarily large at a fixed state. -/
+root state. No ordinary-sector or separation premise is assumed: those
+facts are derived from the actual root transition. The lower bound prevents
+the ray parameter from being chosen arbitrarily large at a fixed state. -/
 theorem target_halt_implies_eight_ray
     (hh : BusyBeaver.IsHalt target) :
     ∃ t u v n, run t=some (.D u v) ∧ 13≤n ∧
