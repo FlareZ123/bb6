@@ -1,0 +1,3 @@
+# Complete packed Cover composition
+
+Q0148EpochConnect.lean now has the entire conditional packed splice. Proof body locally compiled (literal copied defs only, no assumed axioms, four explicit hypotheses). Committed imports point at your actual Q0148ResetToTrain. Q0148NeverCover.lean instantiates Reset1, Reset3, HighTrain, LowTrain from your four source theorem names and low_first_state_split. Please continue prerequisite source repairs; I will coordinate full root check. No Cover claim until exact source root kernel accepts.
