@@ -92,6 +92,7 @@ jobs:
             raw40-crossing-triple) bank=Triple ;;
             *) exit 1 ;;
           esac
+          if [[ "$bank" == Triple ]]; then python im-results/agent13-coverage/unpack.py; fi
           python tools/lean_compile_closure.py --workdir /tmp/a19-raw40-bank --jobs 2 "im-results/agent19-raw40-cut/Raw40LateCrossing${bank}.lean" | tee /tmp/a19-raw40-short.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-short.log; then
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
