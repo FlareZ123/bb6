@@ -1,0 +1,46 @@
+name: Agent6 D0=8 eight-child reduction gate (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent3-raw139-normalized-cryptids-scan
+          run-id: 45767740664
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d8-base
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact D0=8 reduction
+        run: |
+          set -euo pipefail
+          build=.tmp/a6-d8-base/build
+          test -f "$build/Raw139Normalized.olean"
+          LEAN_PATH="$build" lean -o "$build/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean | tee .tmp/d1zero.log
+          LEAN_PATH="$build" lean -o "$build/D1EightReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1EightReduce.lean | tee .tmp/d8reduce.log
+          grep -F "'BB6.Agent6D1EightReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8reduce.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8reduce.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-d8-eight-child-reduction-checked
+          path: |
+            .tmp/d8reduce.log
+            .tmp/a6-d8-base/build/D1EightReduce.olean
+          retention-days: 14
