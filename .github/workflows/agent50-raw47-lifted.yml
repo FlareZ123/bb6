@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e]
         default: late-parent
       base_run:
         type: string
@@ -1339,4 +1339,34 @@ jobs:
           path: /tmp/a50-raw34-compact-complete/
           if-no-files-found: error
           compression-level: 1
+          retention-days: 30
+  raw34-guarded-e:
+    if: inputs.mode == 'raw34-guarded-e'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check guarded B-left E1 invariant, all-time, unrestricted tape
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-guarded
+          W=/tmp/a50-guarded-E
+          mkdir -p "$W"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-guarded-e "$D/Raw34GuardedE.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34GuardedE.never'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34GuardedE.witnessA_never'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34GuardedE.witnessB_never'" "$W/closure.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-guarded-e
+          path: /tmp/a50-guarded-E/
+          if-no-files-found: warn
           retention-days: 30
