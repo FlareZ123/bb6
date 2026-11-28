@@ -634,6 +634,14 @@ jobs:
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
             --include-f-cycles --f-depth3-dir /tmp/a40-raw34-f-cycleunion \
             | tee /tmp/agent40-raw34-f-cycle-live-complement.json
+          mkdir -p /tmp/a40-raw34-f-depth4union
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
+            --shard-size 100 --output /tmp/a40-raw34-f-depth4union \
+            | tee /tmp/agent40-raw34-f-depth4-source-candidates.json
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-f-depth4 --f-depth3-dir /tmp/a40-raw34-f-cycleunion \
+            --f-depth4-dir /tmp/a40-raw34-f-depth4union \
+            | tee /tmp/agent40-raw34-f-depth4-live-complement.json
           mkdir -p /tmp/agent40-raw34-depth5-full-census
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_depth5_halts.mjs \
             --max-fixed 5 --shard-size 192 --output /tmp/agent40-raw34-depth5-full-census \
@@ -650,6 +658,8 @@ jobs:
             /tmp/agent40-raw34-f-left-ray-live-complement.json
             /tmp/agent40-raw34-f-cycle-source-candidates.json
             /tmp/agent40-raw34-f-cycle-live-complement.json
+            /tmp/agent40-raw34-f-depth4-source-candidates.json
+            /tmp/agent40-raw34-f-depth4-live-complement.json
             /tmp/agent40-raw34-depth5-pairwise-proofcheck.json
           if-no-files-found: error
           retention-days: 30
