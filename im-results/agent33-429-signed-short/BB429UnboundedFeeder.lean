@@ -81,8 +81,11 @@ theorem arbitrary_inverse_depth (n : Nat) :
   | succ n ih =>
     intro z
     have hv : 1 ≤ 16^n := by
-      have hh : 0 < 16^n := Nat.pow_pos (by omega) n
-      omega
+      induction n with
+      | zero => decide
+      | succ n ih =>
+        rw [Nat.pow_succ]
+        omega
     obtain ⟨s,hs⟩ := ih (z+960*16^n-1)
     refine ⟨s, ?_⟩
     have hm := source_four_step z (16^n) hv
