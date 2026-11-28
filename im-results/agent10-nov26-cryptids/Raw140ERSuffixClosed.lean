@@ -1,7 +1,8 @@
 import Raw140ERSuffix
 
 namespace Raw140ERSuffixClosed
-open BB6BlockFAR Raw140Orbit Raw140Extra Raw140Double
+open BB6BlockFAR Raw140Orbit Raw140Extra
+open Raw140Double (Reach)
 open Raw140ERSweep Raw140ERSuffix
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
