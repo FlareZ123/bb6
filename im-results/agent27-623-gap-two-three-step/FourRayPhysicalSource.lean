@@ -89,7 +89,7 @@ theorem even_step_first_unscaled (u v x y : Nat)
     · have hd : drainB (v+1) 2 2=some (.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_pos hv] using hs
       have hx := drain_first_le_a_plus_b (v+1) 2 2 x y hd
-      simp only [hzero, Nat.max_zero_left]
+      simp [hzero]
       omega
     · have hp : some (.D v 7)=some (.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_neg hv] using hs
@@ -146,10 +146,10 @@ theorem even_step_second_upper (N u v x y : Nat)
     · have hd : drainB (v+1) 2 2=some (.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_pos hv] using hs
       have hb : 2<3^N := by
-        simp only [hzero, Nat.min_zero_left] at hhi
+        simp [hzero] at hhi
         omega
       have hy := drainB_upper_linear_log N (v+1) 2 2 x y hb hd
-      simp only [hzero, Nat.min_zero_left]
+      simp [hzero]
       omega
     · have hp : some (.D v 7)=some (.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_neg hv] using hs
@@ -277,7 +277,8 @@ theorem target_halt_implies_four_ray (hh : BusyBeaver.IsHalt target) :
       simp only [run] at hp
       cases hp
       have hg := scale_growth_thirteen n hn
-      norm_num at hlo
+      simp at hlo
+      omega
   | succ t =>
       cases hq : run t with
       | none =>
