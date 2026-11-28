@@ -92,6 +92,33 @@ theorem hfMove_X_bounds {a d A D : Nat}
     have hx := (far_coordinates a d h1 h2).1
     omega
 
+theorem hfRun_first_step
+    {n a d A D : Nat}
+    (h : HFRun (n+1) a d A D) :
+    ∃ B C, HFMove a d B C ∧ HFRun n B C A D := by
+  induction n generalizing A D with
+  | zero =>
+      cases h with
+      | step hp hm =>
+          cases hp
+          exact ⟨_,_,hm,HFRun.nil _ _⟩
+  | succ n ih =>
+      cases h with
+      | @step _ _ _ X Y A D hp hm =>
+          rcases ih hp with ⟨B,C,hfirst,htail⟩
+          exact ⟨B,C,hfirst,HFRun.step htail hm⟩
+
+theorem anchor_hfMove_is_high
+    {R c A D : Nat}
+    (hR : 6 ≤ R) (hc : c=1 ∨ c=2)
+    (h : HFMove R c A D) :
+    A = R-c-2 ∧ D = 2*c+3 := by
+  unfold HFMove at h
+  rcases h with hH | hF
+  · exact ⟨hH.2.1,hH.2.2⟩
+  · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
+    rcases hc with rfl | rfl <;> omega
+
 theorem hfRun_X_bounds {n a d A D : Nat}
     (h : HFRun n a d A D) :
     X a d + n ≤ X A D ∧ X A D ≤ X a d + 6*n := by
@@ -288,6 +315,55 @@ theorem compile_cost_identity (w : List InverseLetter) :
   | cons b bs ih =>
       cases b <;> simp [compile, advance] at ih ⊢ <;> omega
 
+/-- Any genuine terminal H/F suffix from a root anchor has positive length and
+    begins with a High branch. -/
+theorem terminal_last_anchor_first_high
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c j B C,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      HFMove R c B C ∧
+      B = R-c-2 ∧ C = 2*c+3 ∧
+      HFRun j B C (D+1) D := by
+  rcases terminal_has_last_anchor_HF h with
+    ⟨q,R,c,m,hchain,hhf,hc⟩
+  have hR0 := anchorChain_linear_growth hchain (by decide)
+  have hR : 6 ≤ R := by omega
+  have hm : 0 < m := by
+    by_contra hz
+    have hm0 : m=0 := by omega
+    subst m
+    cases hhf
+    rcases hc with rfl | rfl <;> omega
+  obtain ⟨j,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : m ≠ 0)
+  rcases hfRun_first_step hhf with ⟨B,C,hfirst,htail⟩
+  have hh := anchor_hfMove_is_high hR hc hfirst
+  exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.1,hh.2,htail⟩
+
+/-- Strengthening of the last-anchor formal normal form: the exact word can be
+    chosen with a leading High letter. -/
+theorem terminal_has_last_anchor_formal_word_head_high
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c j w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = j ∧
+      FormalInversePath (D:Int) (.high::w) (R:Int) (c:Int) := by
+  rcases terminal_last_anchor_first_high h with
+    ⟨q,R,c,j,B,C,hchain,hc,hfirst,hB,hC,htail⟩
+  rcases hfRun_terminal_formal htail with ⟨w,hlen,hw⟩
+  subst B
+  subst C
+  have ha : 2*(R:Int) =
+      2*(((R-c-2 : Nat):Int)) + ((2*c+3 : Nat):Int) + 1 := by
+    rcases hc with rfl | rfl <;> omega
+  have hd : 2*(c:Int) = ((2*c+3 : Nat):Int) - 3 := by omega
+  have hfull : FormalInversePath (D:Int) (.high::w) (R:Int) (c:Int) :=
+    FormalInversePath.stepH hw ha hd
+  exact ⟨q,R,c,j,w,hchain,hc,hlen,hfull⟩
+
 /-- Exact last-anchor inverse-word normal form for any authentic positive-time
     halt.  The word ends at a genuine root-reachable anchor with second counter
     one or two, with no asymptotic or bounded-depth cutoff. -/
@@ -347,6 +423,8 @@ theorem terminal_last_anchor_cost_equation
 #print axioms compile_cost_identity
 #print axioms terminal_last_anchor_cost_equation
 
+#print axioms terminal_last_anchor_first_high
+#print axioms terminal_has_last_anchor_formal_word_head_high
 #print axioms terminal_has_last_anchor_formal_word
 #print axioms terminal_last_anchor_compiled_equation
 
