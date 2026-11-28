@@ -27,25 +27,6 @@ theorem OptTrace.prepend {S : Type} {f : S → Option S}
       simpa only [Nat.succ_eq_add_one, Nat.add_assoc]
         using (OptTrace.step ih hab)
 
-/-- An option-valued map can first become `none` only immediately after
-    some finite genuine trace ending at a state with `next = none`. -/
-theorem eventually_none_has_terminal {S : Type} (f : S → Option S)
-    (s : S) (h : ∃ n : Nat,
-    ((fun o : Option S => o.bind f)^[n] (some s)).isNone) :
-    ∃ (m : Nat) (t : S), OptTrace f s m t ∧ f t = none := by
-  rcases h with ⟨n,hn⟩
-  induction n generalizing s with
-  | zero => simp at hn
-  | succ n ih =>
-      change ((fun o : Option S => o.bind f)^[n] (f s)).isNone at hn
-      cases hs : f s with
-      | none => exact ⟨0,s,OptTrace.nil,hs⟩
-      | some s' =>
-          have hn' : ((fun o : Option S => o.bind f)^[n] (some s')).isNone := by
-            simpa [hs] using hn
-          obtain ⟨m,t,hr,ht⟩ := ih s' hn'
-          exact ⟨m+1,t,OptTrace.prepend hs hr,ht⟩
-
 /-- SourceNext is extended from pairs to a one-argument Option map. -/
 def pairSourceNext : Nat × Nat → Option (Nat × Nat)
  | (a,d) => sourceNext a d
@@ -63,6 +44,5 @@ theorem source_trace_counter {m : Nat} {p : Nat × Nat}
       exact CounterReach.step (by simpa using ih)
         (move_of_sourceNext_some (by simpa [pairSourceNext] using hs))
 
-#print axioms eventually_none_has_terminal
 #print axioms source_trace_counter
 end BB6.Agent31F321Physical
