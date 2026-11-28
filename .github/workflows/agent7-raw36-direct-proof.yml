@@ -1,0 +1,121 @@
+name: Agent7 Raw36 direct D1 full original-source proof
+run-name: Direct D1=${{ inputs.index }} exact Lean source gate
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        type: choice
+        options: ['0','1','4','10','12','16','22']
+        default: '1'
+      source_run_id:
+        type: string
+        default: '46122807180'
+      far_run_id:
+        description: 'Successful cross-bank FAR producer workflow'
+        type: string
+        required: true
+      stack_run_id:
+        description: 'Successful exact N-gram producer workflow'
+        type: string
+        required: true
+      structured_run_id:
+        description: 'Optional further valid candidates'
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-census
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-direct-census
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-recovered
+          run-id: ${{ inputs.far_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-far
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-stack-candidates
+          run-id: ${{ inputs.stack_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-stacks
+      - uses: actions/download-artifact@v4
+        if: inputs.structured_run_id != ''
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-structured-candidates
+          run-id: ${{ inputs.structured_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-structured
+      - name: Strictly assemble literal-keyed 100% coverage fixture
+        run: |
+          set -euo pipefail
+          D=/tmp/a7-direct-census/direct$(printf '%02d' ${{ inputs.index }}).json.gz
+          opt=()
+          if test -f /tmp/a7-structured/structured.json; then opt+=(--extras /tmp/a7-structured/structured.json); fi
+          python im-results/agent7-raw36-direct/assemble_fixture.py \
+            --census "$D" --far /tmp/a7-far/found.tsv \
+            --stack /tmp/a7-stacks/ngram.json "${opt[@]}" \
+            --out /tmp/a7-direct-evidence.xz.b64
+          python - "$D" <<'PY'
+          import gzip,sys
+          open('/tmp/a7-direct-tree.json','wb').write(gzip.decompress(open(sys.argv[1],'rb').read()))
+          PY
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate exact original-machine Lean cover and kernel audit
+        run: |
+          set -euo pipefail
+          INDEX=${{ inputs.index }}
+          printf -v PAD '%02d' "$INDEX"
+          STEM="Raw36D1$PAD"
+          THEOREM="BB6.Agent29$STEM.cover"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent7-raw36-direct/generate_direct.py \
+            /tmp/a7-direct-tree.json /tmp/a7-direct-source /tmp/a7-direct-evidence.xz.b64 280 "$INDEX"
+          B=$(python - <<'PY'
+          import base64,lzma,json
+          d=json.loads(lzma.decompress(base64.b64decode(open('/tmp/a7-direct-evidence.xz.b64').read())))
+          print(d['bound'])
+          PY
+          )
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-direct-olean --source-root /tmp/a7-direct-source --jobs 3 \
+            --manifest /tmp/a7-direct-olean/manifest.json \
+            --theorem "$THEOREM" --weighted-bound "$B" \
+            --parent-table "Raw36 direct D1 move index $INDEX" \
+            --artifact-name "agent7-raw36-direct-$INDEX-checked" \
+            --provenance-input /tmp/a7-direct-evidence.xz.b64 \
+            --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
+            "/tmp/a7-direct-source/$STEM.lean" 2>&1 | tee /tmp/a7-direct-audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-direct-audit.log "$THEOREM"
+          cp /tmp/a7-direct-audit.log /tmp/a7-direct-olean/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-source-audit
+          path: |
+            /tmp/a7-direct-evidence.xz.b64
+            /tmp/a7-direct-evidence.xz.status.json
+            /tmp/a7-direct-evidence.xz.missing.txt
+            /tmp/a7-direct-source/
+            /tmp/a7-direct-olean/
+            /tmp/a7-direct-audit.log
+          if-no-files-found: warn
+          retention-days: 60
