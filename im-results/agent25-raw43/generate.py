@@ -33,7 +33,13 @@ BIDFA_BATCH = max(1, int(os.environ.get("RAW43_BIDFA_BATCH", "1")))
 # rechecks through NGramCertificate.check.  Width 12 is the first successful
 # symmetric local-window closure for residual 3 (4416 abstract states), replacing
 # the previous 47353-state BiDFA certificate.
-NGRAM_OVERRIDES = {"b1re_e11le": {3: 12}}
+NGRAM_OVERRIDES = {
+    "b1re_e11le": {3: 12},
+    # Seven exact local-window closures in B1LE/E1=1RB.  Residual 175 is the
+    # material one: width 1 replaces a 3643-state BiDFA.  The remaining six
+    # are small but strictly cheaper and use the same already-accepted checker.
+    "b1le_e1rb": {175: 1, 475: 1, 679: 6, 685: 1, 725: 1, 775: 1, 885: 1},
+}
 
 def emit(name, imports, body, namespace=NS, opens=None):
     if opens is None:
