@@ -30,10 +30,14 @@ jobs:
           LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay7933.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean "$q/AffineRay9043.lean" | tee -a /tmp/agent31-ray.log
           python3 "$q/affine_ray_generator.py" 6144 3787 --summary
           python3 "$q/affine_ray_generator.py" 12288 7933 --summary
+          python3 "$q/affine_ray_generator.py" 12288 9043 --summary
           python3 "$q/affine_ray_generator.py" 6144 3787 > /tmp/Auto3787.lean
           python3 "$q/affine_ray_generator.py" 12288 7933 > /tmp/Auto7933.lean
           LEAN_PATH="$e:$q" lean /tmp/Auto3787.lean | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean /tmp/Auto7933.lean | tee -a /tmp/agent31-ray.log
+          python3 "$q/affine_ray_generator.py" 12288 9043 > /tmp/Auto9043.lean
+          LEAN_PATH="$e:$q" lean /tmp/Auto9043.lean | tee -a /tmp/agent31-ray.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent31-ray.log
