@@ -1,0 +1,80 @@
+name: Agent 46 Raw13 six-hole Cryptids source audit
+run-name: Agent 46 Raw13 coupled6 source ${{ inputs.parent_run }}
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run:
+        description: Successful raw13-coupled6-composed workflow run ID
+        type: string
+        required: true
+      source_ref:
+        description: Exact repository source commit containing Raw13Coupled6Source.lean
+        type: string
+        required: true
+permissions:
+  actions: read
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download composed six-hole proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PARENT_RUN: ${{ inputs.parent_run }}
+        run: |
+          set -euo pipefail
+          [[ "$PARENT_RUN" =~ ^[0-9]+$ ]]
+          mkdir -p /tmp/a46-c6-parent
+          gh run download "$PARENT_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name raw13-coupled6-composed --dir /tmp/a46-c6-parent
+          find /tmp/a46-c6-parent -name Raw13Coupled6.olean -type f -print -quit | grep -q .
+      - name: Build unchanged upstream theorem at pinned revision
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet 3647718b5df22e1a61462dec0376bd204526285a
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = 3647718b5df22e1a61462dec0376bd204526285a
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          cd /tmp/cryptids
+          printf '%s\n' leanprover/lean4:v4.36.0-rc2 > lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          rm -f lake-manifest.json
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB1LD_1RC0RB_1LA1RE_1LF0LA_1LA0RD_1LCHHH
+      - name: Prove unconditional exact six-hole threshold
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          p6="$(dirname "$(find /tmp/a46-c6-parent -name Raw13Coupled6.olean -type f -print -quit)")"
+          p5="$(dirname "$(find /tmp/a46-c6-parent -name Raw13Coupled5.olean -type f -print -quit)")"
+          export LEAN_PATH="$p6:$p5"
+          cp "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent46-raw13-cut/Raw13Coupled6Source.lean" .
+          lake env lean -o /tmp/CryptidsTapeAdapter.olean CryptidsTapeAdapter.lean 2>&1 | tee /tmp/a46-c6-adapter.log
+          export LEAN_PATH="/tmp:$LEAN_PATH"
+          lake env lean -o /tmp/Raw13Coupled6Source.olean Raw13Coupled6Source.lean 2>&1 | tee /tmp/a46-c6-source.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-c6-adapter.log /tmp/a46-c6-source.log; then
+            echo 'Forbidden proof placeholder or native_decide in source closure' >&2
+            exit 1
+          fi
+          grep -F "BB6.Agent46Raw13Coupled6.unconditional_exact_threshold" /tmp/a46-c6-source.log
+      - name: Preserve unconditional source audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-coupled6-source-certified
+          path: |
+            /tmp/Raw13Coupled6Source.olean
+            /tmp/a46-c6-source.log
+            /tmp/a46-c6-adapter.log
+          retention-days: 30
