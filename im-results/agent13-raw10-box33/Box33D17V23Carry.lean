@@ -355,8 +355,9 @@ theorem never (v : Variant) : NeverHalts (table v) := by
   apply BB6.Agent13.Box33PrefixMacro.sourceNever (table v) (step v) (project_step v)
   intro n
   have hb : BB6.Agent13.Box33PrefixMacro.project BB6Coverage.blank = phase z z := by
-    rw [Box33Source.project_blank]
-    simp [phase,cfg,word,Box33UnarySweeper.blank,z]
+    change Box33Source.project false BB6Coverage.blank = phase z z
+    rw [Box33Source.project_blank false]
+    simp [phase,cfg,word,Box33UnarySweeper.blank] <;> rfl
   rw [hb]
   exact neverBlank v n
 def partialTable (v : Variant) : PartialMachine := fun s => some (table v s)
