@@ -11,9 +11,22 @@ on:
         type: string
         default: '[126,127,128,129,130,137,140]'
       extended_automata:
-        description: Search unresolved open leaves with the broader FAR automata family
+        description: Search unresolved open leaves with the broader FAR automata family (generic generator)
         type: boolean
         default: false
+      generator:
+        description: Generic extra-parent generator or retained Extra29 CachedPhaseTree candidate
+        type: choice
+        default: generic
+        options: [generic, coarse-extra]
+      chunk:
+        description: Maximum ordinary proof chunk nodes for coarse-extra
+        type: string
+        default: '200'
+      module_nodes:
+        description: Maximum generated Lean module nodes for coarse-extra
+        type: string
+        default: '500'
 permissions:
   contents: read
   actions: read
@@ -68,17 +81,45 @@ jobs:
               s=p.read_text().replace("theorem safe := ",f"theorem safe : ∀ m, compatible parent m → WeightedBound {b} m := ")
               p.write_text(s)
           PY
+      - name: Validate generator configuration
+        env:
+          ID: ${{ matrix.parent }}
+          GENERATOR: ${{ inputs.generator }}
+          GENERATION_RUN: ${{ inputs.generation_run }}
+        run: |
+          set -euo pipefail
+          if [ "$GENERATOR" = coarse-extra ]; then
+            test "$ID" = 29
+            test -z "$GENERATION_RUN"
+          fi
+
       - name: Reconstruct pinned coverage contract
         run: python im-results/agent13-coverage/unpack.py
 
-      - name: Generate exact child proofs
-        if: inputs.generation_run == ''
+      - uses: actions/setup-node@v4
+        if: inputs.generator == 'coarse-extra'
+        with:
+          node-version: 20
+
+      - name: Generate exact child proofs with generic extra search
+        if: inputs.generation_run == '' && inputs.generator == 'generic'
         env:
           SIX_HOLE_DATA: /tmp/raw11-six-data
           RAW11_EXTENDED_AUTOMATA: ${{ inputs.extended_automata && '1' || '0' }}
         run: |
           set -euo pipefail
           node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs "$ID" /tmp/raw11-generated
+      - name: Generate Extra29 CachedPhaseTree shards from retained exact candidate
+        if: inputs.generation_run == '' && inputs.generator == 'coarse-extra'
+        env:
+          ID: ${{ matrix.parent }}
+          CHUNK: ${{ inputs.chunk }}
+          MODULE_NODES: ${{ inputs.module_nodes }}
+        run: |
+          set -euo pipefail
+          node im-results/agent44-raw11-extra29/scan.cjs /tmp/extra29-scan
+          RAW11_PARENT_KIND=extra node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs \
+            "$ID" /tmp/extra29-scan /tmp/raw11-generated "$CHUNK" "$MODULE_NODES"
       - name: Compile exact generated proof closure
         run: |
           set -euo pipefail
@@ -110,6 +151,8 @@ jobs:
             --parent-table "$PARENT_TABLE" \
             --weighted-bound "$BOUND" \
             --provenance-input im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs \
+            --provenance-input im-results/agent44-raw11-extra29/scan.cjs \
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent5-weighted-tnf-queue/q0-open-automata.cjs \
