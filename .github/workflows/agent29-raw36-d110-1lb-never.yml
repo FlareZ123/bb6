@@ -1,0 +1,54 @@
+name: Agent29 Raw36 D1=0RE E0=1LB exact NeverHalts source kernel proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reclaim old SDK installation disk for source closure
+        run: |
+          set -euo pipefail
+          df -h /
+          for p in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$p" ]]; then sudo rm -rf "$p"; fi
+          done
+          df -h /
+      - name: Install exact Lean version
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Recheck 1318-state inverse-stack certificate against Lean kernel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent29-raw36/check_d110_e01lb_never.py
+          python -u im-results/agent29-raw36/check_d110_e01lb_never.py \
+            --archives /tmp/a29-d110-one13-deps \
+            --work /tmp/a29-d110-one13-work \
+            | tee /tmp/a29-d110-one13.log
+          test -s /tmp/a29-d110-one13-work/d110-e01lb-never-accepted.json
+          cat /tmp/a29-d110-one13-work/d110-e01lb-never-accepted.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d110-e01lb-new-original-source-never-proof
+          path: |
+            /tmp/a29-d110-one13-work/Raw36D110E01LB.lean
+            /tmp/a29-d110-one13-work/d110-e01lb-never-accepted.json
+            /tmp/a29-d110-one13-work/d110-e01lb-source.log
+            /tmp/a29-d110-one13.log
+          if-no-files-found: warn
+          retention-days: 60
