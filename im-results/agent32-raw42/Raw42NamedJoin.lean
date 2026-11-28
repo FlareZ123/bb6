@@ -3,7 +3,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent32Raw42NamedJoin
-open BB6Coverage BB6.Agent32Raw42
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent32Raw42
 
 /-- The twelve canonical B1 children of Raw42, in the exact order induced by
     the finite move enumeration.  The four F-labelled aliases are absent. -/
