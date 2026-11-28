@@ -302,10 +302,14 @@ Two guard equivalences make the intended semantic induction especially
 direct: the B arithmetic bound is equivalent to the related high runway
 having at least **15** cells, exactly what the high `BBA` block consumes;
 and, under the necessary residue-7 positive-weight condition, the carry
-bound is equivalent to the related high front zero-run being nonempty. The
-file packages these as unified whole-stack B and carry preservation
-theorems, leaving the reachable shape/residue/positivity invariant as the
-principal unresolved semantic obligation.
+bound is equivalent to the related high front zero-run being nonempty.
+Moreover, the exact deletion cases no longer require a separate pop guard:
+at low B-runway length 7, the semantic 15-cell high-runway condition forces
+the front weight to be zero; at low carry-runway length 1, high-side
+nonemptiness forces the front weight to be zero. Normal A's residue-5 rule
+is also packaged as a zero-weight stack push. The file therefore leaves the
+reachable zipper shape, normal-A residue-5 condition, and residue-7
+positive-weight condition as the principal unresolved semantic obligations.
 
 Thus the next proof object is a **stack/vector of nonnegative defect weights**,
 one aligned with each finite left zero-run, rather than a single marked run.
