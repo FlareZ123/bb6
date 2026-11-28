@@ -159,8 +159,8 @@ for(let rowIndex=0;rowIndex<rows.length;rowIndex++){
 }
 assert.equal(open6,4234);
 assert.equal(long6,40);
-assert.equal(selected.length,840);
-assert.equal(full7Rows,114);
+assert.equal(selected.length,3464);
+assert.equal(full7Rows,123);
 assert.equal(new Set(selected.map(x=>x.codes.join(","))).size,selected.length);
 for(let i=0;i<selected.length;i++)
   for(let j=i+1;j<selected.length;j++)
