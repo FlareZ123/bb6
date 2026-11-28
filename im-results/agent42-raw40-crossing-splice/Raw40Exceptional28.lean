@@ -43,6 +43,29 @@ def bank : List PartialMachine := [
 
 theorem bank_size : bank.length = 28 := by decide
 
+/-- Exactly the twelve physical read slots of a two-symbol six-state table. -/
+def slotRoster : List Slot :=
+  (List.finRange 6).flatMap fun q => [(q,false),(q,true)]
+
+theorem slotRoster_size : slotRoster.length = 12 := by decide
+theorem slotRoster_nodup : slotRoster.Nodup := by decide
+theorem slotRoster_complete (s : Slot) : s ∈ slotRoster := by
+  rcases s with ⟨q,b⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨q,List.mem_finRange q,?_⟩
+  cases b <;> simp
+
+/-- Each of these 28 sparse sources leaves exactly one of the twelve slots
+    unassigned. Hence each source represents 25 different full tables. -/
+def holeCount (p : PartialMachine) : Nat :=
+  (slotRoster.filter (fun s => p s = none)).length
+
+theorem oneHole_checked : bank.all (fun p => decide (holeCount p = 1)) = true := by
+  decide +kernel
+
+theorem oneHole (p : PartialMachine) (hp : p ∈ bank) : holeCount p = 1 := by
+  exact of_decide_eq_true (List.all_eq_true.mp oneHole_checked p hp)
+
 /-- A finite, syntactic conflict between sparse tables: their common
     assigned slots demand different transitions. -/
 def clash (p q : PartialMachine) : Bool :=
@@ -162,10 +185,11 @@ theorem all_never (p : PartialMachine) (hp : p ∈ bank)
     recurrence is imported from the generic temporal transcript proof. -/
 theorem certificate :
     bank.length = 28 ∧
+    (∀ p ∈ bank, holeCount p = 1) ∧
     List.Pairwise (fun p q : PartialMachine =>
       ∀ m : Machine, compatible p m → compatible q m → False) bank ∧
     (∀ p ∈ bank, ∀ m, compatible p m → NeverHalts m) :=
-  ⟨bank_size, all_pairwise_disjoint, all_never⟩
+  ⟨bank_size, oneHole, all_pairwise_disjoint, all_never⟩
 
 #print axioms certificate
 end BB6.Agent42Raw40Exceptional28
