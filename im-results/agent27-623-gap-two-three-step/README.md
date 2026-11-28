@@ -31,3 +31,65 @@ In particular, avoiding either pair of source-certified strips at all such root 
 ## Remaining mathematical obligation
 
 Prove avoidance on the actual infinite root orbit, not just finite replay. The source already supplies the bridge from the authentic six-state machine's halting to the terminal-strip condition. The strips are exactly the old-ray cancellation directions g-9m and 4g+9m for g=L-4m. This permits the synchronization approach in Agent1's dossier to use the checked asymmetric widths above rather than an assumed sharper bound. No global BB(6) result follows without root avoidance.
+
+
+## Fourth-predecessor inverse-ray reduction (new Lean candidates; CI acceptance pending)
+
+The exact original-source B-drain identity gives a useful *one-step inverse
+transport* of the source-accepted necessary three-predecessor gate. Let
+\`m=min(u,v)\`, \`L=max(u,v)\` for a genuine root predecessor
+\`D(u,v) -> D(x,y)\`, and let \`N\` bound the input ternary block. When the
+ordinary-sector budget is available, the source Lean proof constructs **one
+shared drain count** \`r\` and an exact sector constant \`c ∈ {4,5,8}\`:
+\`\`\`
+r <= N
+x+m <= L+r+4
+L <= x+m+N+6
+2*x+y = 2*L+m+c+2*r
+\`\`\`
+Thus \`x≈L-m\`, \`y≈3m\` with signed, *coupled* errors; the proof does
+not multiply independent one-sided worst cases. Pulling the tight terminal
+rays \`max(x,y)≈13min(x,y)\` and \`4max(x,y)≈7min(x,y)\` backwards
+yields exactly four possible predecessor centre ratios
+\`L/m ≈ 40, 16/13, 25/4, 19/7\`.
+
+The strongest candidate \`coupledFourRayCone N n u v\` is a disjunction
+of the following **one-sided** inequalities (unverified as a complete Lean
+source theorem until its workflow succeeds):
+
+| Ray | Upper inequality | Lower inequality |
+| --- | --- | --- |
+| 40 | \`L <= 40m + 53N+23n+377\` | \`40m <= L + N+3n+61\` |
+| 16/13 | \`13L <= 16m + 17N+3n+103\` | \`16m <= 13L + 13N+23n+167\` |
+| 25/4 | \`4L <= 25m + 32N+10n+219\` | \`25m <= 4L + 4N+10n+84\` |
+| 19/7 | \`7L <= 19m + 23N+10n+162\` | \`19m <= 7L + 7N+10n+99\` |
+
+The new **fourth-predecessor physical-source candidate** attempts to
+discharge the budget, sector, gap-two, and scale prerequisites for
+*every* real root predecessor. Its key unconditional source inequalities
+are \`x <= max(u,v)+3\` and \`min(u,v)+4 <= y\` for any successful even-first
+source transition, while the upper logarithmic estimate is
+\`y <= 3min(u,v)+4N+20\`. The conclusion, **if accepted**, is
+
+\`\`\`
+BusyBeaver.IsHalt target →
+  ∃ t u v n, run t = some (.D u v) ∧
+    n >= 13 ∧ coupledFourRayCone (n+3) n u v
+\`\`\`
+
+The published \`n>=13\` depth premise depends on repairing nine originally
+non-reducing finite \`decide\` root checkpoints to \`native_decide\` in
+[RootMassGapN11N12.lean](../agent48-623-budget-composition/RootMassGapN11N12.lean).
+Unlike kernel-only \`decide\`, those finite source oracles introduce native
+reflection axioms; report them explicitly rather than calling the entire
+end-to-end chain pure kernel computation.
+
+Lean modules: [FourRayInverseConeSource.lean](FourRayInverseConeSource.lean),
+[FourRayPhysicalSource.lean](FourRayPhysicalSource.lean), and
+[FourRayCoupledSource.lean](FourRayCoupledSource.lean).
+CI: existing parameterized original-Cryptids-source workflow
+[agent27-623-n10-mass-gap.yml](../../.github/workflows/agent27-623-n10-mass-gap.yml),
+target \`four-ray-full\`, against pinned Cryptids
+\`c86f15861709b76042998c5211c7b2f83991621b\`.
+**No #623 nonhalting theorem or BB(6) maximality proof follows without
+showing all-time blank-root avoidance of these four cones.**
