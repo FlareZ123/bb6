@@ -1,6 +1,5 @@
 import Raw44B1RC_C1R_A1RE_Growth
 import WeightedSymmetry
-import NormalizedExpansion
 
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
@@ -37,11 +36,23 @@ theorem renamed_table :
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 
+private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6) = 0)
+    (m : Machine) (h : NeverHalts (renameTable e m)) : NeverHalts m := by
+  intro n
+  have hrun : run (renameTable e m) n blank =
+      (run m n blank).map (renameConfig e) := by
+    simpa [renameConfig,blank,hroot] using rename_run e m blank n
+  have hn := h n
+  rw [hrun] at hn
+  cases hr : run m n blank with
+  | none => simp [hr] at hn
+  | some d => simp [hr]
+
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   have hc := rename_compatible ef hm
   rw [renamed_table] at hc
   have hn := BB6.Agent16Raw44B1RC_C1R_A1RE.never (renameTable ef m) hc
-  exact (renameNeverHalts_iff ef m (by decide)).mp hn
+  exact rename_never_back ef (by decide) m hn
 
 theorem literal_cover (bound : Nat) : Cover (DecidedBelow bound) table :=
   Cover.leaf table (fun m hm => Or.inl (never m hm))
