@@ -34,9 +34,9 @@ theorem weightedCheck_sound (B : Nat) (p : PartialMachine) (cert : Cert)
       (finiteHaltCheck_exact p n hh.1.2)
       (fun d hd => of_decide_eq_true (List.all_eq_true.mp hh.2 d hd))
   | side entry period right boundary =>
-    exact zeroCover_weighted B p (cert_sound 0 p _ h)
+    exact zeroCover_weighted B p (cert_sound 0 p (.side entry period right boundary) h)
   | closed entry ss =>
-    exact zeroCover_weighted B p (cert_sound 0 p _ h)
+    exact zeroCover_weighted B p (cert_sound 0 p (.closed entry ss) h)
 
 theorem weightedPlan_closed (nodes : Array Node) (B fuel root : Nat)
     (p : PartialMachine) (h : checkWith nodes [] (weightedCheck B) fuel root p = true) :

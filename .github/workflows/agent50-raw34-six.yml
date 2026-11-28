@@ -1,0 +1,145 @@
+name: Agent 50 Raw34 six-hole complete Cover
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check shared kernels and generate exact partition
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-plan
+          W=/tmp/a50-raw34-six-prepare
+          mkdir -p "$W/imports"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python "$D/generate.py" --output "$W/imports/Raw34Pilot.lean" --summary "$W/pilot.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" --source-root "$W/imports" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-six-prepare "$D/Raw34CompactPlan.lean" "$D/Raw34PilotExact.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          g++ -O3 -std=c++17 "$D/far.cpp" -o "$W/far"
+          python "$D/generate_six.py" --far "$W/far" --output "$W/imports" 2>&1 | tee "$W/generator.log"
+          python - "$W/imports/summary.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['weighted_bound']==278
+          assert sum(x['mass'].values())==25**6
+          assert x['stats'].get('residual',0)==0 and all(not c['residuals'] for c in x['children'])
+          assert x['attainer']['ordinary']==278 and x['attainer']['delay']==0
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-six-prepare
+          path: /tmp/a50-raw34-six-prepare/
+          if-no-files-found: error
+          retention-days: 30
+  children:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - group: 0
+            indices: '23 00 01 02 04 05'
+          - group: 1
+            indices: '19 22 06 08 09'
+          - group: 2
+            indices: '03 18 10 11'
+          - group: 3
+            indices: '24 07 12 13'
+          - group: 4
+            indices: '21 17 14 15'
+          - group: 5
+            indices: '20 16'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw34-six-prepare
+          path: /tmp/a50-raw34-six-prepare
+      - name: Check complete disjoint child Covers
+        env:
+          INDICES: ${{ matrix.indices }}
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          P=/tmp/a50-raw34-six-prepare
+          W=/tmp/a50-raw34-six-child
+          mkdir -p "$W"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          roots=()
+          for i in $INDICES; do roots+=("$P/imports/Raw34D1LD_C1REChild$i.lean"); done
+          python tools/lean_compile_closure.py --workdir "$W/build" --source-root "$P/imports" --jobs 2 --precompiled-manifest "$P/manifest.json" --precompiled-dir "$P/build" --manifest "$W/manifest.json" --artifact-name "raw34-six-child-$GROUP" "${roots[@]}" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          for i in $INDICES; do grep -F "'BB6.Agent50Raw34D1LD_C1REChild$i.cover'" "$W/closure.log"; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-six-child-${{ matrix.group }}
+          path: /tmp/a50-raw34-six-child/
+          if-no-files-found: error
+          retention-days: 30
+  compose:
+    needs: children
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw34-six-*
+          path: /tmp/a50-raw34-six-artifacts
+      - name: Compose the exact six-hole source Cover and attaining machine
+        run: |
+          set -euo pipefail
+          A=/tmp/a50-raw34-six-artifacts
+          W=/tmp/a50-raw34-six-complete
+          D=im-results/agent50-raw34-plan
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent50-raw47-depth3/merge_accepted_artifacts.py "$W" "$A/raw34-six-prepare" "$A"/raw34-six-child-*
+          python tools/lean_compile_closure.py --workdir "$W/build" --source-root "$W/imports" --jobs 2 --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem BB6.Agent50Raw34D1LD_C1RE.cover --parent-table '1RB---_1RC---_0RD0RE_1LC0LD_------_------' --weighted-bound 278 --artifact-name raw34-six-complete --provenance-input "$D/generate_six.py" --provenance-input "$D/generate_compact.py" --provenance-input "$D/generate.py" --provenance-input "$D/far.cpp" --provenance-input "$D/fastsim.py" --provenance-input im-results/agent48-raw139-f1-oneLA/autopump.py "$W/imports/Raw34D1LD_C1RE.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34D1LD_C1RE.cover'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34D1LD_C1RE.attained'" "$W/closure.log"
+          cp "$A/raw34-six-prepare/imports/summary.json" "$W/summary.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-six-complete
+          path: |
+            /tmp/a50-raw34-six-complete/imports/
+            /tmp/a50-raw34-six-complete/build/
+            /tmp/a50-raw34-six-complete/manifest.json
+            /tmp/a50-raw34-six-complete/summary.json
+            /tmp/a50-raw34-six-complete/closure.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
