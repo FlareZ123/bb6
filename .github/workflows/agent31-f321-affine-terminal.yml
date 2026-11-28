@@ -67,7 +67,8 @@ jobs:
           lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e" lean -o "$e/TerminalWordCandidate.olean" "$e/TerminalWordCandidate.lean" | tee -a /tmp/f321-terminal-candidate.log
-          LEAN_PATH="$e" lean "$e/TerminalWordOneFar.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e" lean -o "$e/TerminalWordOneFar.olean" "$e/TerminalWordOneFar.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e" lean "$e/TerminalWordOneFarGeneral.lean" | tee -a /tmp/f321-terminal-candidate.log
           ! grep -q sorryAx /tmp/f321-terminal-candidate.log
 
       - name: Kernel-check F321 odd-depth source-counter inverse theorem
