@@ -85,3 +85,5 @@ jobs:
           done
           ! grep -q 'sorryAx' /tmp/agent22-finite-power-axioms.log
           ! grep -q 'native_decide' /tmp/agent22-finite-power-axioms.log
+      - name: Check exact four-adic capacity and 136-case proof base
+        run: node im-results/agent22-429-signed-drift/sharp_packing_small.cjs
