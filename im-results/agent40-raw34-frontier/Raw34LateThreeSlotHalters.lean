@@ -12,7 +12,7 @@ the 3,087 old sources + ten graph masks + E/F counters + 1,067 early
 halts (see rank_live_nonD1RD.mjs, CI 46119443983).
 -/
 namespace BB6.Agent40Raw34LateHalters
-open BB6Coverage BB6.Agent23Raw34Next
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent23Raw34Next
 open BB6.Agent40Raw34EarlyHalters
 
 def witnesses : List Witness := [
