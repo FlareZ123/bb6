@@ -1005,8 +1005,8 @@ jobs:
           W=/tmp/raw10-box27-slice24
           D=im-results/agent49-raw10-box27
           python "$D/generate_slice24.py" | tee /tmp/box27-slice24-stats.log
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice24.parent_bound --parent-table "8,-1,11,-1,13,13,14,17,24,-1,-1,-1" --artifact-name raw10-box27-slice24 --provenance-input "$D/generate_slice24.py" "$D/Box27Slice24Source.lean" 2>&1 | tee /tmp/raw10-box27-slice24.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice24.log BB6.Agent49.Box27Slice24.audit_sound BB6.Agent49.Box27Slice24.bound BB6.Agent49.Box27Slice24.parent_bound
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice24.exact_weighted --parent-table "8,-1,11,-1,13,13,14,17,24,-1,-1,-1" --artifact-name raw10-box27-slice24 --provenance-input "$D/generate_slice24.py" "$D/Box27Slice24Source.lean" 2>&1 | tee /tmp/raw10-box27-slice24.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice24.log BB6.Agent49.Box27Slice24.audit_sound BB6.Agent49.Box27Slice24.bound BB6.Agent49.Box27Slice24.parent_bound BB6.Agent49.Box27Slice24.exact_weighted
           cp /tmp/raw10-box27-slice24.log "$W/lean.log"
           cp /tmp/box27-slice24-stats.log "$W/stats.log"
       - uses: actions/upload-artifact@v4
