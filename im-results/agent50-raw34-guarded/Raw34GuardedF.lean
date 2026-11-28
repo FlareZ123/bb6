@@ -10,12 +10,12 @@ open BB6Coverage
 A local *tape-sensitive*, universally nonhalting Raw34 certificate.
 
 The source fixes A0=1RB, B0=1RC, C0=0RD, D0=1LC, and
-B1=(write b, L, E). Other assigned instructions A1,C1,D1,E1
+B1=(write b, L, F). Other assigned instructions A1,C1,D1,F1
 may be any ordinary move to A,C,D or exactly 1RB.
 F0 and E0,E1 are arbitrary/unassigned.
 
 Every transition entering B is 1RB and thus writes a 1 immediately
-to the left of B's head. Consequently when B1 enters E by moving
+to the left of B's head. Consequently when B1 enters F by moving
 left, F always reads 1. F0 is unreachable in EVERY compatible total
 machine, even if it is HALT. State E is likewise unreachable.
 
@@ -30,7 +30,7 @@ def safeMove (v : Move) : Prop :=
     v = ⟨true,true,1⟩
 
 /-- F0, E0, and E1 deliberately unassigned. The four variable
-    instructions a1,c1,d1,e1 range over all safeMove values. -/
+    instructions a1,c1,d1,f1 range over all safeMove values. -/
 def parent (a1 c1 d1 f1 : Move) (bw : Bool) : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -45,8 +45,8 @@ def parent (a1 c1 d1 f1 : Move) (bw : Bool) : PartialMachine := fun s =>
   | _,_ => none
 
 /-- States A,C,D are unrestricted. B must have a marked cell
-    immediately left; E must currently be scanning a marked cell.
-    F is not in the invariant. -/
+    immediately left; F must currently be scanning a marked cell.
+    E is not in the invariant. -/
 def Inv (c : Config) : Prop :=
   c.state = 0 ∨ c.state = 2 ∨ c.state = 3 ∨
   (c.state = 1 ∧ c.tape (c.head-1) = true) ∨
@@ -196,7 +196,7 @@ theorem witnessA_never (m : Machine)
   exact never _ _ _ _ _ (by decide) (by decide) (by decide)
     (by decide) m hm
 
-/-- A distinct E1=0RC, A1=1RA right-moving counter-like holdout. -/
+/-- A distinct F1=0RC, A1=1RA right-moving counter-like holdout. -/
 def witnessB : PartialMachine :=
   parent ⟨true,true,0⟩ ⟨false,false,0⟩
     ⟨false,false,3⟩ ⟨false,true,2⟩ false
