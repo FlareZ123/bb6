@@ -43,7 +43,7 @@ theorem b_two_one_action (s : List Bool) (rest : List Nat)
   have hfirst : (2,rightSig (0::rest)) ∈
       cut (rightSig (1::0::rest)) := hh.1
   have hsecond : (1,rightSig rest) ∈ cut (rightSig (0::rest)) := by
-    simpa [actualNext,cat] using hh.2
+    simpa [actualNext,BB6.Agent5Q0151Category.cat] using hh.2
   unfold delta
   apply List.mem_flatMap.mpr
   refine ⟨(2,rightSig (0::rest)), by simpa [co] using hfirst, ?_⟩
