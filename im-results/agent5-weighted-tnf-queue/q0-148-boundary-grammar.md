@@ -145,3 +145,49 @@ The **new E head is the third A (zero-based index 2)** in the enlarged next grou
 The remaining global proof must therefore handle three symbolic cases: (1) the marked hop with one A and a following B, now source-theorem candidate; (2) continuation within the *same* A-run when more than one A remains to the right of an E1 head; (3) boundary expansion when there is no B to the right. These cases appear algebraically sufficient to describe the infinite blank-tape trajectory, but they are not yet a closed invariant.
 
 The current results are held in \`im-results/\`, not \`results/\`, because none alone resolves q0-148 or proves BB(6).
+
+
+## A three-carry finite-state transducer for repeated blank-boundary sweeps (2026-11-28, proof candidates)
+
+This materially narrows the last q0-148 rightmost-boundary difficulty. It concerns **source-defined parametric computations** on any chunk list, not an extrapolation of a long trace. The Lean proof candidates are now \`rightBlankTurn\`, \`rightBlankCarryShape\`, \`twoBlankTurns\`, \`anotherBlankCycle\`, \`ERightFirstMarker\`, and \`ARightToEOne\` in \`Q0148BoundarySweep.lean\`. The 3-carry word transformation is elementary and can be proved algebraically without Lean; source Lean CI compilation of the later compositions is still pending.
+
+### Exact six-clause word algebra
+
+Keep A = \`10\`, M = \`11010\` as **left-scan tokens**, and let their right-sweep outputs be \`O(A)=01\`, \`O(M)=01011\`. For any list \`cs\`, \`outSubst(cs)\` concatenates these outputs in the *original chunk order*. The right-sweep stack operation has the exact identity \`outputRightChunks(rightSequence(cs))=outSubst(cs)\`.
+
+Scanning the word \`11 ++ outSubst(cs)\` leftward with full chunk tokens A/M leaves one of only THREE short residues. Let \`S=11\`, \`T=1101\`, \`U=1\`. The following six equalities of actual binary words define a deterministic transducer; the "output tokens" column contains full A/M tokens removed from the front of the concatenation:
+
+| Carry | Input chunk | Output chunks | Next carry | Exact word equality |
+|---|---|---|---|---|
+| S | A | empty | T | \`11 01 = 1101\` |
+| S | M | M | S | \`11 01011 = 11010 11\` |
+| T | A | M | U | \`1101 01 = 11010 1\` |
+| T | M | M A | S | \`1101 01011 = 11010 10 11\` |
+| U | A | A | U | \`1 01 = 10 1\` |
+| U | M | A A | S | \`1 01011 = 10 10 11\` |
+
+The source-level second-turn pattern after the blank-right 13-step gadget is \`C0, left=0 ++ M ++ 11 ++ outSubst(cs) ++ (at least two blank zeros)\`. The transducer rewrites this **for every finite cs** as \`0 ++ inputBits(M::chunks') ++ residue ++ 00\`. Thus \`scanChunks\` applies at arbitrary length, and the residual is handled by one of exactly three finite source transitions:
+
+| Residual carry | Left prefix in C0 | Steps | A0 right output |
+|---|---|---|---|
+| S (\`11\`) | \`01100\` | 4 | \`1010\` |
+| T (\`1101\`) | \`0110100\` | 6 | \`011010\` |
+| U (\`1\`) | \`0100\` | 3 | \`010\` |
+
+This yields the **two full sweeps** source theorem candidate \`twoBlankTurns\` for any initial E1 left grammar chunk list \`cs\` and arbitrary untouched outer tails, as long as the explicitly read boundary cells are blank. At its end, qA0 is at the next left boundary, with right tape \`carryRight(residue) ++ outputBits(M::emittedChunks) ++ untouchedRightTail\` and exact finite duration
+\[
+  (4+4\,\mathrm{scanCost}(cs))+13+
+    \mathrm{scanCost}(M::emittedChunks)+\mathrm{terminalCost}(residue).
+\]
+
+For carry T or U, that right prefix is respectively \`0 M\` or \`0 A\`, so the ordinary \`scanRightChunks\` transfers a new token plus all the prior chunks, a two-step blank-right turn returns to C0, and the **same** three-carry transducer applies again, this time to \`oldChunks ++ [newToken]\`. The general arbitrary-length lemma candidate is \`anotherBlankCycle\`; its input is **any** chunk list, and its output remains one of the same three carries. This closes a finite-state, *repeatable* abstract description of successive blank-boundary sweeps rather than treating each tape expansion as a new special case.
+
+### Natural-number termination argument (conditional section)
+
+Assume the initial left chunk sequence has a final marker followed by r copies of A: \`cs = prefix ++ [M] ++ A^r\`. The six-transition table proves directly, by induction on r, that the carry after scanning this final suffix is S if r=0, T if r=1, and U if r≥2. For r≥2, the emitted chunk list has a final M followed by exactly r−2 copies of A. Consequently, on a U carry, the next blank cycle reads one more A appended to a chunk list with r−2 trailing As, reducing the relevant counter to r−1. On a T carry, the next cycle appends M and resets the carry to S. Thus **the carry becomes S in at most r additional cycles**. The source E1→A0 initial two-sweep stage plus those finitely many cycles is universally finite.
+
+At carry S, qA0's right tape begins \`1010\`, followed by the word \`outputBits(chunks)\`. Since each cycle's chunk list contains an M (its first token is M after the initial step), its \`outputBits\` ends with M; therefore the right tape contains a first M after a finite number n of A tokens. The original-source lemma candidates \`ERightFirstMarker\` and \`ARightToEOne\` execute this final qA0→E1 transition in exactly \`2n+6\` steps. In the resulting E1, the immediately right cell is zero, and **no F1 step occurred** during that conditional next-E computation.
+
+This gives a concrete path to a universal **positive next-E return and F1 guard** for the boundary section whose leading A exponent is positive. It does *not* yet establish full nonhalting, because a succession of such next-E steps also requires proving the returned tape stays within a suitable global language (and handling intermediate E1 configurations). In particular, arbitrary syntactically valid boundary inputs can produce an E1 at a different active group; do not assume that first-return always resets directly to the group-0 phase. A complete source Cover still requires that closure theorem or a different global invariant.
+
+**Reproducibility.** The exact-table regression \`q0-148-carry-transducer.cjs\` checks the first two-sweep source identity and the general additional-cycle identity across all chunk lists of length at most 9 (1,023 two-turn cases and 2,046 token/cycle cases), including all three carries. Run \`node im-results/agent5-weighted-tnf-queue/q0-148-carry-transducer.cjs\`. The mathematical finite-state and arbitrary-length list inductions, not the finite regression, are the relevant basis for any universal theorem. Until CI confirms the Lean theorems, this material remains in \`im-results/\`.
