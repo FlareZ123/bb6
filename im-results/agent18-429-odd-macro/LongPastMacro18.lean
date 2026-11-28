@@ -7,14 +7,14 @@ set_option maxHeartbeats 30000000
 
 /-- A concrete, fixed finite macro word uses the exact original signed
     radix-16 operations rather than an independent simulator. -/
-def IsWord : List Digit → Nat → Nat → Prop
-  | [], _, _ => True
-  | d :: ds, p, y => num d p y % 16 = 0 ∧
+def IsWord : List Digit → Nat → Nat → Bool
+  | [], _, _ => true
+  | d :: ds, p, y => decide (num d p y % 16 = 0) &&
     IsWord ds (nextP d p) (nextY d p y)
 
 /-- Soundness of the small arithmetic checker for the source Path semantics. -/
 theorem path_of_word : ∀ (ds : List Digit) (p y : Nat),
-    IsWord ds p y → Path ds.length p y := by
+    IsWord ds p y = true → Path ds.length p y := by
   intro ds
   induction ds with
   | nil =>
@@ -22,7 +22,11 @@ theorem path_of_word : ∀ (ds : List Digit) (p y : Nat),
     exact Path.nil p y
   | cons d ds ih =>
     intro p y h
-    rcases h with ⟨hmod, htail⟩
+    change decide (num d p y % 16 = 0) &&
+      IsWord ds (nextP d p) (nextY d p y) = true at h
+    have hpair := Bool.and_eq_true.mp h
+    have hmod : num d p y % 16 = 0 := of_decide_true hpair.1
+    have htail : IsWord ds (nextP d p) (nextY d p y) = true := hpair.2
     simpa only [List.length_cons] using
       (Path.cons d hmod (ih (nextP d p) (nextY d p y) htail))
 
@@ -35,7 +39,7 @@ def witness18 : List Digit :=
 /-- A genuine radix-16 macro path of length 24 from the explicit
     2*4^18+4 height-two inverse ancestor. This is synthetic, NOT blank-root. -/
 theorem witness18_path : Path 24 (4^18 - 77) (1015 * 4^12) := by
-  have hw : IsWord witness18 (4^18 - 77) (1015 * 4^12) := by decide
+  have hw : IsWord witness18 (4^18 - 77) (1015 * 4^12) = true := by decide
   simpa [witness18] using path_of_word witness18 (4^18 - 77) (1015 * 4^12) hw
 
 def runWord : List Digit → Nat → Nat → Nat × Nat
