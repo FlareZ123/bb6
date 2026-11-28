@@ -61,7 +61,7 @@ theorem move_hf_or_anchor {a d A D : Nat}
     (h : CounterMove a d A D) :
     HFMove a d A D ∨ AnchorMove a d A D := by
   cases h with
-  | high hg =>
+  | high _ hg =>
       left
       unfold HFMove
       exact Or.inl ⟨hg,rfl,rfl⟩
@@ -113,7 +113,7 @@ theorem hfRun_second_pow_bound
         refine ⟨highs+1,by omega,?_⟩
         have hmul := Nat.mul_le_mul_left 2 hbound
         calc
-          C+3 = 2*(D+3) := by omega
+          (2*D+3)+3 = 2*(D+3) := by omega
           _ ≤ 2*(2^highs*(d+3)) := hmul
           _ = 2^(highs+1)*(d+3) := by
             rw [Nat.pow_succ]
