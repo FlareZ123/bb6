@@ -300,8 +300,10 @@ theorem A_triad_normal (a d c z : Nat) (L R : List Bool) :
     (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hZ
   have h := join0_of_eq hIZ
     (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hR
-  convert h using 1 <;>
-    simp [rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
+  have hcost :
+      a + (d+1) + 12 + (2*c+13) + 9 = a+d+2*c+35 := by omega
+  rw [← hcost]
+  simpa [rep, rep_add, rep_singleton_cons, List.append_assoc] using h
 
 theorem carry_prelude7 (L R : List Bool) :
     run0 p 7
@@ -359,8 +361,9 @@ theorem R_return_carry (a d c z : Nat) (L R : List Bool) :
     (by simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc]) h2
   have h := join0_of_eq h12
     (by simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc]) h3
-  convert h using 1 <;>
-    simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
+  have hcost : 7 + (a+d+4) + 1 = a+d+12 := by omega
+  rw [← hcost]
+  simpa [RT, rep, rep_add, rep_singleton_cons, List.append_assoc] using h
 
 /-- Source-level boundary b=5 A-triad carry rewrite. -/
 theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
@@ -380,8 +383,10 @@ theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
     (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hZ
   have h := join0_of_eq hIZ
     (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) hR
-  convert h using 1 <;>
-    simp [rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
+  have hcost :
+      a + 0 + 12 + (2*c+13) + (a+d+12) = 2*a+2*c+d+37 := by omega
+  rw [← hcost]
+  simpa [rep, rep_add, rep_singleton_cons, List.append_assoc] using h
 
 theorem D0D1_to_E (L R : List Bool) :
     run0 p 2 ⟨3, false :: true :: true :: L, R⟩ =
@@ -488,8 +493,12 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
     (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h8
   have h := join0_of_eq h12345678
     (by simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc]) h9
-  convert h using 1 <;>
-    simp [LT, RT, tailB, rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
+  have hcost :
+      1 + (A+1) + 2 + B + 2 + (B+2) + 2 + (A+2) + 3 =
+        2*A+2*B+15 := by omega
+  rw [← hcost]
+  simpa [LT, RT, tailB, rep, rep_add, rep_singleton_cons,
+    List.append_assoc] using h
 
 /-- The second B-triad Z return is completely local and always costs eleven. -/
 theorem B_second_Z_return (L R : List Bool) :
@@ -541,9 +550,13 @@ theorem B_triad (A B z : Nat) (L R : List Bool) :
       (rep [true] 3 ++ rep [false] (A+1) ++
         rep [true] (B+4) ++ rep [false] z ++ R)
     simpa [rep, rep_singleton_cons, List.append_assoc] using ht
-  have h12 := join0 h1 h2
-  have h := join0 h12 h3
-  simpa [rep, List.append_assoc] using h
+  have h12 := join0_of_eq h1
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) h2
+  have h := join0_of_eq h12
+    (by simp [rep, rep_add, rep_singleton_cons, List.append_assoc]) h3
+  have hcost : (2*A+2*B+15) + 11 + 9 = 2*A+2*B+35 := by omega
+  rw [← hcost]
+  simpa [rep, rep_add, rep_singleton_cons, List.append_assoc] using h
 
 #print axioms D0D1_to_E
 #print axioms E_Z_tail_to_A
