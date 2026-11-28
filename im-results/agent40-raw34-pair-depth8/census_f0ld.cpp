@@ -199,7 +199,9 @@ int main() {
       auto m=base; m[holes[0]]=a;
       if (closedReachable(m)) { closedLong7++; continue; }
       auto r=trace(m);
-      if (r.kind==1) haltLong7++; else hardLong7++;
+      if (r.kind==1) { haltLong7++; continue; }
+      auto rr=trace(m,1000);
+      if (rr.kind==1) haltLong7++; else hardLong7++;
     }
   }
   if (closedLong6!=23040 || hardLong6!=1960 ||
