@@ -65,7 +65,6 @@ private theorem finish_shape (n : Nat) :
       simp only [List.append_assoc,List.cons_append,List.nil_append]
     _ = [false,false]++([false,false]++rep [false,false] (n+1))++[true,true] := by rw [hs]
     _ = rep [false,false] ((n+1)+2)++[true,true] := by
-      rw [show (n+1)+2=2+(n+1) by omega]
       rfl
 
 theorem entry : run0 table 9 ⟨0,[],[]⟩ = some (phase 0) := by rfl
@@ -84,7 +83,6 @@ theorem growth (n : Nat) :
       some ⟨4,[true,false,true,true],rep [true,true] (n+1)⟩ := by
     have hp : rep [true,true] (n+2) =
         [true,true]++rep [true,true] (n+1) := by
-      rw [show n+2=1+(n+1) by omega]
       rfl
     simpa only [hp] using turn (rep [true,true] (n+1))
   have h3 : run0 table (2*(n+1))
