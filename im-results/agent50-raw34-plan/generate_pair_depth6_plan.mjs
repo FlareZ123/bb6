@@ -163,11 +163,11 @@ if(rootShards){
 
  const dataModule="Raw34PairD1LF_F0LDDepth6Data";
  const dataNs="BB6.Agent40Raw34PairD1LF_F0LDDepth6Data";
- const dataSource=\`import Raw34Plan
+ const dataSource=`import Raw34Plan
 import Raw34QuadraticPairGrowth
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-namespace \${dataNs}
+namespace ${dataNs}
 open BB6Coverage BB6.Agent50Raw34Plan
 
 inductive EasyCert where
@@ -181,10 +181,10 @@ def easyCheck (p : PartialMachine) : EasyCert → Bool
   | .alternating => sameTable p BB6.Agent40Raw34PairQuadratic.alternating
 
 abbrev EasyNode := PlanNode EasyCert
-def parent : PartialMachine := table [\${parentCodes.join(",")}]
-def rootSlot : Slot := \${leanSlot(topSlot)}
+def parent : PartialMachine := table [${parentCodes.join(",")}]
+def rootSlot : Slot := ${leanSlot(topSlot)}
 def residualRows : List (List Nat) := [
-\${rows.map(r=>\`  [\${r.join(",")}]\`).join(",\\n")}
+${rows.map(r=>`  [${r.join(",")}]`).join(",\n")}
 ]
 abbrev Good (m : Machine) : Prop :=
   DecidedBelow 128 m ∨ ExplicitResidual residualRows m
@@ -217,12 +217,12 @@ theorem residual_sound (j : Nat) (row : List Nat)
   intro m hm
   exact Or.inr ⟨j,row,h,hm⟩
 
-theorem residual_count : residualRows.length = \${rows.length} := by decide
+theorem residual_count : residualRows.length = ${rows.length} := by decide
 #print axioms easy_sound
 #print axioms residual_sound
 #print axioms residual_count
-end \${dataNs}
-\`;
+end ${dataNs}
+`;
  writeFileSync(join(output,dataModule+".lean"),dataSource);
 
  function rebaseNode(text,start){
@@ -237,7 +237,7 @@ end \${dataNs}
    if(i===0)return "none";
    const k=i-1,q=Math.floor(k/4),c=k%4;
    const w=c>=2,r=(c%2)===1;
-   return \`some ⟨\${w}, \${r}, ⟨\${q}, by decide⟩⟩\`;
+   return `some ⟨${w}, ${r}, ⟨${q}, by decide⟩⟩`;
  }
 
  const shardMeta=[];
@@ -245,29 +245,29 @@ end \${dataNs}
  for(let i=0;i<25;i++){
    const end=topChildren[i],local=nodes.slice(start,end+1).map(x=>rebaseNode(x,start));
    const localRoot=local.length-1,suffix=String(i).padStart(2,"0");
-   const module=\`Raw34PairD1LF_F0LDDepth6Child\${suffix}\`;
-   const ns=\`BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${suffix}\`;
+   const module=`Raw34PairD1LF_F0LDDepth6Child${suffix}`;
+   const ns=`BB6.Agent40Raw34PairD1LF_F0LDDepth6Child${suffix}`;
    const transition=leanTransition(i);
-   const childSource=\`import \${dataModule}
+   const childSource=`import ${dataModule}
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-namespace \${ns}
-open BB6Coverage BB6.Agent50Raw34Plan \${dataNs}
-def childParent : PartialMachine := refine parent rootSlot (\${transition})
+namespace ${ns}
+open BB6Coverage BB6.Agent50Raw34Plan ${dataNs}
+def childParent : PartialMachine := refine parent rootSlot (${transition})
 def nodes : Array EasyNode := #[
-\${local.map(n=>\`  \${n}\`).join(",\\n")}
+${local.map(n=>`  ${n}`).join(",\n")}
 ]
-theorem node_count : nodes.size = \${local.length} := by decide
-theorem checked : checkWith nodes residualRows easyCheck 4 \${localRoot} childParent = true := by
+theorem node_count : nodes.size = ${local.length} := by decide
+theorem checked : checkWith nodes residualRows easyCheck 4 ${localRoot} childParent = true := by
   decide +kernel
 theorem cover : Cover Good childParent :=
   checkWith_sound nodes residualRows easyCheck easy_sound residual_sound
-    4 \${localRoot} childParent checked
+    4 ${localRoot} childParent checked
 #print axioms node_count
 #print axioms checked
 #print axioms cover
-end \${ns}
-\`;
+end ${ns}
+`;
    writeFileSync(join(output,module+".lean"),childSource);
    shardMeta.push({i,module,namespace:ns,start,end,nodes:local.length,transition});
    start=end+1;
@@ -278,17 +278,17 @@ end \${ns}
    const [w,r]=combo;
    const ids=[];
    for(let q=0;q<6;q++)ids.push(1+4*q+(w?2:0)+(r?1:0));
-   const target=\`Cover Good (refine parent rootSlot (some ⟨\${w}, \${r}, q⟩))\`;
-   let body=\`by\\n  refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[0]).padStart(2,"0")}.cover) ?_ q\\n\`;
+   const target=`Cover Good (refine parent rootSlot (some ⟨${w}, ${r}, q⟩))`;
+   let body=`by\n  refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child${String(ids[0]).padStart(2,"0")}.cover) ?_ q\n`;
    let indent="  ";
    for(let k=1;k<6;k++){
-     const varName=\`q\${k}\`;
-     body+=indent+\`intro \${varName}\\n\`;
+     const varName=`q${k}`;
+     body+=indent+`intro ${varName}\n`;
      if(k<5){
-       body+=indent+\`refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[k]).padStart(2,"0")}.cover) ?_ \${varName}\\n\`;
+       body+=indent+`refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child${String(ids[k]).padStart(2,"0")}.cover) ?_ ${varName}\n`;
        indent+="  ";
      }else{
-       body+=indent+\`exact Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[k]).padStart(2,"0")}.cover) (fun z => Fin.elim0 z) \${varName}\\n\`;
+       body+=indent+`exact Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child${String(ids[k]).padStart(2,"0")}.cover) (fun z => Fin.elim0 z) ${varName}\n`;
      }
    }
    return {target,body};
@@ -297,18 +297,18 @@ end \${ns}
  const helperNames=["cover00","cover01","cover10","cover11"];
  const helpers=combos.map((c,i)=>{
    const x=finCases(c);
-   return \`theorem \${helperNames[i]} (q : Fin 6) : \${x.target} := \${x.body}\`;
- }).join("\\n");
- const importLines=shardMeta.map(x=>\`import \${x.module}\`).join("\\n");
+   return `theorem ${helperNames[i]} (q : Fin 6) : ${x.target} := ${x.body}`;
+ }).join("\n");
+ const importLines=shardMeta.map(x=>`import ${x.module}`).join("\n");
  const finalModule="Raw34PairD1LF_F0LDDepth6Sharded";
  const finalNs="BB6.Agent40Raw34PairD1LF_F0LDDepth6Sharded";
- const finalSource=\`\${importLines}
+ const finalSource=`${importLines}
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-namespace \${finalNs}
+namespace ${finalNs}
 open BB6Coverage
-open \${dataNs}
-\${helpers}
+open ${dataNs}
+${helpers}
 theorem cover : Cover Good parent := by
   apply Cover.branch parent rootSlot (by decide)
   intro t ht
@@ -327,10 +327,10 @@ theorem cover : Cover Good parent := by
 #print axioms cover10
 #print axioms cover11
 #print axioms cover
-end \${finalNs}
-\`;
+end ${finalNs}
+`;
  writeFileSync(join(output,finalModule+".lean"),finalSource);
- writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
+ writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\n");
  const report={
    parentCodes,d1:d1Action,f0:f0Action,physicalParentCompletions:String(25n**6n),
    nodeCount:nodes.length,residualCount:rows.length,rootIndex,rootSlot:topSlot,
@@ -339,7 +339,7 @@ end \${finalNs}
    theorem:finalNs+".cover",
    interpretation:"Exact pair-parent Cover, kernel-checked through 25 root subplans to avoid a monolithic decide proof."
  };
- writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\\n");
+ writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
  console.log(JSON.stringify(report,null,2));
  process.exit(0);
 }
