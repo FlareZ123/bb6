@@ -208,7 +208,7 @@ jobs:
               node im-results/agent10-nov26-cryptids/generate_raw14086_local.js
               cutargs+=(--source86)
             fi
-            if [ "$TARGET" = cutFamily ]; then
+            if [ "$TARGET" = cutFamily ] || [ "$TARGET" = cut42Family ]; then
               for i in 28 39 77 81 88; do
                 node im-results/agent10-nov26-cryptids/generate_raw140_28.js "$i"
               done
@@ -231,7 +231,7 @@ jobs:
             fi
             python im-results/agent10-nov26-cryptids/generate_raw140_three_hole_cut.py "${cutargs[@]}"
             python tools/lean_compile_closure.py --workdir /tmp/raw140-cut --jobs 3 im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean 2>&1 | tee /tmp/raw140-proof.log
-            if [ "$TARGET" = cut86 ] || [ "$TARGET" = cutFamily ]; then
+            if [ "$TARGET" = cut86 ] || [ "$TARGET" = cutFamily ] || [ "$TARGET" = cut42Family ]; then
               python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log Raw14086.cover
             fi
             if [ "$TARGET" = cutFamily ] || [ "$TARGET" = cut42Family ]; then
