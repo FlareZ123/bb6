@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight]
         default: pilot
 
 permissions:
@@ -126,6 +126,20 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Erase.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6.Agent23Raw34EraseSlice.cover'" /tmp/agent23-raw34-halters/audit.log
+      - name: Source-check four defect sweeps and four variable-width binary odometers
+        if: inputs.mode == 'final-eight'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
+            im-results/agent23-raw34-frontier/Raw34Defect.lean \
+            im-results/agent23-raw34-frontier/Raw34Odometer.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+          grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
+          grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
