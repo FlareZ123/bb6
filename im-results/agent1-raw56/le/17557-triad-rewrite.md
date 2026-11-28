@@ -276,6 +276,16 @@ to zero at the end of the episode. This is derived-macro evidence rather than
 a primitive-machine/source theorem, but it is an exact closure test for the
 local rewrite system.
 
+The same derived-macro closure test has now been iterated on complete
+substituted episodes through **rank 13**. For ranks 8, 9, 10, 11, 12 and 13,
+with respective episode lengths 13,122; 39,366; 118,098; 354,294;
+1,062,882; and 3,188,646 macros, every comparison keeps the right relation
+exact, every left discrepancy remains an 8-multiple zero-run defect, the
+maximum simultaneous number of nonzero weights stays **2**, the maximum
+weight stays **2**, and the episode ends with the all-zero weight stack.
+`analyze_17557_defect_vector.cpp` reproduces this stress test. These rows
+remain local exact-rewrite evidence, not a primitive-source induction theorem.
+
 The arithmetic explains the new state naturally. On a front zero-run:
 
 - ordinary B residues preserve its defect weight;
