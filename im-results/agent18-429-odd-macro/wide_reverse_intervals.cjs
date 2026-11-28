@@ -88,7 +88,7 @@ function selfTest() {
   console.log('SELFTEST: 497 ranks and k=12,b=0 passed.');
 }
 
-function scan(kLo = 12, kHi = 20, cutoff = 64) {
+function scan(kLo = 11, kHi = 20, cutoff = 64) {
   assert(Number.isSafeInteger(kLo) && Number.isSafeInteger(kHi));
   assert(kLo >= 1 && kHi >= kLo && kHi <= 64);
   for (let k = kLo; k <= kHi; k++) {
@@ -122,7 +122,7 @@ function scan(kLo = 12, kHi = 20, cutoff = 64) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args[0] === '--selftest') selfTest();
-  else scan(args[0] === undefined ? 12 : Number(args[0]),
+  else scan(args[0] === undefined ? 11 : Number(args[0]),
             args[1] === undefined ? 20 : Number(args[1]),
             args[2] === undefined ? 64 : Number(args[2]));
 }
