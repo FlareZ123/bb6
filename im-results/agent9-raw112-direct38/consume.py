@@ -262,7 +262,7 @@ def main():
         out.mkdir()
         shutil.copy2(membership_output, out / membership_output.name)
         (out / "membership.json").write_text(
-            json.dumps(report, indent=2, sort_keys=True) + "\\n")
+            json.dumps(report, indent=2, sort_keys=True) + "\n")
         print(
             "PASS: Raw112 occurs exactly once in accepted direct Canonical38",
             flush=True,
@@ -277,7 +277,7 @@ def main():
     raw112_meta, raw112_dirs, raw112_summary = verify_raw112_parent(
         raw112_work, args.raw112_run_id)
 
-    copied = []
+    copied = [membership_output]
     audit = {}
     c.selected.add_family(
         {"root": "Raw112ClosedCover"}, raw112_dirs, linked, copied, audit)
