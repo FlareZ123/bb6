@@ -38,6 +38,14 @@ function check(s) {
   const expectedAfterThree=(r%2===0?63*(k+r)-5:63*(k+r)-49);
   assert.equal(stages[3].height,BigInt(expectedAfterThree));
   assert.equal(stages[4].height,BigInt(expectedAfterThree)*4n**BigInt(q));
+  // The long history is maximal: neither possible strict predecessor exists.
+  // At this even terminal rank, inverse bit 0 has q=p-1, z=4y;
+  // inverse bit 1 has q=p-3, z=4y-p-1.
+  assert.equal(p%2n,0n);
+  assert(12n*y>=p-1n, 'terminal bit 0 unexpectedly possible');
+  assert(4n*y<=p+1n, 'terminal bit 1 unexpectedly possible');
+  assert(1700n*(4n**BigInt(s))<BigInt(expectedAfterThree));
+  assert(BigInt(expectedAfterThree)<=2030n*(4n**BigInt(s)));
   // Independently replay the same history in the exact radix-16 q0 macro.
   // Macro digit 0/1/4/5 corresponds to chronological halfstep pairs
   // 00/10/01/11 respectively.
