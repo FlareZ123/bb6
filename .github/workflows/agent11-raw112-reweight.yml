@@ -25,12 +25,14 @@ jobs:
           mkdir -p /tmp/raw112-new-sources
           cp im-results/agent11-partial-weight/PartialWeightExact.lean /tmp/raw112-new-sources/
           cp im-results/agent11-raw112-sharp/Raw112Reweight.lean /tmp/raw112-new-sources/
+          cp im-results/agent11-raw112-sharp/Raw112SharpBound.lean /tmp/raw112-new-sources/
           sha256sum /tmp/raw112-new-sources/*.lean
           git fetch --no-tags origin "$FROZEN_HEAD"
           git checkout --detach "$FROZEN_HEAD"
           mkdir -p im-results/agent11-partial-weight im-results/agent11-raw112-sharp
           cp /tmp/raw112-new-sources/PartialWeightExact.lean im-results/agent11-partial-weight/
           cp /tmp/raw112-new-sources/Raw112Reweight.lean im-results/agent11-raw112-sharp/
+          cp /tmp/raw112-new-sources/Raw112SharpBound.lean im-results/agent11-raw112-sharp/
           git status --short
       - name: Install pinned Lean 4.36.0-rc2
         run: |
@@ -67,7 +69,7 @@ jobs:
             --jobs 2 \
             --manifest /tmp/raw112-weight-iff/manifest.json \
             --label "Raw112 exact B iff weight-only checker" \
-            --theorem BB6.Agent11Raw112Reweight.weighted_bound_iff_query_weights \
+            --theorem BB6.Agent11Raw112SharpBound.bound_iff \
             --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LC_------" \
             --artifact-name raw112-weight-iff-source \
             2>&1 | tee /tmp/raw112-weight-iff/compile.log
@@ -75,7 +77,11 @@ jobs:
             /tmp/raw112-weight-iff/compile.log \
             BB6.Agent11Raw112Reweight.coveredAt_eq \
             BB6.Agent11Raw112Reweight.residuals_weighted_at \
-            BB6.Agent11Raw112Reweight.weighted_bound_iff_query_weights
+            BB6.Agent11Raw112Reweight.weighted_bound_iff_query_weights \
+            BB6.Agent11Raw112SharpBound.weights_91503 \
+            BB6.Agent11Raw112SharpBound.weights_91502 \
+            BB6.Agent11Raw112SharpBound.bound_iff \
+            BB6.Agent11Raw112SharpBound.attained
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -85,7 +91,9 @@ jobs:
             /tmp/raw112-weight-iff/compile.log
             /tmp/raw112-weight-iff/compiled/PartialWeightExact.olean
             /tmp/raw112-weight-iff/compiled/Raw112Reweight.olean
+            /tmp/raw112-weight-iff/compiled/Raw112SharpBound.olean
             im-results/agent11-partial-weight/PartialWeightExact.lean
             im-results/agent11-raw112-sharp/Raw112Reweight.lean
+            im-results/agent11-raw112-sharp/Raw112SharpBound.lean
           if-no-files-found: warn
           retention-days: 30
