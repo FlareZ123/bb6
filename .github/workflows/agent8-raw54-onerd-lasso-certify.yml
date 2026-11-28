@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       kind:
-        description: 'cycle (29), last (14), or extended (3 late-hit cases)'
+        description: 'cycle (29), last (14), extended (3), or far-smoke'
         required: true
         default: 'cycle'
       indices:
@@ -39,15 +39,21 @@ jobs:
           set -euo pipefail
           D=im-results/agent8-raw54
           python im-results/agent13-coverage/unpack.py
-          LEDGER=/tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv
-          if [ "${{ inputs.kind }}" = extended ]; then LEDGER="$D/oneRD_extended_hits.tsv"; fi
-          python "$D/generate_onerd_lasso_proofs.py" "$LEDGER" "$D" --kind '${{ inputs.kind }}' --index ${{ matrix.index }}
-          KIND='${{ inputs.kind }}'
-          if [ "$KIND" = cycle ]; then PFX=Lasso; elif [ "$KIND" = last ]; then PFX=Last; else PFX=Extended; fi
-          MOD=$(printf 'Raw54OneRD%s%02d' "$PFX" '${{ matrix.index }}')
+          if [ "${{ inputs.kind }}" = far-smoke ]; then
+            MOD=Raw54OneRDMutantSmoke
+            NAMESPACE=BB6.Agent8Raw54.OneRDMutantSmoke
+          else
+            LEDGER=/tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv
+            if [ "${{ inputs.kind }}" = extended ]; then LEDGER="$D/oneRD_extended_hits.tsv"; fi
+            python "$D/generate_onerd_lasso_proofs.py" "$LEDGER" "$D" --kind '${{ inputs.kind }}' --index ${{ matrix.index }}
+            KIND='${{ inputs.kind }}'
+            if [ "$KIND" = cycle ]; then PFX=Lasso; elif [ "$KIND" = last ]; then PFX=Last; else PFX=Extended; fi
+            MOD=$(printf 'Raw54OneRD%s%02d' "$PFX" '${{ matrix.index }}')
+            NAMESPACE="BB6.Agent8Raw54.OneRD$PFX$(printf '%02d' '${{ matrix.index }}')"
+          fi
           W=/tmp/raw54-onerd-literal-${{ matrix.index }}
           python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-lasso-${{ matrix.index }}.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-lasso-${{ matrix.index }}.log "BB6.Agent8Raw54.OneRD$PFX$(printf '%02d' '${{ matrix.index }}').checked" "BB6.Agent8Raw54.OneRD$PFX$(printf '%02d' '${{ matrix.index }}').cover"
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-lasso-${{ matrix.index }}.log "$NAMESPACE.checked" "$NAMESPACE.cover"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
