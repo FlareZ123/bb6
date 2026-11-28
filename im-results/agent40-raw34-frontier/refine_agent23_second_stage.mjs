@@ -87,14 +87,10 @@ function make(mask,fixed){
   const id=nodes.length;
   nodes.push(node);memo.set(key,id);return id;
 }
-const already=new Map([
-  ["halt","97265625"],
-  ["side","934375000"]
-]);
 const sourceGrowth={
   parentIndex:68,slot:"F1",action:"1LD",
   table:"1RB---_1RC---_0RD0RF_1LC1RD_------_---1LD",
-  source:"BB6.Agent23Raw34TripleSweepGrowthF.never",
+  source:"BB6.Agent23Raw34TripleSweepF.never",
 };
 let accounted=0n,graph=0n,outside=0n;
 const roots=[];
