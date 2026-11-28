@@ -306,6 +306,41 @@ theorem prefixWeight_unbounded (t : Nat) :
   rw [peak_weight]
   omega
 
+/-- A rank-r frame is born from normal A with b = 2^(r+4)-3:
+    its low runway is b-6. -/
+theorem frame_initial_low (r : Nat) :
+    lowRemaining r [] = 2^(r+4) - 9 := by
+  unfold lowRemaining countB countC
+  simp [Nat.pow_succ]
+  omega
+
+/-- The corresponding high runway is 2*b-11. -/
+theorem frame_initial_high (r : Nat) :
+    highRemaining r [] = 2^(r+5) - 17 := by
+  unfold highRemaining countB countC
+  simp [Nat.pow_succ]
+  omega
+
+/-- A whole frame consumes both related runways exactly and closes with zero
+    defect weight.  Thus recursive frames can be popped without a residual
+    arithmetic side condition once their schedule is established. -/
+theorem frame_closes (r : Nat) :
+    lowRemaining r (frame r) = 0 ∧
+    highRemaining r (frame r) = 0 ∧
+    prefixWeight (frame r) = 0 := by
+  have hl := lowRemaining_eq_suffixCost r (p := frame r) (s := []) (by simp)
+  have hh := highRemaining_eq_suffixCost r (p := frame r) (s := []) (by simp)
+  have hb := frame_balance_one r
+  constructor
+  · simpa [lowCost, countB, countC] using hl
+  constructor
+  · simpa [highCost, countB, countC] using hh
+  · unfold prefixWeight
+    omega
+
+#print axioms frame_initial_low
+#print axioms frame_initial_high
+#print axioms frame_closes
 #print axioms walk_frame
 #print axioms frame_prefix_ballot
 #print axioms frame_prefix_defect
