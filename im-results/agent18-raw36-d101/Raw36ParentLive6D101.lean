@@ -33,7 +33,7 @@ theorem d101_cover_at (B : Nat) (hB : 450 ≤ B) :
 
 theorem parent_cover_from_live6_after01_02_14 (B : Nat) (hB : 1152 ≤ B)
     (h : ∀ p ∈ parentLiveAfter01_02_14, Cover (WeightedBound B) p) :
-    Cover (WeightedBound B) parent := by
+    Cover (WeightedBound B) BB6.Agent29Raw36.parent := by
   apply parent_cover_from_live7_after02And14 B hB
   intro p hp
   unfold parentLiveAfter02And14 at hp
