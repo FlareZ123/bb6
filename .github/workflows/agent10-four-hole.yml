@@ -3224,9 +3224,9 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 2
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     steps:
       - uses: actions/checkout@v4
       - name: Install exact Lean 4.36.0-rc2
@@ -3241,7 +3241,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent25-raw43/run_b0le_source_sharded.py shard \
-            --variant '${{ inputs.raw43_extra_child }}' --index '${{ matrix.shard }}' --count 4
+            --variant '${{ inputs.raw43_extra_child }}' --index '${{ matrix.shard }}' --count 15
       - name: Retain Raw43 B0LE proof shard
         uses: actions/upload-artifact@v4
         with:
@@ -3275,7 +3275,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent25-raw43/run_b0le_source_sharded.py assemble \
-            --variant '${{ inputs.raw43_extra_child }}' --count 4 --shards-root /tmp/a25-b0le-shards
+            --variant '${{ inputs.raw43_extra_child }}' --count 15 --shards-root /tmp/a25-b0le-shards
       - name: Retain source-accepted Raw43 B0LE child
         uses: actions/upload-artifact@v4
         with:
