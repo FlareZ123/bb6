@@ -99,7 +99,8 @@ theorem m8BoundaryJLattice_plus3 (m s : Nat) (hm4 : m%4=3) :
   let j := m8BoundaryJLattice m s
   have hv : m+v=q*Q := by
     simpa [q,Q,v] using m8BoundaryVLattice_sum m s hm4
-  have hB := m8BoundaryBQ m
+  have hB : 2^(2*m+2)=3*Q+1 := by
+    simpa [Q] using m8BoundaryBQ m
   have hqB :
       q*2^(2*m+2)=3*(q*Q)+q := by
     rw [hB]
@@ -142,7 +143,7 @@ theorem m8BoundaryLattice_stop (m s : Nat) (hm4 : m%4=3) :
   calc
     k+j+3*m+5 = (k+2)+(j+3)+3*m := by omega
     _ = 3*v*B+(3*v+q)+3*m := by rw [hk,hj]
-    _ = 3*v*B+q*B := by rw [htail]
+    _ = 3*v*B+q*B := by omega
     _ = B*(3*v+q) := by
       simp [Nat.add_mul,Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     _ = B*(j+3) := by rw [hj]
