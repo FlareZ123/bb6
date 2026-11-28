@@ -97,7 +97,7 @@ static bool rotation_reject(U m,U a,U E,U N,bool four){
   return false;
 }
 int main(int argc,char**argv){
-  assert(argc==5);U r=std::stoul(argv[1]),lo=std::stoul(argv[2]),hi=std::stoul(argv[3]),limit=std::stoul(argv[4]);
+  assert(argc==5||argc==6);bool childOnly=argc==6;assert(!childOnly||std::string(argv[5])=="child-only");U r=std::stoul(argv[1]),lo=std::stoul(argv[2]),hi=std::stoul(argv[3]),limit=std::stoul(argv[4]);
   assert(r>=8&&r<=14&&r%3==1&&limit>=7&&limit<=10000000);
   U N=1;for(U i=0;i<r;i++)N*=9;U a=(N+5)/2,M=2*r*a,E=M+a;
   Z L=(Z(13)*(r+1)*a-1)/4,sq;mpz_sqrt(sq.get_mpz_t(),L.get_mpz_t());U cut=sq.get_ui();
@@ -105,8 +105,8 @@ int main(int argc,char**argv){
   auto begin=std::chrono::steady_clock::now();auto elapsed=[&](){return std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count();};
   std::vector<uint32_t> spf(limit+1);std::vector<U> primes;
   for(U p=2;p<=limit;p++)if(!spf[p]){spf[p]=p;primes.push_back(p);if(p<=limit/p)for(U k=p*p;k<=limit;k+=p)if(!spf[k])spf[k]=p;}
-  std::vector<uint8_t> flags(hi-lo+1); // bit 0=root rejected, bit 1=four rejected
-  U sieveR=0,sieveF=0,ladic=0,rotR=0,rotF=0;
+  std::vector<uint8_t> flags(hi-lo+1,childOnly?1:0); // bit 0=root rejected/skipped, bit 1=four rejected
+  U sieveR=childOnly?hi-lo+1:0,sieveF=0,ladic=0,rotR=0,rotF=0;
   for(U p:primes){if(p<5)continue;auto [period,res]=order_log(p,spf);
     if(p<10000){U t=1,per=0,ref=0;do{++per;t=t*2%p;if(t==p-3)ref=per;}while(t!=1);assert(period==per&&((ref==0&&res==period)||(ref&&res==ref%per)));}
     if(res==period)continue;
@@ -151,5 +151,5 @@ int main(int argc,char**argv){
   }
   assert(sieveR+rotR+sparseR+fullR==hi-lo+1);assert(sieveF+ladic+rotF+sparseF+fullF==hi-lo+1);
   std::sort(parentsR.begin(),parentsR.end());std::sort(parentsF.begin(),parentsF.end());
-  std::cout<<"r="<<r<<" range="<<lo<<".."<<hi<<" cut="<<cut<<" root: sieve="<<sieveR<<" rotation="<<rotR<<" sparse="<<sparseR<<" exact="<<fullR<<" parents=";for(U v:parentsR)std::cout<<v<<",";std::cout<<" four: sieve="<<sieveF<<" Ladic="<<ladic<<" rotation="<<rotF<<" sparse="<<sparseF<<" exact="<<fullF<<" parents=";for(U v:parentsF)std::cout<<v<<",";std::cout<<" seconds="<<elapsed()<<std::endl;
+  std::cout<<"r="<<r<<" range="<<lo<<".."<<hi<<" cut="<<cut<<(childOnly?" root skipped: sieve=":" root: sieve=")<<sieveR<<" rotation="<<rotR<<" sparse="<<sparseR<<" exact="<<fullR<<" parents=";for(U v:parentsR)std::cout<<v<<",";std::cout<<" four: sieve="<<sieveF<<" Ladic="<<ladic<<" rotation="<<rotF<<" sparse="<<sparseF<<" exact="<<fullF<<" parents=";for(U v:parentsF)std::cout<<v<<",";std::cout<<" seconds="<<elapsed()<<std::endl;
 }
