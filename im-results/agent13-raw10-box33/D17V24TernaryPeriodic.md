@@ -11,3 +11,9 @@ Both witnesses are consumed by replay_direct.py. Eight exact records in the save
 ## Binary packet return laws (records 35 and 49)
 
 The shared proof in Box33D17V24BinaryPackets.lean uses A configurations with blank right stream and left words (100)^n 101 b for 35, (101)^n 1001 b for 49, where b is any finite binary suffix followed by blanks. If b=1^k 0 u, the return replaces b by 0^k 1 u and n by n+1 in exactly 12n+2k+21 or 6n+2k+19 steps respectively. Initialization occurs at 9/55 steps. The two model-level neverBlank theorems have a successful local Lean check (propext, Quot.sound); the original-source bridge audit is queued. Exact table consumers are integrated. The remaining candidate complement is now 5,12,27,28,33,41.
+
+### Residual 27: five-cell counter
+
+At A with blank right tape, the even phase has left `(01)^(2m) 0^6 b`, where b is a finite sequence of five-cell digits `00000` and `10000`. After exactly `16m+18` steps the odd phase is `(01)^(2m+3) 0^4 b`. For b=`(10000)^k 00000 u` (including the implicit blank digit), the odd phase returns to the even phase at m+2 with b=`(00000)^k 10000 u` after `16m+20k+54` steps. The proof uses exact sweeps with arbitrary tape tails, not bounded simulation. Blank start is even phase m=0. Local Lean model theorem checked with standard axioms; full original-source CI queued. Source: aef1d3b4d1683c797146161e572fa53955bdeeaa; replay a532c828c9957381ef64ecc40dc1ec171eabc377.
+
+Remaining saved residual IDs: 5,12,28,33,41.
