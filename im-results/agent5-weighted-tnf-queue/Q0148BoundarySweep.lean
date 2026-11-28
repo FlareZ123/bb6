@@ -256,6 +256,77 @@ theorem halfSweepZero (cs : List LeftChunk) (L R : List Bool) :
   have h := join0 h1 (join0 h2 h3)
   simpa only [List.append_assoc] using h
 
+
+/-- Reinterpret a left-transfer chunk as an equivalent right-transfer
+    chunk. Both scans consume the same source-side bit sequence. -/
+def toRight : LeftChunk → RightChunk
+  | .alternating => .alternating
+  | .separatedMarker => .separatedMarker
+
+/-- The leftward scan emits its chunks in reverse order, so the
+    subsequent rightward scan must consume them in this order. -/
+def rightSequence : List LeftChunk → List RightChunk
+  | [] => []
+  | c::cs => rightSequence cs ++ [toRight c]
+
+theorem rightInput_append (xs ys : List RightChunk) :
+    inputRightChunks (xs ++ ys) =
+      inputRightChunks xs ++ inputRightChunks ys := by
+  induction xs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [List.cons_append,inputRightChunks,List.append_assoc,ih]
+
+theorem rightCost_append (xs ys : List RightChunk) :
+    rightScanCost (xs ++ ys) =
+      rightScanCost xs + rightScanCost ys := by
+  induction xs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [List.cons_append,rightScanCost,ih,Nat.add_assoc]
+
+theorem rightSequenceInput (cs : List LeftChunk) :
+    inputRightChunks (rightSequence cs) = outputBits cs := by
+  induction cs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [rightSequence,outputBits,rightInput_append,
+        inputRightChunks,ih,List.nil_append]
+      cases c <;> rfl
+
+theorem rightSequenceCost (cs : List LeftChunk) :
+    rightScanCost (rightSequence cs) = 3 * scanCost cs := by
+  induction cs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [rightSequence,scanCost,rightCost_append,
+        rightScanCost,ih,List.nil_append]
+      cases c <;> simp [toRight,rightCost,chunkCost] <;> omega
+
+/-- The complete *first bidirectional round*: for arbitrary mixed
+    10 and separated 110 markers, exact E1 source execution reaches
+    A0 at the right-hand triple-one 1110 sentinel, with an exact
+    linear step count (4 + 4 * scanCost cs). -/
+theorem firstRoundPositive (cs : List LeftChunk) (L R : List Bool) :
+    run0 p (4 + 4 * scanCost cs)
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+         [false,true,false] ++ R⟩ =
+    some ⟨0,[false] ++ outputRightChunks (rightSequence cs) ++ L,
+            [false] ++ [true,true,true,false] ++ R⟩ := by
+  have h1 := halfSweepPositive cs L R
+  have h2 := scanRightChunks (rightSequence cs) L ([true,true,true,false] ++ R)
+  rw [rightSequenceInput] at h2
+  have h := join0 h1 h2
+  have ht : (3 + (scanCost cs + 1)) +
+      rightScanCost (rightSequence cs) = 4 + 4 * scanCost cs := by
+    rw [rightSequenceCost]
+    omega
+  simpa only [ht,List.append_assoc] using h
+
+#print axioms rightSequenceInput
+#print axioms rightSequenceCost
+#print axioms firstRoundPositive
+
 #print axioms entryOne
 #print axioms leftEndPositive
 #print axioms leftEndZero
