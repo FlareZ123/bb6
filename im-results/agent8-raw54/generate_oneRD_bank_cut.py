@@ -233,9 +233,13 @@ def main() -> None:
             f"open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10FastAudit {NS}\n",
         ]
         root_name = emit_subtree(child, p, pexpr, f"b{i:02d}", parts, len(bank), seen, args.threshold)
+        rn, _rm = residual_stats(child, p)
         parts.append(f"abbrev tree : BankAudit := {root_name}\n")
         parts.append(f"theorem checked : bankCheck bank B {pexpr} tree = true := {root_name}_checked\n")
-        parts.append(f"#print axioms checked\nend {bns}\n")
+        parts.append(
+            f"theorem residual_count : (bankResiduals {pexpr} tree).length = {rn} := by decide +kernel\n"
+        )
+        parts.append(f"#print axioms checked\n#print axioms residual_count\nend {bns}\n")
         (out / f"{mod}.lean").write_text("".join(parts))
         branch_names.append(f"{NS}.Branch{i:02d}.tree")
 
@@ -278,6 +282,8 @@ theorem checked : bankCheck bank B parent tree = true := by
 
 def residuals := bankResiduals parent tree
 
+theorem residual_count : residuals.length = 671 := by decide +kernel
+
 theorem cut (m : Machine) (hm : compatible parent m) :
     WeightedBound B m ∨ ∃ e ∈ residuals, compatible e.2 m :=
   bankSound bank B parent tree parent_root parent_nohalt checked m hm
@@ -288,6 +294,7 @@ theorem close
   bankClose bank B parent tree parent_root parent_nohalt checked hres
 
 #print axioms checked
+#print axioms residual_count
 #print axioms cut
 #print axioms close
 end {NS}
