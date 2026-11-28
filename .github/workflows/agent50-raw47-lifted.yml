@@ -3074,6 +3074,7 @@ jobs:
           grep -F "'BB6.Agent50Window5Product.never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Domains.family_never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Domains.counts_exact'" "$W/closure.log"
+          node "$D/search_and_count.mjs" | tee "$W/mask-bank-reconstruction.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
