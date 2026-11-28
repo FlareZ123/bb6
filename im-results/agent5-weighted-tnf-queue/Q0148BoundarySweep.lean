@@ -511,6 +511,182 @@ theorem rightBlankTurn (cs : List LeftChunk) (L R : List Bool) :
   have h := join0 h1 h2
   simpa [Auto.extend,List.append_assoc] using h
 
+
+/-- Regular right-sweep output as a substitution in the original chunk
+    order. A:10 -> 01, M:11010 -> 01011. -/
+def rightSubst : List LeftChunk → List Bool
+  | [] => []
+  | c::cs => rightOutput (toRight c) ++ rightSubst cs
+
+theorem outputRightChunks_append (xs ys : List RightChunk) :
+    outputRightChunks (xs ++ ys) =
+      outputRightChunks ys ++ outputRightChunks xs := by
+  induction xs with
+  | nil => simp [outputRightChunks]
+  | cons c cs ih =>
+      simp only [List.cons_append,outputRightChunks,ih,List.append_assoc]
+
+theorem outputRightChunks_rightSeq (cs : List LeftChunk) :
+    outputRightChunks (rightSequence cs) = rightSubst cs := by
+  induction cs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [rightSequence,rightSubst,outputRightChunks_append,
+        outputRightChunks,ih,List.nil_append]
+      cases c <;> rfl
+
+theorem inputBits_append (xs ys : List LeftChunk) :
+    inputBits (xs ++ ys) = inputBits xs ++ inputBits ys := by
+  induction xs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [List.cons_append,inputBits,ih,List.append_assoc]
+
+/-- Only three one-sided carry residues are possible when processing
+    the right-sweep output, regardless of how many arbitrary markers
+    the source tape contains. -/
+inductive Carry where
+  | eleven
+  | elevenZeroOne
+  | one
+  deriving DecidableEq,Repr
+
+def carryBits : Carry → List Bool
+  | .eleven => [true,true]
+  | .elevenZeroOne => [true,true,false,true]
+  | .one => [true]
+
+/-- Finite-state word transducer. Its six clauses are all exact
+    bit-string identities, not empirical classifications. -/
+def carryStep : Carry → LeftChunk → List LeftChunk × Carry
+  | .eleven,.alternating => ([],.elevenZeroOne)
+  | .eleven,.separatedMarker => ([.separatedMarker],.eleven)
+  | .elevenZeroOne,.alternating => ([.separatedMarker],.one)
+  | .elevenZeroOne,.separatedMarker => ([.separatedMarker,.alternating],.eleven)
+  | .one,.alternating => ([.alternating],.one)
+  | .one,.separatedMarker => ([.alternating,.alternating],.eleven)
+
+theorem carryStepBits (carry : Carry) (chunk : LeftChunk) :
+    carryBits carry ++ rightOutput (toRight chunk) =
+      inputBits (carryStep carry chunk).1 ++
+        carryBits (carryStep carry chunk).2 := by
+  cases carry <;> cases chunk <;> rfl
+
+def carryFold (carry : Carry) : List LeftChunk → (List LeftChunk × Carry)
+  | [] => ([],carry)
+  | c::cs =>
+      let step := carryStep carry c
+      let rest := carryFold step.2 cs
+      (step.1 ++ rest.1, rest.2)
+
+/-- Whole-list three-residue transducer identity, with no limit on the
+    length of the source alternating/separated-marker word. -/
+theorem carryFoldBits (carry : Carry) (cs : List LeftChunk) :
+    carryBits carry ++ rightSubst cs =
+      inputBits (carryFold carry cs).1 ++ carryBits (carryFold carry cs).2 := by
+  induction cs generalizing carry with
+  | nil => simp [carryFold,rightSubst,inputBits]
+  | cons c cs ih =>
+      have hStep := carryStepBits carry c
+      have hTail := ih (carryStep carry c).2
+      change carryBits carry ++
+          (rightOutput (toRight c) ++ rightSubst cs) =
+        inputBits ((carryStep carry c).1 ++
+          (carryFold (carryStep carry c).2 cs).1) ++
+        carryBits (carryFold (carryStep carry c).2 cs).2
+      calc
+        carryBits carry ++ (rightOutput (toRight c) ++ rightSubst cs)
+            = (inputBits (carryStep carry c).1 ++
+                carryBits (carryStep carry c).2) ++ rightSubst cs := by
+                    rw [← List.append_assoc,hStep]
+        _ = inputBits (carryStep carry c).1 ++
+              (inputBits (carryFold (carryStep carry c).2 cs).1 ++
+               carryBits (carryFold (carryStep carry c).2 cs).2) := by
+                    rw [List.append_assoc,hTail]
+        _ = inputBits ((carryStep carry c).1 ++
+              (carryFold (carryStep carry c).2 cs).1) ++
+              carryBits (carryFold (carryStep carry c).2 cs).2 := by
+                    rw [inputBits_append,List.append_assoc]
+
+/-- The full C0 left input after the blank-right 13-step turn consists
+    of an arbitrary, transduced sequence of 10/11010 blocks followed
+    by exactly one of THREE bounded residual bit strings. -/
+theorem rightBlankCarryShape (cs : List LeftChunk) :
+    [false,true,true,false,true,false,true,true] ++
+      outputRightChunks (rightSequence cs) =
+    [false] ++ inputBits
+       (.separatedMarker :: (carryFold .eleven cs).1) ++
+      carryBits (carryFold .eleven cs).2 := by
+  have h := congrArg
+    (fun v : List Bool => [false,true,true,false,true,false] ++ v)
+    (carryFoldBits Carry.eleven cs)
+  simpa [outputRightChunks_rightSeq,inputBits,carryBits,List.append_assoc] using h
+
+/-- All three exceptional left-edge residues are handled by fixed
+    original-table runs. No infinite search is required. -/
+def carryCost : Carry → Nat
+  | .eleven => 4
+  | .elevenZeroOne => 6
+  | .one => 3
+
+def carryRight : Carry → List Bool
+  | .eleven => [true,false,true,false]
+  | .elevenZeroOne => [false,true,true,false,true,false]
+  | .one => [false,true,false]
+
+theorem carryTerminal (carry : Carry) :
+    Auto.knownRun p (carryCost carry)
+      ⟨2,[false] ++ carryBits carry ++ [false,false],[]⟩ =
+      some ⟨0,[false],carryRight carry⟩ := by
+  cases carry <;> decide +kernel
+
+/-- TWO COMPLETE bidirectional sweeps from an E1 checkpoint at the
+    far-right blank boundary; source-defined and finite for any list
+    of the arbitrary A/M grammar chunks. The total duration is given
+    by closed computations of scanCost and a 3-state transducer. -/
+theorem twoBlankTurns (cs : List LeftChunk) (L R : List Bool) :
+    let f := carryFold .eleven cs
+    let chunks := LeftChunk.separatedMarker :: f.1
+    run0 p (((4 + 4*scanCost cs) + 13) +
+        (scanCost chunks + carryCost f.2))
+      ⟨4,[true,false] ++ inputBits cs ++ [false,false,false] ++ L,
+         [false,true,false,false,false] ++ R⟩ =
+      some ⟨0,[false] ++ L,
+              carryRight f.2 ++ outputBits chunks ++ R⟩ := by
+  dsimp only
+  let f := carryFold Carry.eleven cs
+  let chunks := LeftChunk.separatedMarker :: f.1
+  have h1 : run0 p ((4+4*scanCost cs)+13)
+      ⟨4,[true,false] ++ inputBits cs ++ [false,false,false] ++ L,
+         [false,true,false,false,false] ++ R⟩ =
+      some ⟨2,[false] ++ inputBits chunks ++ carryBits f.2 ++
+                    [false,false] ++ L,R⟩ := by
+    simpa [f,chunks,rightBlankCarryShape,List.append_assoc] using
+      rightBlankTurn cs ([false,false] ++ L) R
+  have h2 : run0 p (scanCost chunks)
+      ⟨2,[false] ++ inputBits chunks ++ carryBits f.2 ++
+              [false,false] ++ L,R⟩ =
+      some ⟨2,[false] ++ carryBits f.2 ++ [false,false] ++ L,
+              outputBits chunks ++ R⟩ := by
+    simpa [List.append_assoc] using
+      scanChunks chunks (carryBits f.2 ++ [false,false] ++ L) R
+  have h3 : run0 p (carryCost f.2)
+      ⟨2,[false] ++ carryBits f.2 ++ [false,false] ++ L,
+         outputBits chunks ++ R⟩ =
+      some ⟨0,[false] ++ L,
+           carryRight f.2 ++ outputBits chunks ++ R⟩ := by
+    simpa [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p (carryCost f.2)
+         (carryTerminal f.2) L (outputBits chunks ++ R)
+  have h := join0 h1 (join0 h2 h3)
+  simpa [f,chunks,List.append_assoc] using h
+
+#print axioms carryStepBits
+#print axioms carryFoldBits
+#print axioms rightBlankCarryShape
+#print axioms carryTerminal
+#print axioms twoBlankTurns
+
 #print axioms rightBlank13
 #print axioms rightBlankTurn
 
