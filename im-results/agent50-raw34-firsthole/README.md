@@ -1,11 +1,13 @@
-# Raw34 first-hole and depth-two infinite-ray certificates
+# Raw34 infinite-ray certificates and unbounded unary-growth proof
 
-**Current accepted result:** exactly **85 distinct oriented half-line infinite-ray cylinders**, containing `11*25^7+74*25^6=85,205,078,125` physical six-state two-symbol transition tables. This is a local universal nonhalting result, **not** a complete Raw34 Cover, a global Canonical40 reduction or BB(6) determination.
+**Accepted ray result:** exactly **85 distinct oriented half-line infinite-ray cylinders**, containing `11*25^7+74*25^6=85,205,078,125` physical six-state two-symbol transition tables. This is a local universal nonhalting result, **not** a complete Raw34 Cover, a global Canonical40 reduction or BB(6) determination.
 
 The true raw34 parent is `1RB---_1RC---_0RD---_1LC---_------_------`.
 
 - [First level](Raw34ElevenSideCycles.lean): 11 ordinary D1 moves covered without any additional instruction; theorem `BB6.Agent50Raw34Eleven.all_never`. Original-source Lean [run 46085109098](https://github.com/FlareZ123/bb6/actions/runs/46085109098), artifact 15238447811; 9 project modules, standard axioms only.
 - [Second level](Raw34Depth2SideCycles.lean): 74 additional D1/next-queried-slot move pairs; theorem `BB6.Agent50Raw34Depth2.all_never` with `pairwise_key_distinct` and `separate_from_first_level`. Original-source Lean [run 46085429345](https://github.com/FlareZ123/bb6/actions/runs/46085429345), artifact 15238832709; 10 modules, standard axioms only. The [full exact source data and the still open frontier](depth2-candidate-witnesses.json) may be inspected or used to resume discovery.
+
+**New accepted symbolic-growth result:** [Raw34UnaryGrowth.lean](Raw34UnaryGrowth.lean) proves all-time nonhalting for an additional disjoint six-hole child with D1=1RD and C1=1LC, by the exact recurrence `family n → family (n+1)` in `2n+3` transitions. Source Lean [run 46085752374](https://github.com/FlareZ123/bb6/actions/runs/46085752374) accepted `BB6.Agent50Raw34Unary.never`, standard axioms only. This covers another `25^6=244,140,625` complete tables and raises the combined certified Raw34 mass to `85,449,218,750`. See the separate [growth proof and statement](../../results/2026-11-28-raw34-unary-growth-agent50.md).
 
 The common [SideCycle soundness theorem](../agent50-weighted-tnf-pilot/SideCycle.lean) turns these finite checks into universal nonhalting, including arbitrary untouched tape tails. All theorem axioms are confined to `propext, Classical.choice, Quot.sound`. The earlier [11-cylinder result](../../results/2026-11-27-raw34-eightyfive-infinite-rays-agent50.md) was extended in place to cover both source-accepted levels.
 
