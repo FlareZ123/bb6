@@ -13,22 +13,30 @@ def main(census,out):
     keys=sorted(t.replace('_','') for t in data['opens'])
     assert len(keys)==2255
     assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()=='d3cff2c1257272d8af4c8087906589d4623f41dcd8cd3de98e2ae7f71d8d8ff0'
-    rows=json.loads((ROOT/'d100-new-modular.json').read_text())
-    assert len(rows)==5 and len({t for t,v in rows})==5
+    variant=sys.argv[3] if len(sys.argv)>3 else 'five'
+    assert variant in ('five','six')
+    fixture=ROOT/('d100-new-modular-extra.json' if variant=='six' else 'd100-new-modular.json')
+    rows=json.loads(fixture.read_text())
+    assert len(rows)==(6 if variant=='six' else 5) and len({t for t,v in rows})==len(rows)
     norm=sorted(t.replace('_','') for t,v in rows)
     assert all(t in keys for t in norm)
-    assert hashlib.sha256('\n'.join(sorted(t for t,v in rows)).encode()).hexdigest()=='b89e5b016f42c2e5fd81e50339b29b2bf0c125f4592c6e2c7e13fffe196eaac3'
+    digest=('80f04cbbd0e04cefaa660374a207d750e5064669ea74d8525012f0427ab5cc4c' if variant=='six' else 'b89e5b016f42c2e5fd81e50339b29b2bf0c125f4592c6e2c7e13fffe196eaac3')
+    assert hashlib.sha256('\n'.join(sorted(t for t,v in rows)).encode()).hexdigest()==digest
+    if variant=='six':
+        old={t.replace('_','') for t,v in json.loads((ROOT/'d100-new-modular.json').read_text())}
+        assert old.isdisjoint(norm)
     pumps={t.replace('_','') for t in (ROOT/'d100-new-pumps.txt').read_text().splitlines()}
     assert pumps.isdisjoint(norm)
-    assert all(v[0]=='m' and len(v)==5 for t,v in rows)
+    assert all(v[0] in ('m','r') and len(v)==5 for t,v in rows)
     sys.path.insert(0,str(ROOT.parent/'agent7-raw36-b1le'))
     from stack_candidates import generate
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
-    mapping=generate([(t.replace('_',''),v) for t,v in rows],out,
-       stem='Raw36D100Mod',ns='BB6.Agent7Raw36D100Modular')
+    stem='Raw36D100Extra' if variant=='six' else 'Raw36D100Mod'
+    namespace='BB6.Agent7Raw36D100ModularExtra' if variant=='six' else 'BB6.Agent7Raw36D100Modular'
+    mapping=generate([(t.replace('_',''),v) for t,v in rows],out,stem=stem,ns=namespace)
     assert len(mapping)==len(rows)
     theorems=[mapping[t.replace('_','')][1]+'.never' for t,v in rows]
-    assert all(mapping[t.replace('_','')][0]=='Raw36D100ModAutomata00' for t,v in rows)
+    assert all(mapping[t.replace('_','')][0]==stem+'Automata00' for t,v in rows)
     (out/'theorems.txt').write_text('\n'.join(theorems)+'\n')
     (out/'source-index.json').write_text(json.dumps(dict(census_digest='d3cff2c1257272d8af4c8087906589d4623f41dcd8cd3de98e2ae7f71d8d8ff0',tables=rows,theorems=theorems),indent=2)+'\n')
     print('strict five-key source emission',len(mapping),theorems,flush=True)
