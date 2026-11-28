@@ -38,10 +38,11 @@ def Z (n : Nat) : List Bool := rep [true,true,false,true] n
 
 private theorem rep_add (P : List Bool) (n m : Nat) :
     rep P (n+m) = rep P n ++ rep P m := by
-  induction m with
+  induction n with
   | zero => simp [rep]
-  | succ m ih =>
-    rw [Nat.add_succ, ← rep_snoc, ih, ← rep_snoc, List.append_assoc]
+  | succ n ih =>
+    rw [Nat.succ_add]
+    simp [rep, ih, List.append_assoc]
 
 private theorem rep2 (n : Nat) :
     rep [true,true] n = ones (2*n) := by
@@ -275,7 +276,7 @@ theorem stageD (toC : Bool) (n : Nat) :
       calc
         rep [false,true] (2*n+4) ++ [false,true,true] =
           (rep [false,true] (2*n+4) ++ [false,true]) ++ [true] := by
-            rw [List.append_assoc]
+            simp [List.append_assoc]
         _ = rep [false,true] ((2*n+4)+1) ++ [true] := by rw [rep_snoc]; rfl
     simpa only [leftA2,hl,hr,
       show 2*(2*n+4)=4*n+8 by omega,List.append_nil,List.nil_append] using H
