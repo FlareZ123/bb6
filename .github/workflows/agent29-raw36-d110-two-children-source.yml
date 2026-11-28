@@ -2,6 +2,17 @@ name: Agent29 Raw36 D1=0RE two full E0 children original-source six-live proof
 
 on:
   workflow_dispatch:
+    inputs:
+      include_zeroLF:
+        description: "Also source-check the five exact E0=0LF inverse-stack candidates"
+        required: false
+        type: boolean
+        default: false
+      zeroLF_search_run_id:
+        description: "Successful candidate-search run containing the exact E0=0LF report"
+        required: false
+        type: string
+        default: "46156248678"
 
 permissions:
   contents: read
@@ -39,6 +50,14 @@ jobs:
           run-id: 46154479283
           github-token: ${{ github.token }}
           path: /tmp/a29-d110-struct
+      - name: Download optional E0=0LF candidate search artifact
+        if: ${{ inputs.include_zeroLF }}
+        uses: actions/download-artifact@v4
+        with:
+          name: raw36-d110-e0-0lf-five-finite-automaton-candidates
+          run-id: ${{ inputs.zeroLF_search_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a29-d110-0lf-search
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
@@ -55,24 +74,36 @@ jobs:
           python -m py_compile \
             im-results/agent29-raw36/generate_direct10_multi.py \
             im-results/agent29-raw36/compose_direct10_dual04_13.py
-          python -u im-results/agent29-raw36/compose_direct10_dual04_13.py \
+          args=( \
             --census /tmp/a29-d110-census/direct10.json.gz \
             --far /tmp/a29-d110-far/found.tsv \
             --structured /tmp/a29-d110-struct/structured.json \
             --archives /tmp/a29-d110-dual-archives \
-            --work /tmp/a29-d110-dual \
+            --work /tmp/a29-d110-dual )
+          if [[ "${{ inputs.include_zeroLF }}" == "true" ]]; then
+            args+=(--zeroLF-search /tmp/a29-d110-0lf-search/a29-d110-0lf-five-search.json)
+          fi
+          python -u im-results/agent29-raw36/compose_direct10_dual04_13.py "${args[@]}" \
             | tee /tmp/a29-d110-dual-source.log
-          test -s /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
-          cat /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+          if [[ "${{ inputs.include_zeroLF }}" == "true" ]]; then
+            test -s /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
+            cat /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
+          else
+            test -s /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+            cat /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw36-d110-two-e0-children-six-live-source
+          name: raw36-d110-selected-e0-children-source
           path: |
             /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
+            /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
             /tmp/a29-d110-dual/Raw36D110Kid04.lean
+            /tmp/a29-d110-dual/Raw36D110Kid05.lean
             /tmp/a29-d110-dual/Raw36D110Kid13.lean
             /tmp/a29-d110-dual/Raw36D110Live6AfterE0LE1LB.lean
+            /tmp/a29-d110-dual/Raw36D110Live5AfterE0LE1LB0LF.lean
             /tmp/a29-d110-dual/direct10-source-build.log
             /tmp/a29-d110-dual-source.log
           if-no-files-found: warn
