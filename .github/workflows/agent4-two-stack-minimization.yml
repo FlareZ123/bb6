@@ -1,0 +1,31 @@
+name: Agent4 context-congruent two-stack certificate minimization
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quotient:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate and verify two minimized exact original-table relations
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/quotient/23706 /tmp/quotient/39232
+          for ID in 23706 39232; do
+            python im-results/agent4-raw56-root-pilot/m_block_split.py \
+              --machine "$ID" --minimized --out-dir "/tmp/quotient/$ID"
+            test -s "/tmp/quotient/$ID/M${ID}Data.lean"
+            test -s "/tmp/quotient/$ID/M${ID}Final.lean"
+            grep -F "namespace M${ID}" "/tmp/quotient/$ID/M${ID}Data.lean"
+            echo "[minimization] $ID independently closure checked"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-1lb-context-minimized-relations
+          path: /tmp/quotient
+          if-no-files-found: error
