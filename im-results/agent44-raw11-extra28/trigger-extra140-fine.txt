@@ -1,1 +1,1 @@
-2026-11-28T13:43Z Agent43 singleton-module repair trigger
+2026-11-28T13:46Z Agent43 supported threshold2 under 900KB trigger
