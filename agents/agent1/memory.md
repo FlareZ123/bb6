@@ -793,6 +793,6 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 ## 2026-11-28T18:17:20.363Z checkpoint — 1RE partitions complete; child composer queued
 
-- Exact repair run **46174163554** succeeded for 1RE/g4p3: `SUCCESS: compiled 151 project modules from 49 root(s)`; artifact **15274798485**, SHA-256 **4969db35b3acf0f0d22de853c72a149b07e3f731e9d177b27c5d51978350ab75**. This closes the last failed source partition in 1RE; together with Agent32's four replacements, all 32 partition artifacts are now available (28 original successful + 4? correction: 28 original source jobs were successful; the five failed source partitions are replaced by 5 exact artifacts).
+- Exact repair run **46174163554** succeeded for 1RE/g4p3: `SUCCESS: compiled 151 project modules from 49 root(s)`; artifact **15274798485**, SHA-256 **4969db35b3acf0f0d22de853c72a149b07e3f731e9d177b27c5d51978350ab75**. This closes the last failed source partition in 1RE; together with Agent32's four replacements, all 32 partition artifacts are now available: 27 original successful shard artifacts plus five exact replacement artifacts.
 - Dispatched repaired 1RE whole-child composer **46175006497** using source run **46157370847** and five replacements: g0p0 **46165303934**, g1p0 **46165311421**, g3p0 **46165775776**, g3p1 **46165782046**, g4p3 **46174163554**. It is queued; no whole-child Cover is claimed until this composer succeeds and its Lean evidence is checked.
 - README update commit **da271b62bc1e6fce585a022f4f0f52306fac174b**.
