@@ -84,17 +84,18 @@ directly (`generate_pair_depth6_plan.mjs --f0 0LD`) and asserts the
 following depth-six census:
 
 - 16,976 total plan nodes;
-- 4,318 explicit residual rows;
+- 4,276 explicit residual rows;
 - 1/7/67/604 finite-halting leaves at depths 3/4/5/6;
 - 17/101/1,002/10,155 short side-cycle leaves at depths 3/4/5/6;
 - 25 additional extended side-cycles at depth six;
 - 4,234 open depth-six residuals;
-- 82 long depth-six residuals;
+- 40 long depth-six residuals;
+- 42 depth-six leaves closed immediately by the finite state set {A,B,C,D,F};
 - exactly **two** long depth-five residuals.
 
 The residual physical mass at that point is therefore
 
-`(4234+82)*25^2 + 2*25^3 = 2,728,750`
+`(4234+40)*25^2 + 2*25^3 = 2,702,500`
 
 out of the pair parent's 244,140,625 completions.  A dedicated workflow mode
 `raw34-pair-easy-plan` kernel-checks the generated source `Cover`; the
@@ -114,7 +115,11 @@ Each has three arbitrary rows (C1,E0,E1), hence physical mass 15,625.
 sweep-pump proofs for both.  The first grows a contiguous block with checkpoint
 time n(n+8); the second grows an alternating block with checkpoint time
 2n^2+7n.  Once both theorems are source accepted, all depth-five residual mass
-for this pair is closed and only the 4,316 depth-six residual cylinders remain.
+for this pair is closed and only the 4,274 depth-six residual cylinders remain.
+The 42 newly closed depth-six leaves require no dynamical recurrence: both E
+rows are free, while every A/B/C/D/F row is assigned an ordinary transition
+whose next state remains in {A,B,C,D,F}, so `Raw34Plan.Cert.closed` applies
+at entry zero.
 
 A deeper candidate census using the same short side-cycle checker, then the
 repository's larger half-line search window (entry <= 500, period <= 200,
