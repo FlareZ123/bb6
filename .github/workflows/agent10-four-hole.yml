@@ -597,7 +597,7 @@ jobs:
           for v in 0la 0lf 1le 1ra 1la 1lb 1lf 1rf; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > "/tmp/run-$v.json"
-            jq -e --arg title "raw43-extra raw43=b0le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' "/tmp/run-$v.json"
+            jq -e --arg title1 "raw43-extra raw43=b0le_e$v child=" --arg title2 "raw43-b0le-sharded raw43=b0le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and ((.display_title|startswith($title1)) or (.display_title|startswith($title2)))' "/tmp/run-$v.json"
             gh run download "$id" -n raw43-extra-proof -D "$input/$v"
             jq -e --arg sha "$(jq -r .head_sha "/tmp/run-$v.json")" '.proof_source_revision == $sha' "$input/$v/manifest.json"
           done
@@ -801,7 +801,7 @@ jobs:
           for v in 0la 0lb 0lc 0ld 0le 0rc 0re 1lb 1lc 1le 1rc 1re; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > /tmp/run-$v.json
-            jq -e --arg title "raw43-extra raw43=b1la_a$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' /tmp/run-$v.json
+            jq -e --arg title1 "raw43-extra raw43=b1la_a$v child=" --arg title2 "raw43-b0le-sharded raw43=b1la_a$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and ((.display_title|startswith($title1)) or (.display_title|startswith($title2)))' /tmp/run-$v.json
             gh run download "$id" -n raw43-extra-proof -D "/tmp/a25-b1la-input/$v"
             jq -e --arg sha "$(jq -r .head_sha /tmp/run-$v.json)" '.proof_source_revision == $sha' "/tmp/a25-b1la-input/$v/manifest.json"
             python "$root/generate.py" "b1la_a$v"
@@ -839,7 +839,7 @@ jobs:
           for v in 0la 0lb 0lc 0le 0lf 0rc 0re 0rf 1la 1lc 1ld 1le 1lf 1rd 1re 1rf; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > /tmp/run-$v.json
-            jq -e --arg title "raw43-extra raw43=b1re_e1$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' /tmp/run-$v.json
+            jq -e --arg title1 "raw43-extra raw43=b1re_e1$v child=" --arg title2 "raw43-b0le-sharded raw43=b1re_e1$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and ((.display_title|startswith($title1)) or (.display_title|startswith($title2)))' /tmp/run-$v.json
             gh run download "$id" -n raw43-extra-proof -D "/tmp/a25-b1re-input/$v"
             jq -e --arg sha "$(jq -r .head_sha /tmp/run-$v.json)" '.proof_source_revision == $sha' "/tmp/a25-b1re-input/$v/manifest.json"
             python "$root/generate.py" "b1re_e1$v"
@@ -877,7 +877,7 @@ jobs:
           for v in 0la 0lb 0lc 0ld 0le 0lf 0ra 0rc 0re 0rf 1la 1lb 1lc 1le 1lf 1ra 1rb 1rc 1re 1rf; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > /tmp/run-$v.json
-            jq -e --arg title "raw43-extra raw43=b1le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' /tmp/run-$v.json
+            jq -e --arg title1 "raw43-extra raw43=b1le_e$v child=" --arg title2 "raw43-b0le-sharded raw43=b1le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and ((.display_title|startswith($title1)) or (.display_title|startswith($title2)))' /tmp/run-$v.json
             gh run download "$id" -n raw43-extra-proof -D "/tmp/a25-b1le-input/$v"
             jq -e --arg sha "$(jq -r .head_sha /tmp/run-$v.json)" '.proof_source_revision == $sha' "/tmp/a25-b1le-input/$v/manifest.json"
             python "$root/generate.py" "b1le_e$v"
