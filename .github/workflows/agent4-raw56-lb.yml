@@ -17,6 +17,7 @@ on:
           - parent-diagnose
           - recover-split
           - recover-residual-step
+          - subset-lemma
           - consumer-conditional
           - complete
           - complete-min
@@ -475,6 +476,43 @@ jobs:
             /tmp/mblock/M*Final.olean
             /tmp/mblock/M*Base.log
             /tmp/mblock/M*Final.log
+          if-no-files-found: error
+
+  subset-lemma:
+    if: ${{ inputs.target == 'subset-lemma' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Kernel-check generic residual-subset theorem against source-accepted base
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/subset-lemma
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/subset-lemma"
+          lean -j1 -o /tmp/subset-lemma/CanonicalResidualSubset.olean im-results/agent4-raw56-root-pilot/CanonicalResidualSubset.lean | tee /tmp/subset-lemma/CanonicalResidualSubset.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/subset-lemma/CanonicalResidualSubset.log --require BB6.Agent4Raw56Root.canonicalResiduals_split_subset
+          test -s /tmp/subset-lemma/CanonicalResidualSubset.olean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-residual-subset-lemma-source-accepted
+          path: |
+            /tmp/subset-lemma/CanonicalResidualSubset.lean
+            /tmp/subset-lemma/CanonicalResidualSubset.olean
+            /tmp/subset-lemma/CanonicalResidualSubset.log
           if-no-files-found: error
 
   parent-diagnose:
