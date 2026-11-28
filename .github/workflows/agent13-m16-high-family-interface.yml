@@ -85,6 +85,7 @@ on:
           - sourceM8ModConeStrict
           - sourceM8TowerModConeStrict
           - sourceM8GenericModConeStrict
+          - sourceM8Boundary
           - sourceModularBlind
           - sourceModularBlindHigh
           - sourceModularLowStop
@@ -388,6 +389,9 @@ jobs:
             sourceM8GenericModConeStrict)
               target=im-results/agent15-c-halting/M8GenericModularConeStrict.lean
               ;;
+            sourceM8Boundary)
+              target=im-results/agent15-c-halting/M8BoundaryFamily.lean
+              ;;
             sourceModularBlind)
               target=im-results/agent15-c-halting/ModularConeBlind.lean
               ;;
@@ -539,7 +543,7 @@ jobs:
               ;;
           esac
           extra_roots=()
-          if [ "$M16_TARGET" = sourceM8ModConeStrict ] || [ "$M16_TARGET" = sourceM8TowerModConeStrict ] || [ "$M16_TARGET" = sourceM8GenericModConeStrict ]; then
+          if [ "$M16_TARGET" = sourceM8ModConeStrict ] || [ "$M16_TARGET" = sourceM8TowerModConeStrict ] || [ "$M16_TARGET" = sourceM8GenericModConeStrict ] || [ "$M16_TARGET" = sourceM8Boundary ]; then
             mkdir -p /tmp/a43mod8
             base64 -d im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64 > /tmp/a43mod8/certificate.tar.xz
             echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  /tmp/a43mod8/certificate.tar.xz" | sha256sum -c -
