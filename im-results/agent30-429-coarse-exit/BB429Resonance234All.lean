@@ -1,11 +1,53 @@
 import BB429Resonance234Complete
-import BB429Resonance234Even
 import BB429ResonanceFinite
 
 namespace BB429.CoarseExit
 
 set_option maxRecDepth 20000
 set_option maxHeartbeats 50000000
+
+/-- Clean re-indexing of the exact d=234 post-resonance state, independent of
+    the superseded modulo-9 large-scale module. -/
+theorem d234_post_m_complete (m : Nat) (hm : 2≤m) :
+    run (8*m+7) (prepared m 234) =
+      some (416*m+3965,72*16^m-808*m-7677) := by
+  obtain ⟨j,rfl⟩ : ∃ j : Nat, m=j+2 := ⟨m-2,by omega⟩
+  have h := d234_post j
+  have hp : 72*16^(j+2)=18432*16^j := by
+    rw [Nat.pow_add,show 16^2=256 by decide]
+    omega
+  rw [show 8*(j+2)+7=8*j+23 by omega]
+  convert h using 1 <;> simp only [Prod.mk.injEq,Option.some.injEq]
+  · omega
+  · rw [hp]
+    have hpow : 1≤16^j := Nat.pow_pos (by decide)
+    omega
+
+theorem d234_burst_growth_complete (s : Nat) (hs : 3≤s) :
+    832*(4*s+3)+7936 ≤ 72*16^s := by
+  induction s with
+  | zero => omega
+  | succ s ih =>
+    by_cases h : 3≤s
+    · have hh := ih h
+      rw [Nat.pow_succ]
+      omega
+    · have he : s=2 := by omega
+      subst s
+      decide
+
+theorem d234_sep_growth_complete (s : Nat) (hs : 4≤s) :
+    (9375:Int)*(1000*s+4000)+40≤128^s := by
+  induction s with
+  | zero => omega
+  | succ s ih =>
+    by_cases h : 4≤s
+    · have hh := ih h
+      rw [Int.pow_succ,Int.natCast_succ]
+      omega
+    · have he : s=3 := by omega
+      subst s
+      decide
 
 /-- The exact doubled second burst for d=234 always returns when m≠35.
     The old m≡8 (mod 9) exceptional class disappears: if the bounded
@@ -40,7 +82,7 @@ theorem d234_even_second_return_complete
     dsimp [w]
     dsimp [R,K,P] at hbudget ⊢
     omega
-  have hfirst := d234_post_m m hm2
+  have hfirst := d234_post_m_complete m hm2
   have hburst :
       run K (416*m+3965,72*16^m-808*m-7677)=some (u,w) := by
     apply LowReturnBand.section_burst
@@ -124,7 +166,7 @@ theorem d234_large_complete (s t : Nat) (hs : 4≤s) (ht : t<4)
     dsimp [m]
     rw [Nat.pow_add]
   have hP : 2^(4*j)=16^j := by rw [Nat.pow_mul]
-  have hg := d234_burst_growth s (by omega)
+  have hg := d234_burst_growth_complete s (by omega)
   have hcoef : 2*(416*m+3968)≤72*16^s := by
     rw [hm]
     omega
@@ -154,7 +196,7 @@ theorem d234_large_complete (s t : Nat) (hs : 4≤s) (ht : t<4)
   have hcap : 3*cap (budget 0 y L) L+39≤128^s*25^s := by
     rw [cap_eq,h5]
     have hh := Int.mul_le_mul_of_nonneg_right hB (show 0≤(25:Int)^s by omega)
-    have hh' := Int.mul_le_mul_of_nonneg_right (d234_sep_growth s hs)
+    have hh' := Int.mul_le_mul_of_nonneg_right (d234_sep_growth_complete s hs)
       (show 0≤(25:Int)^s by omega)
     have hmul : (25:Int)^s*budget 0 y L=budget 0 y L*25^s := Int.mul_comm ..
     have hdist :
@@ -257,6 +299,9 @@ theorem d234_all (m : Nat) :
     · exact ⟨167,(0,5188146770730812132),by decide,by decide,by native_decide,by simp [isSection]⟩
     · exact ⟨179,(0,83010348331692983048),by decide,by decide,by native_decide,by simp [isSection]⟩
 
+#print axioms d234_post_m_complete
+#print axioms d234_burst_growth_complete
+#print axioms d234_sep_growth_complete
 #print axioms d234_even_second_return_complete
 #print axioms d234_large_complete
 #print axioms d234_large_all
