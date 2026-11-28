@@ -380,21 +380,31 @@ function domainBDD(domain){
  }
  return r;
 }
+const directCubeCompile=process.argv.includes("--direct-cube-compile");
 function compileCubes(ps,at=0){
  if(ps.length===0)return 0;
  if(at===8)return 1;
  const wild=[],by=Array.from({length:26},()=>[]);
  for(const p of ps){const c=p[at];if(c===0)wild.push(p);else by[c].push(p);}
- // Compile each physical branch from its actual compatible cube set instead
- // of first compiling the wildcard subtree and unioning it into 25 children.
- // The latter creates enormous transient apply-product MDDs for the accepted
- // 300k+ depth-five/six source banks even though the final union is compact.
+ if(!directCubeCompile){
+   const w=compileCubes(wild,at+1);
+   if(w===1)return 1;
+   const ch=Array(25);
+   for(let c=1;c<=25;c++)ch[c-1]=union(w,compileCubes(by[c],at+1));
+   return mk(at,ch);
+ }
+ // Large accepted source banks: compile each physical branch from its actual
+ // compatible cubes. This avoids the huge transient apply-product MDDs that
+ // exhausted the runner heap when wildcard subtrees were unioned 25 ways.
  if(wild.some(p=>p.slice(at+1).every(x=>x===0)))return 1;
+ let wEmpty=null;
  const ch=Array(25);
  for(let c=1;c<=25;c++){
    if(wild.length===0)ch[c-1]=compileCubes(by[c],at+1);
-   else if(by[c].length===0)ch[c-1]=compileCubes(wild,at+1);
-   else ch[c-1]=compileCubes(wild.concat(by[c]),at+1);
+   else if(by[c].length===0){
+     if(wEmpty===null)wEmpty=compileCubes(wild,at+1);
+     ch[c-1]=wEmpty;
+   } else ch[c-1]=compileCubes(wild.concat(by[c]),at+1);
  }
  return mk(at,ch);
 }
