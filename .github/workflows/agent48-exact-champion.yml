@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent, rc-triple, ra-rd, ra-cover, remaining-cover, f1-zeroRD, f1-oneLF]
+        options: [champion, f412-bound, parent, rc-triple, ra-rd, ra-cover, remaining-cover, f1-zeroRD, f1-oneLF]
         default: champion
 permissions:
   contents: read
@@ -23,6 +23,9 @@ jobs:
       - name: Compile exact source import closure and audit final theorems
         if: inputs.audit == 'champion'
         run: bash im-results/agent48-counted-inc0/reproduce-exact-champion.sh
+      - name: Compile F412 score bound against exact champion source closure
+        if: inputs.audit == 'f412-bound'
+        run: bash im-results/agent48-counted-inc0/reproduce-exact-champion.sh im-results/agent26-proof-witness/F412ChampionBound.lean
       - name: Compile champion parent cover and audit sibling proofs
         if: inputs.audit == 'parent'
         run: bash im-results/agent48-champion-root/reproduce-parent.sh
