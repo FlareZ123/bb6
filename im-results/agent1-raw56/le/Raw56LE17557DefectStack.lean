@@ -133,6 +133,29 @@ theorem carry_safe_iff (ell w : Nat) (h1 : 1 ≤ ell)
     unfold weightedZero
     omega
 
+/-- Normal A prepends exactly the unmarked zero-run predicted by the
+    reachable second-right-run residue class. -/
+theorem normalA_push {low weights high : List Nat} (b : Nat)
+    (h : DefectStack low weights high)
+    (h6 : 6 ≤ b) (hr : b % 8 = 5) :
+    DefectStack ((b-6)::low) (0::weights) ((2*b-11)::high) := by
+  have hz := rho_a_normal b h6 hr
+  simpa [hz] using push_zero h (b-6)
+
+/-- At the exact B-pop runway length, the semantic high-side BBA guard
+    forces the disappearing front weight to be zero. -/
+theorem b_pop_forces_zero (w : Nat)
+    (h15 : 15 ≤ weightedZero 7 w) : w = 0 := by
+  unfold weightedZero rhoZero at h15
+  omega
+
+/-- At the exact carry-pop runway length, high-side nonemptiness forces the
+    disappearing front weight to be zero. -/
+theorem carry_pop_forces_zero (w : Nat)
+    (h1 : 1 ≤ weightedZero 1 w) : w = 0 := by
+  unfold weightedZero rhoZero at h1
+  omega
+
 /-- Unified whole-stack B law stated directly with the semantic high-runway
     guard needed by the corresponding BBA block. -/
 theorem b_weighted_stack {low weights high : List Nat} (ell w : Nat)
@@ -225,6 +248,9 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
 #print axioms carry_weighted_transition
 #print axioms b_safe_iff
 #print axioms carry_safe_iff
+#print axioms normalA_push
+#print axioms b_pop_forces_zero
+#print axioms carry_pop_forces_zero
 #print axioms b_weighted_stack
 #print axioms carry_weighted_stack
 #print axioms b_exception_stack
