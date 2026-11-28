@@ -62,7 +62,7 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
         for i,t,v in sw[j:j+4]:
             body.append(emit_sweep([i,t,*v[1:]]));external[t]=(name,f'{ns}.M{i}')
         (out/(name+'.lean')).write_text(HEADER.format(ns=ns)+'\n\n'.join(body)+'\nend '+ns+'\n')
-    base=f'''abbrev b1 : PartialMachine := refine parent (3,true) (some {move(MOVES[index])})
+    base=f'''abbrev b1 : PartialMachine := refine BB6.Agent29Raw36.parent (3,true) (some {move(MOVES[index])})
 abbrev b1Child (mv : Move) : PartialMachine := refine b1 {slot(s)} (some mv)
 theorem b1_root : b1 initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem b1_nohalt : weightedTNFNoAssignedHalt b1 :=
