@@ -9,7 +9,8 @@ open BB6.Agent21Dyadic
     dyadic valuation v cannot have exponent greater than v. -/
 theorem exact_val_gap_le (b v r : Nat) (s : Pair)
     (hv : ValValid b s v) (hr : I r∣q s) : r≤v := by
-  by_contra hn
+  by_cases hn : r≤v
+  · exact hn
   have hle : v+1≤r := by omega
   have hsplit : I (v+1)∣I r := by
     refine ⟨I (r-(v+1)),?_⟩

@@ -29,10 +29,11 @@ theorem checker_dense_on_even_odd_rays (d : Nat) (hd : 0<d) :
     ⟨((x+2*a*t:Nat):Int),((y+(2*b+1)*t:Nat):Int)⟩
   have hno' : excluded n p=false := hno
   have hopen : OpenAt (signedS p.x p.y) (signedZ p.x p.y) n := by
-    by_contra hnot
-    have hh := (excluded_open_duality n p).mpr hnot
-    rw [hh] at hno'
-    cases hno'
+    by_cases ho : OpenAt (signedS p.x p.y) (signedZ p.x p.y) n
+    · exact ho
+    · have hh := (excluded_open_duality n p).mpr ho
+      rw [hh] at hno'
+      cases hno'
   have hr := ray_coords x y a b t
   have ho : OpenAt (mass (rayAffine x y a b) (t:Int))
       (norm (rayAffine x y a b) (t:Int)) n := by

@@ -135,9 +135,10 @@ theorem check_open_duality (b f : Nat) (s : Pair) (hf : b≤f) :
                     exact hno ((open_iff_children b v s hv).mpr
                       (Or.inr ⟨n,ha,hchild⟩))
               · have hdiv : I b∣q s := by
-                  by_contra hn
-                  have hval := (valvalid_iff_not_divisible b s).mpr hn
-                  exact hv (by simpa [v] using hval)
+                  by_cases hn : I b∣q s
+                  · exact hn
+                  · have hval := (valvalid_iff_not_divisible b s).mpr hn
+                    exact (hv (by simpa [v] using hval)).elim
                 have hQ : P b∣s.x+s.y+(s.x+s.y)%2 := by
                   have hp : P b=I b := by
                     simp [P,I,BB6.Agent42ModularCone.P]
