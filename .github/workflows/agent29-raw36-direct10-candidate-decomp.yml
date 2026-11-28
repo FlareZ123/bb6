@@ -1,0 +1,54 @@
+name: Agent29 Raw36 D1=0RE exact-table candidate decomposition
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a29-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-recovered
+          run-id: 46153748009
+          github-token: ${{ github.token }}
+          path: /tmp/a29-far
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-structured-candidates
+          run-id: 46154479283
+          github-token: ${{ github.token }}
+          path: /tmp/a29-struct
+      - name: Cross-audit 2638 exact source literals and rank true residuals
+        run: |
+          set -euo pipefail
+          python im-results/agent29-raw36/direct10_candidate_decomposition.py \
+            --census /tmp/a29-source/direct10.json.gz \
+            --far-summary /tmp/a29-far/summary.json \
+            --far-found /tmp/a29-far/found.tsv \
+            --structured-summary /tmp/a29-struct/summary.json \
+            --structured-found /tmp/a29-struct/structured.json \
+            --out /tmp/a29-direct10-candidates.json \
+            | tee /tmp/a29-direct10-candidates.log
+          test -s /tmp/a29-direct10-candidates.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d1-0re-e0-discovery-rank
+          path: |
+            /tmp/a29-direct10-candidates.json
+            /tmp/a29-direct10-candidates.log
+          if-no-files-found: warn
+          retention-days: 45
