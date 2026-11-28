@@ -1,0 +1,69 @@
+name: Agent9 official Canonical38 Raw112 successor
+run-name: Official Canonical38 -> Raw112 -> Canonical37 (${{ inputs.mode }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Source-check conditional cut or consume accepted Raw112 parent
+        type: choice
+        options: [conditional, full]
+        default: conditional
+        required: true
+      canonical38_run_id:
+        description: Successful official Raw39->Raw47 Canonical38 run
+        type: string
+        required: true
+      raw112_run_id:
+        description: Successful Raw112 parent-cover run (full mode only)
+        type: string
+        default: ''
+        required: false
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Source-check official Canonical38 Raw112 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+          CANONICAL38_RUN_ID: ${{ inputs.canonical38_run_id }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL38_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent9-raw112-official38/consume.py
+          args=(--work /tmp/a9-canonical37-official --canonical38-run-id "$CANONICAL38_RUN_ID")
+          if [ "$MODE" = conditional ]; then
+            args+=(--conditional-only)
+          else
+            [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+            args+=(--raw112-run-id "$RAW112_RUN_ID")
+          fi
+          python im-results/agent9-raw112-official38/consume.py "${args[@]}"             | tee /tmp/a9-canonical37-official.log
+          find /tmp/a9-canonical37-official -name delta.json -type f -print -exec cat {} \;
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical37-raw112-official-${{ inputs.mode }}-delta
+          path: |
+            /tmp/a9-canonical37-official/*-delta/**
+            /tmp/a9-canonical37-official.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
