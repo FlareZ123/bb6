@@ -32,6 +32,10 @@ The six-hole parent `1RB---_1RC0LA_0RD---_0LD1LB_------_------` admits the sourc
 
 All twenty corrected child roots passed [46085477064](https://github.com/FlareZ123/bb6/actions/runs/46085477064), pinned to `7a78c06e431a4110e5af8df227b51812dcaf7e74`. The corrected conservative threshold 1022 is now a theorem via `Raw36Branch.lean`. The former bound 162 for the entire B1=0LA cylinder is formally false: [46075570333](https://github.com/FlareZ123/bb6/actions/runs/46075570333) accepted the explicit 1016 ordinary-step halter and a weighted lower bound of 1017. Thus the current proven maximum interval is [1017,1022]; exact sharpness at 1022 is not asserted.
 
+## Direct D1=0LC candidate and exceptional theorem
+
+The direct seven-hole cylinder `1RB---_1RC---_0RD---_0LD0LC_------_------` has a new exact canonical discovery tree (773737 nodes, 32241 split nodes, 593100 cycles, 12497 FAR, 135774 last-hole nodes, 125 OPEN literals; weighted halt candidate threshold 172). The 125 sorted OPEN literals have SHA-256 `570f28e662feade63e755b77541f09dfeff21657eeb3028e887f0392009e06ee`. The compact exact-table candidate bank `direct-02-compact.json.xz.b64` supplies 103 FAR certificates, 21 regular-ray certificates and one manual theorem. The manual theorem `BB6.Agent29Raw36D1LCExceptional.never` is locally kernel checked against original `SweepPumping` objects, axiom profile `[propext, Quot.sound]`. It applies to every A1 completion of `1RB---_1RC1RF_0RD1RE_0LD0LC_1LF0RA_0LA0LE`; blank entry 11 reaches state A with empty left zipper and right `0 (1010)^n 10100` at n=0, exact recurrence cost `14*n+25` increments n. The other 124 certificates and whole direct parent still require source composition; no parent Cover is claimed here yet.
+
 ## Remaining research
 
 Close B1=0LB, 0LE, 1LE and 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close the nine direct D1 descendants in `parentComplement` and apply `parent_cover_from_thirteen` to close the original eight-hole parent. The global Canonical40 frontier is unchanged by this local refinement.
