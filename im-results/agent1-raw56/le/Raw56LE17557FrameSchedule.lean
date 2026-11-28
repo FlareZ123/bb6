@@ -223,6 +223,40 @@ theorem highRemaining_eq_suffixCost (r : Nat) {p s : List Bool}
   unfold highRemaining highCost at *
   omega
 
+/-- The closed-form frame weight updates exactly by the defect-stack B
+    transition at every scheduled B hit. -/
+theorem next_B_weight_update (r : Nat) {p s : List Bool}
+    (hps : frame r = p ++ true :: s) :
+    bNextWeight (lowRemaining r p) (prefixWeight p) =
+      prefixWeight (p ++ [true]) := by
+  have hb := frame_prefix_ballot r hps
+  have hf := lowRemaining_balance_form r hps
+  unfold prefixWeight bNextWeight
+  simp only [countB, countC, List.count_append, List.count_cons,
+    List.count_nil, Nat.add_zero]
+  by_cases h6 : lowRemaining r p % 8 = 6
+  · simp [h6]
+    omega
+  · simp [h6]
+    omega
+
+/-- Likewise the closed-form frame weight follows the carry transition exactly.
+    Ballot positivity at a scheduled carry supplies the only delicate case. -/
+theorem next_C_weight_update (r : Nat) {p s : List Bool}
+    (hps : frame r = p ++ false :: s) :
+    carryNextWeight (lowRemaining r p) (prefixWeight p) =
+      prefixWeight (p ++ [false]) := by
+  have hb := next_C_balance_positive r hps
+  have hf := lowRemaining_balance_form r hps
+  unfold prefixWeight carryNextWeight
+  simp only [countB, countC, List.count_append, List.count_cons,
+    List.count_nil, Nat.add_zero]
+  by_cases h7 : lowRemaining r p % 8 = 7
+  · simp [h7]
+    omega
+  · simp [h7]
+    omega
+
 /-- The B/BBA semantic runway guards follow immediately from suffix cost. -/
 theorem next_B_guards (r : Nat) {p s : List Bool}
     (hps : frame r = p ++ true :: s) :
@@ -402,6 +436,8 @@ theorem frame_closes (r : Nat) :
   · unfold prefixWeight
     omega
 
+#print axioms next_B_weight_update
+#print axioms next_C_weight_update
 #print axioms normalB_ge6
 #print axioms normalB_mod8
 #print axioms frame_succ_refine
