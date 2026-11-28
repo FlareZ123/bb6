@@ -9,6 +9,7 @@ on:
         required: true
 permissions:
   contents: write
+  actions: read
 jobs:
   shards:
     if: ${{ inputs.branch == '0RB' || inputs.branch == '1RC' || inputs.branch == '0RE' }}
@@ -312,8 +313,50 @@ jobs:
             exit 1
           fi
 
+  prepare_1le_reuse:
+    if: ${{ inputs.branch == '1LE' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 1fab89df71c7c0cdd5a15f236e09e0e7ec0ad1e5
+      - name: Regenerate original accepted shard sources
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent11-raw39
+          python "$root/prepare_raw39_semantic_children.py" 1LE
+          python - "$root/shards-1LEsemantic.json" <<'PY'
+          import json,sys
+          from pathlib import Path
+          p=Path(sys.argv[1]);j=json.loads(p.read_text())
+          j['artifact_prefix']='raw39-1LE-semantic-shard'
+          p.write_text(json.dumps(j,indent=2)+'\n')
+          j['groups']={g:j['groups'][g] for g in ('g0','g2','g3')}
+          Path('/tmp/a11-1le-old-groups.json').write_text(json.dumps(j))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw39-1LE-semantic-shard-*
+          run-id: 46085821790
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/a11-1le-old-shards
+      - name: Merge exact original accepted proof objects
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-1le-old-shards /tmp/a11-1le-old-union /tmp/a11-1le-old-groups.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-1LE-old-accepted-union
+          path: /tmp/a11-1le-old-union/
+          if-no-files-found: error
+          retention-days: 30
+
   semantic_shards:
-    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' || inputs.branch == '1LE' || inputs.branch == '0LE' }}
+    needs: prepare_1le_reuse
+    if: ${{ always() && !cancelled() && (needs.prepare_1le_reuse.result == 'success' || needs.prepare_1le_reuse.result == 'skipped') && (inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' || inputs.branch == '1LE' || inputs.branch == '0LE') }}
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -352,6 +395,11 @@ jobs:
           PY
 
 
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.branch == '1LE' }}
+        with:
+          name: raw39-1LE-old-accepted-union
+          path: /tmp/a11-1le-old-union
       - name: Check one independent semantic shard
         env:
           GROUP: ${{ matrix.group }}
@@ -363,9 +411,14 @@ jobs:
           roots=()
           for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
           work=/tmp/a11-semantic-shard
+          reuse=()
+          if [ "${{ inputs.branch }}" = 1LE ]; then
+            reuse=(--precompiled-manifest /tmp/a11-1le-old-union/manifest.json --precompiled-dir /tmp/a11-1le-old-union)
+          fi
           python tools/lean_compile_closure.py \
             --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" \
+            "${reuse[@]}" \
             --label "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --artifact-name "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \

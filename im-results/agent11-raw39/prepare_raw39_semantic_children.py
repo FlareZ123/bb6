@@ -27,6 +27,39 @@ def project(node,cut,opens,stats):
     return [*node[:3],[project(k,max(cut,i%6+1),opens,stats)
                        for i,k in enumerate(node[3]) if i%6<=cut]]
 
+class MixedBoundBuilder(Builder):
+    """Preserve accepted low-bound chunks; lift only potentially costly ancestors."""
+    def __init__(self,out,branch,B,limit,far,special,tree,high):
+        super().__init__(out,branch,B,limit,far,special)
+        self.high=high
+        self.raised=set()
+        def visit(t):
+            needed=t.tag in ('last','split') and t.v[0]+6>B
+            for k in t.kids:
+                needed=visit(k) or needed
+            if needed:self.raised.add(t)
+            return needed
+        assert visit(tree)
+    def bound_leaf(self,t,imports):
+        if t not in self.raised:return super().bound_leaf(t,imports)
+        low=self.B;self.B=self.high
+        try:return super().bound_leaf(t,imports)
+        finally:self.B=low
+    def compose(self,t):
+        if t not in self.raised:return super().compose(t)
+        low=self.B;self.B=self.high
+        try:code=super().compose(t)
+        finally:self.B=low
+        names={k.name for k in t.kids if k not in self.raised}
+        return '\n'.join(
+            f'  · exact BB6.Agent43Raw391LEBoundLift.mono (by decide : {low} ≤ {self.high}) '+line.removeprefix('  · exact ')
+            if line.removeprefix('  · exact ') in names else line
+            for line in code.splitlines())+'\n'
+    def write(self,ts,body,imports,size):
+        if any(t in self.raised and not self.small(t) for t in ts):
+            imports=imports|{'Raw391LEBoundLift'}
+        return super().write(ts,body,imports,size)
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('branch',choices=['1LA','1RE','0LE','1LE'])
@@ -137,6 +170,10 @@ def main():
     tree.name='all'+branch+('_if_residual' if residual else '')
     b=(ConditionalBuilder(out,flavor,data['bound_candidate'],a.limit,witnesses,special,tree,residual)
        if residual else Builder(out,flavor,data['bound_candidate'],a.limit,witnesses,special))
+    if branch=='1LE' and not residual:
+        lift='Raw391LEBoundLift.lean'
+        if out!=ROOT:(out/lift).write_bytes((ROOT/lift).read_bytes())
+        b=MixedBoundBuilder(out,flavor,28310,a.limit,witnesses,special,tree,data['bound_candidate'])
     w,r,q=branch
     base=f'''abbrev p39 : PartialMachine :=
   refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,0⟩)
