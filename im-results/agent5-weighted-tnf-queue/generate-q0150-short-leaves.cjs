@@ -31,7 +31,7 @@ function P(i,t){
  const rows=t.map((m,j)=>m==="---"?"":`  | ${j>>1},${bool(m[1]==="1")} => some (some ⟨${bool(m[0]==="1")},${bool(m[1]==="R")},${m.charCodeAt(2)-65}⟩)\n`).join("");
  let lines=[
  "import FastPhaseTree","import CachedPhaseTree","import PhaseFrontier","import ExactOneHoleOrdinary",
- "set_option maxHeartbeats 0","set_option maxRecDepth 100000",
+ "set_option maxHeartbeats 0","set_option maxRecDepth 1000000",
  `namespace ${name}`,
  "open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree",
  "open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree",
