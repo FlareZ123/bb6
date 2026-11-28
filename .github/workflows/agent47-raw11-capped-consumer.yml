@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, extra-resume-132, extra-repair-132, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, q0-148-pending, extra-resume-132, extra-repair-132, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -856,5 +856,84 @@ jobs:
             /tmp/parent-out
             /tmp/parent-source
             /tmp/extra132-repaired.log
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  # Source-check exact four-parent membership and disjoint 152->148
+  # complement, keeping Cover proofs for these four as explicit premises.
+  # Reuses accepted 299->152 original-source object, never recompiles it.
+  q0-148-pending:
+    if: inputs.mode == 'q0-148-pending'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152-accepted
+      - name: Recover exact frozen transitive object dependencies
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/q0148-pending
+          for id in \
+            15159003899 15161045625 \
+            15159257293 15154832729 15154568902 \
+            15154569169 15154663882 15158958272 \
+            15017647753 15014940132 15166284252 \
+            15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/q0152-accepted -name Raw11Q0CombinedExtra.olean -print -quit)"
+      - name: Check exact conditional 152-to-148 proof
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/q0148-pending
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find /tmp/deps /tmp/q0152-accepted -type f -name '*.olean' | sort)
+          export LEAN_PATH
+          src=im-results/agent47-raw11-adapter/Raw11FourPending.lean
+          lean -j1 -o /tmp/q0148-pending/Raw11FourPending.olean "$src" \
+            | tee /tmp/q0148-pending/Raw11FourPending.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0148-pending/Raw11FourPending.log; then exit 1; fi
+          for theorem in \
+            "'BB6.Agent47Raw11FourPending.all_members_in_152' depends on axioms:" \
+            "'BB6.Agent47Raw11FourPending.exact_census' depends on axioms:" \
+            "'BB6.Agent47Raw11FourPending.raw11_cover_from_148' depends on axioms:"; do
+            grep -F "$theorem" /tmp/q0148-pending/Raw11FourPending.log
+          done
+          sha256sum "$src" > /tmp/q0148-pending/source-sha256.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-152-to-148-pending-exact
+          path: |
+            /tmp/q0148-pending
+            im-results/agent47-raw11-adapter/Raw11FourPending.lean
           if-no-files-found: warn
           retention-days: 30
