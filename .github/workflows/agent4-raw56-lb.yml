@@ -18,6 +18,7 @@ on:
           - recover-split
           - recover-residual-step
           - subset-lemma
+          - parent-subset
           - consumer-conditional
           - complete
           - complete-min
@@ -615,6 +616,87 @@ jobs:
           name: raw56-lb-split-defs-source-accepted
           path: /tmp/split-parent
           if-no-files-found: error
+
+
+  parent-subset:
+    if: ${{ inputs.target == 'parent-subset' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-split-defs-source-accepted
+          path: /tmp/split-parent
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46144287707'
+      - name: Check direct eight-table residual subset proof without giant trace list
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/subset-parent/E11LB
+          python im-results/agent4-raw56-root-pilot/gen_lb_subset_parent.py --prep /tmp/raw56-pilot-prep --helper im-results/agent4-raw56-root-pilot/CanonicalResidualSubset.lean
+          cp /tmp/raw56-pilot-prep/E11LB/{CanonicalResidualSubset,Raw56LBTopTables,Raw56LBTopChildren,Raw56LBTopSubset}.lean /tmp/subset-parent/E11LB/
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/split-parent/E11LB:/tmp/subset-parent/E11LB:/tmp/subset-parent"
+          cd /tmp/raw56-pilot-prep
+          lean -j1 -o /tmp/subset-parent/CanonicalResidualSubset.olean E11LB/CanonicalResidualSubset.lean | tee /tmp/subset-parent/CanonicalResidualSubset.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" /tmp/subset-parent/CanonicalResidualSubset.log --require BB6.Agent4Raw56Root.canonicalResiduals_split_subset
+          lean -j1 -o /tmp/subset-parent/E11LB/Raw56LBTopTables.olean E11LB/Raw56LBTopTables.lean | tee /tmp/subset-parent/Raw56LBTopTables.log
+          lean -j1 -o /tmp/subset-parent/E11LB/Raw56LBTopChildren.olean E11LB/Raw56LBTopChildren.lean | tee /tmp/subset-parent/Raw56LBTopChildren.log
+          lean -j1 -o /tmp/subset-parent/E11LB/Raw56LBTopSubset.olean E11LB/Raw56LBTopSubset.lean | tee /tmp/subset-parent/Raw56LBTopSubset.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" /tmp/subset-parent/Raw56LBTopSubset.log --require BB6.Agent4Raw56LB.E11LB.root_residual_subset
+          test -s /tmp/subset-parent/E11LB/Raw56LBTopSubset.olean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw56-lb-parent-subset-original-source-diagnostics
+          path: /tmp/subset-parent
+          if-no-files-found: warn
 
   parent-split-branches:
     if: ${{ inputs.target == 'recover-split' }}
