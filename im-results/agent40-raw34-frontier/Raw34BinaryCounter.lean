@@ -4,7 +4,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent40Raw34BinaryCounter
-open BB6Coverage BB6Coverage.Agent31Pump
+open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent50Zipper
 
 /-!
 The unfinished Raw34 depth-three child:
@@ -95,7 +95,7 @@ theorem carryZero (n : Nat) (R : List Bool) :
   have h12 := join0 h1 h2'
   have h123 := join0 h12 h3
   have h1234 := join0 h123 h4
-  have hc : 1+(2*n+3+2*(n+1))=4*n+6 := by omega
+  have hc : 1+2*n+3+2*(n+1)=4*n+6 := by omega
   simpa only [rep,List.append_assoc,List.nil_append,hc] using h1234
 
 theorem carryBlank (n : Nat) :
@@ -112,7 +112,7 @@ theorem carryBlank (n : Nat) :
   have h12 := join0 h1 h2'
   have h123 := join0 h12 h3
   have h1234 := join0 h123 h4
-  have hc : 1+(2*n+3+2*(n+1))=4*n+6 := by omega
+  have hc : 1+2*n+3+2*(n+1)=4*n+6 := by omega
   simpa only [rep,List.append_assoc,List.nil_append,hc] using h1234
 
 
@@ -153,7 +153,7 @@ theorem padZeros_encode (n : Nat) (w : Digits) :
 theorem classify (d : Digits) :
     (∃ r : Digits, encode d = [false,false]++encode r) ∨
     (∃ (n : Nat) (r : Digits),
-      encode d = [true]++rep [false,true] n++[false,false]++encode r) ∨
+      encode d = [true]++rep [false,true] n++[false,false,false]++encode r) ∨
     (∃ (n : Nat), encode d = [true]++rep [false,true] n) := by
   induction d with
   | last =>
@@ -184,7 +184,7 @@ theorem numeral_progress (d : Digits) :
       (incZero ([false]++encode r))
   · refine ⟨4*n+6,padZeros (n+1) (Digits.one r),by omega,?_⟩
     simpa [hr,padZeros_encode,encode,List.append_assoc] using
-      (carryZero n (encode r))
+      (carryZero n ([false]++encode r))
   · refine ⟨4*n+6,padZeros (n+1) Digits.last,by omega,?_⟩
     simpa [hr,padZeros_encode,encode,List.append_assoc] using
       (carryBlank n)
