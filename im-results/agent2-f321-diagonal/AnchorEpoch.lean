@@ -1,5 +1,6 @@
 import DiagonalCoordinates
 import F321BackwardBarrier
+import Phase6Bridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -15,6 +16,7 @@ anchor epochs plus one trailing High/Far suffix.
 namespace BB6.Agent2F321AnchorEpoch
 open BB6.Agent31F321Density
 open BB6.Agent2F321Diagonal
+open BB6.Agent2F321Phase6Bridge
 
 def HFMove (a d A D : Nat) : Prop :=
   (d+2 ≤ a ∧ A=a-d-2 ∧ D=2*d+3) ∨
