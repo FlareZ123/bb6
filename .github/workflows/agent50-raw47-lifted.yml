@@ -913,8 +913,9 @@ jobs:
           assert x['combinedKnownPhysicalTables']=='5592285375'
           assert x['physicalTablesOutsideThisCombinedPortfolio']=='511230250'
           assert x['testedOpenSourceChildCylinders']==1927
-          assert x['decisionDagNodes']==63
-          print('PASS: 1,927 current Agent23 source-open children refined by 63-node graph DAG')
+          assert x['decisionDagNodes']==105
+          assert x['decisionSplitNodes']==63
+          print('PASS: 1,927 current Agent23 source-open children refined by 63-decision/105-node graph DAG')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
