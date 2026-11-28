@@ -49,7 +49,41 @@ theorem firstSecondaryHeadScalar :
   rw [hl] at h
   simpa only [he,Prod.fst,Prod.snd] using h
 
+/-- Exact scalar Q-mass identity with all small authentic initial constants
+    evaluated by kernel arithmetic; no 32750-step numeric replay. -/
+theorem firstSecondaryQNumeric :
+    qSum (sIter 32750 (2047,3071,firstPrimary)).2.2 +
+      2^((lifeIter 32750 firstLives).length+2) =
+      9293834+4*lifeLengthSum 32750 firstLives := by
+  have h := firstSecondaryQScalar
+  have hinit : qSum firstPrimary=9325560 := by decide
+  have hpow : 2^firstPrimary.length=1024 := by decide
+  rw [hinit,hpow] at h
+  omega
+
+/-- Complete authentic secondary-zero primary-prefix mass as a scalar
+    lifetime-only expression, with all initial values kernel-evaluated. -/
+theorem firstSecondaryPrefixNumeric :
+    let e := sIter 32750 (2047,3071,firstPrimary)
+    prefixMass e.1 e.2.1 e.2.2 =
+      21952504+4*2^((lifeIter 32750 firstLives).length+2)+
+        6*lifeLengthSum 32750 firstLives := by
+  have h := BB6Coverage.Agent41F421.EpochWords.firstSecondaryMassTelescoping
+  have hl := firstSecondaryCells
+  have hs := firstLengthSum
+  rcases he : sIter 32750 (2047,3071,firstPrimary) with ⟨a,b,ds⟩
+  rw [he] at h hl
+  simp only [Prod.fst,Prod.snd] at h hl
+  rw [hs,hl] at h
+  have hinit : prefixMass 2047 3071 firstPrimary=21923850 := by decide
+  have hpow : 2^firstPrimary.length=1024 := by decide
+  rw [hinit,hpow] at h
+  simp only [he,Prod.fst,Prod.snd]
+  omega
+
 #print axioms firstSecondaryCells
 #print axioms firstSecondaryQScalar
 #print axioms firstSecondaryHeadScalar
+#print axioms firstSecondaryQNumeric
+#print axioms firstSecondaryPrefixNumeric
 end F421SecondaryLifetimes
