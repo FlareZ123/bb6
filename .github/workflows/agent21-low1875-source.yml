@@ -12,6 +12,7 @@ on:
           - low-stop
           - dyadic-density
           - dyadic-gap
+          - dyadic-period
 
 permissions:
   contents: read
@@ -118,3 +119,24 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent21-c-shadow-density/DyadicGapConstraint.lean \
             --workdir /tmp/a21-dyadic-gap --jobs 4 --lean "$(command -v lean)"
+  dyadic-period:
+    if: ${{ inputs.target == 'dyadic-period' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile all-bit signed inverse-word periodicity
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          python3 tools/lean_compile_closure.py \
+            im-results/agent21-c-shadow-density/DyadicSignedPeriod.lean \
+            --workdir /tmp/a21-dyadic-period --jobs 4 --lean "$(command -v lean)"
