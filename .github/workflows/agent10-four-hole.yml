@@ -2554,7 +2554,7 @@ jobs:
           export LEAN_PATH=/tmp/d114:/tmp/base
           kid=$(printf 'Raw36D114Kid%02d' ${{ matrix.kid }})
           (cd /tmp/d114 && lean -o "$kid.olean" "$kid.lean") 2>&1 | tee "/tmp/$kid.log"
-          python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" "BB6.Agent29Raw36D114.${kid#Raw36D114}_bound"
+          python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" "BB6.Agent29Raw36D114.kid${kid#Raw36D114Kid}_bound"
           cp "/tmp/d114/$kid.lean" "/tmp/d114/$kid.olean" "/tmp/$kid.log" /tmp/out/
       - name: Retain heavy D1=1LC child
         uses: actions/upload-artifact@v4
@@ -2688,7 +2688,7 @@ jobs:
           export LEAN_PATH=/tmp/d102:/tmp/base
           kid=$(printf 'Raw36D102Kid%02d' ${{ matrix.kid }})
           (cd /tmp/d102 && lean -o "$kid.olean" "$kid.lean") 2>&1 | tee "/tmp/$kid.log"
-          python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" "BB6.Agent29Raw36D102.${kid#Raw36D102}_bound"
+          python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" "BB6.Agent29Raw36D102.kid${kid#Raw36D102Kid}_bound"
           cp "/tmp/d102/$kid.lean" "/tmp/d102/$kid.olean" "/tmp/$kid.log" /tmp/out/
       - name: Retain heavy D1=0LC child
         uses: actions/upload-artifact@v4
