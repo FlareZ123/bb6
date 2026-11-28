@@ -1,6 +1,6 @@
 # One-period cyclic-order obstruction for genuine P1 delayed-carry traces
 
-**Status (28 November 2026):** Lean source and original-Trace bridges are being audited in the opt-in Agent9 P1 workflow; this file records the mathematical argument and precise scope. Do not treat the new source theorems or numerical examples as kernel-accepted until the workflow succeeds, with no errors or nonstandard axiom dependencies. This is an **intermediate structural restriction**, not a P1 halting decision or an upper bound for BB(6).
+**Status (28 November 2026):** **Lean 4.36.0-rc2 source-kernel-checked**, including the unchanged original `LagCore.lean` trace, primitive quotient lemma, unrestricted odd-order K+B theorem, dyadic normalization, true Trace bridge and h=9/27/47 examples. GitHub Actions [46122418723](https://github.com/FlareZ123/bb6/actions/runs/46122418723) successfully compiled source pinned to commit [60f6ac54](https://github.com/FlareZ123/bb6/commit/60f6ac54ce507a1ac59147a978bd82b8aa3571a9), with `#print axioms` and a strict `sorryAx`/error guard; the source printed only `propext`, `Classical.choice`, `Quot.sound`. This is a **new general structural restriction**, not a P1 halting decision or an upper bound for BB(6). The older optional `CyclicOrder.lean` coprime draft is no longer a dependency of these accepted stronger theorems.
 
 ## New primitive-period arithmetic lemma
 
@@ -54,6 +54,6 @@ The 9 and 27 examples have nontrivial `gcd(h,K)`; the older coprime determinant 
 
 ## Limits and next tests
 
-- Required: original-source Lean 4.36.0-rc2 compilation with `#print axioms` excluding `sorryAx`; the workflow targets `cyclic-order` in `.github/workflows/agent9-p1-shadow-depth.yml`.
+- Completed: original-source Lean 4.36.0-rc2 audit with ordinary axioms; the accepted workflow target is `cyclic-short` in `.github/workflows/agent9-p1-shadow-depth.yml`, run 46122418723.
 - Potential direct use: add forbidden equal/complement windows at selected `2^r*h` shifts to P1 symbolic trace or exact prefix search when windows become long enough.
 - Unsolved: prove that every hypothetical true P1 critical trace necessarily contains such a forbidden factor. This theorem alone cannot exclude any new `n`, let alone determine BB(6).
