@@ -94,6 +94,17 @@ theorem valuationFiveSource {k e f : Nat} (h : SourceChain 5 k e f) :
   67^k ∣ 3*(e+2)+224 := by
   simpa using allValuationsSource (w:=5) (by decide) h
 
+/-- Exact original-source transport of the affine potential along
+    every length-k fixed-valuation inverse history. -/
+theorem allValuationsPotential {w k e f : Nat} (hw : 2≤w)
+    (hs : SourceChain w k e f) :
+    (2^(w+1))^k * (3*(e+2)+2^w*(2*w-3)) =
+    (2^(w+1)+3)^k * (3*(f+2)+2^w*(2*w-3)) := by
+  exact chainPotential (by rfl)
+    (source_to_affine (fun q e he => source_edge w q e hw he) hs)
+
+#print axioms allValuationsPotential
+
 #print axioms allValuationsSource
 #print axioms valuationThreeSource
 #print axioms valuationFourSource
