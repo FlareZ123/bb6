@@ -1,0 +1,33 @@
+name: Agent29 Raw36 D1=0RE exact first-level target selection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a29-raw36-direct10-census
+      - name: Partition original source D1=0RE tree into exact children
+        run: |
+          set -euo pipefail
+          python im-results/agent29-raw36/direct10_locus.py \
+            --census /tmp/a29-raw36-direct10-census/direct10.json.gz \
+            --out /tmp/a29-raw36-direct10-children.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-d1-0re-first-level-open-locus
+          path: /tmp/a29-raw36-direct10-children.json
+          if-no-files-found: error
+          retention-days: 60
