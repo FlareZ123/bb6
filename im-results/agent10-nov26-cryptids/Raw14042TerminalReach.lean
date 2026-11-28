@@ -33,10 +33,14 @@ theorem terminal_reach_a (p n s : Nat) (hp : 24≤p) (he : p%2=0)
     · by_cases hm : p%4=2
       · obtain ⟨t,ht,hR⟩ := Raw14042AMixedTerminal.a5215_mod2 p hp hm
         have hq : (p-8)/2+5=p/2+1 := by omega
+        have hR' : R (Raw14042AMixedTerminal.A p [S 5,S 2,S 1,S 5])
+            (Raw14042DGeneral.B (2*p+6) ((p/2+1)/6) t) := by
+          simpa only [Raw14042AMixedTerminal.B, Raw14042DGeneral.B,
+            Raw14042DGeneral.TB, hq] using hR
         have G : R (Raw14042AMixedTerminal.A p [S 5,S 2,S 1,S 5])
             (encode ⟨.b,2*p+6,(p/2+1)/6,(p/2+1)%6⟩) := by
           apply bOut (Nat.mod_lt _ (by decide))
-          refine ⟨t,?_,hR⟩
+          refine ⟨t,?_,hR'⟩
           simpa only [hq] using ht
         simpa [encode,aTail,Raw14042AMixedTerminal.A,Raw14042BGeneral.aCfg,
           Raw14042BGeneral.TA,Raw14042BGeneral.aword,Raw14042Bank.T,
