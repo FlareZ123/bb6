@@ -40,7 +40,7 @@ private theorem drain_first_le_a_plus_b
   drainB_first_upper_log b a b d x y (block_lt_ternary_power b) hs
 
 private theorem ordinary_first_unscaled (u v x y : Nat)
-    (hord : OrdinaryStep u v x y) :
+    (hu : 0<u) (hord : OrdinaryStep u v x y) :
     x≤max u v+3 := by
   cases hord with
   | oddFar h hs =>
@@ -106,7 +106,7 @@ theorem even_step_first_unscaled (u v x y : Nat)
       have hv : v≤u := by omega
       simpa only [Nat.max_eq_left hv] using
         (show x≤u+3 by omega)
-    · exact ordinary_first_unscaled u v x y
+    · exact ordinary_first_unscaled u v x y (by omega)
         (ordinary_of_step u v x y (by omega) he hg hs)
 
 /-- Strict source mass growth and the globally bounded first counter
