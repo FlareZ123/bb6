@@ -12,6 +12,7 @@ on:
           - deepThin
           - boundary
           - strict
+          - lattice
 
 permissions:
   contents: read
@@ -52,6 +53,9 @@ jobs:
               ;;
             strict)
               target=im-results/agent15-c-halting/M8BoundaryStrict.lean
+              ;;
+            lattice)
+              target=im-results/agent15-c-halting/M8BoundaryLattice.lean
               ;;
           esac
           python3 tools/lean_compile_closure.py \
