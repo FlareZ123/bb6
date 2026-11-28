@@ -320,8 +320,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 1fab89df71c7c0cdd5a15f236e09e0e7ec0ad1e5
-      - name: Regenerate original accepted shard sources
+          ref: e7c319dd192131b9af81cf7c8e963f35ae992a26
+      - name: Regenerate source-accepted corrected-bound shard sources
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -333,13 +333,13 @@ jobs:
           p=Path(sys.argv[1]);j=json.loads(p.read_text())
           j['artifact_prefix']='raw39-1LE-semantic-shard'
           p.write_text(json.dumps(j,indent=2)+'\n')
-          j['groups']={g:j['groups'][g] for g in ('g0','g2','g3')}
+          j['groups']={g:j['groups'][g] for g in ('g0','g2','g3','g4','g6','g7')}
           Path('/tmp/a11-1le-old-groups.json').write_text(json.dumps(j))
           PY
       - uses: actions/download-artifact@v4
         with:
           pattern: raw39-1LE-semantic-shard-*
-          run-id: 46085821790
+          run-id: 46094272482
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: /tmp/a11-1le-old-shards
       - name: Merge exact original accepted proof objects
