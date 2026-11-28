@@ -1,19 +1,13 @@
 name: Agent9 official Canonical39 Raw47 successor
-run-name: Canonical39 source successor (${{ inputs.target }})
+run-name: Accepted Raw39 Canonical39 -> Raw47 -> Canonical38
 
 on:
   workflow_dispatch:
     inputs:
-      target:
-        description: Source-accepted parent to consume on the accepted Canonical39 roster
-        type: choice
-        options: [raw47, raw83, raw83-85, raw83-85-112, six-ready-conditional]
-        default: raw47
-        required: true
       direct38_run_id:
         description: Successful direct Raw39+Raw47 transport-carrier run
         type: string
-        required: false
+        required: true
 
 permissions:
   actions: read
@@ -21,7 +15,6 @@ permissions:
 
 jobs:
   consume:
-    if: ${{ inputs.target == 'raw47' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -52,148 +45,6 @@ jobs:
           path: |
             /tmp/a9-canonical38-official/canonical38-raw39-then-raw47-delta/**
             /tmp/a9-canonical38-official.log
-          if-no-files-found: warn
-          compression-level: 1
-          retention-days: 30
-
-  consume-raw83:
-    if: ${{ inputs.target == 'raw83' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Source-check Raw83 on accepted Canonical39
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          lean --version | grep -F '4.36.0-rc2'
-          python -m py_compile im-results/agent9-raw83-canonical39/consume.py
-          python im-results/agent9-raw83-canonical39/consume.py \
-            --work /tmp/a9-raw83-canonical38 \
-            | tee /tmp/a9-raw83-canonical38.log
-          test -s /tmp/a9-raw83-canonical38/evidence/raw83-after-raw39-canonical38.json
-          cat /tmp/a9-raw83-canonical38/evidence/raw83-after-raw39-canonical38.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: canonical38-raw39-then-raw83-evidence
-          path: |
-            /tmp/a9-raw83-canonical38/evidence/
-            /tmp/a9-raw83-canonical38.log
-          if-no-files-found: warn
-          compression-level: 1
-          retention-days: 30
-
-  consume-raw83-85:
-    if: ${{ inputs.target == 'raw83-85' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 75
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Source-check Raw83 and Raw85 on accepted Canonical39
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          lean --version | grep -F '4.36.0-rc2'
-          python -m py_compile im-results/agent9-raw83-canonical39/consume83_85.py
-          python im-results/agent9-raw83-canonical39/consume83_85.py \
-            --work /tmp/a9-raw83-85-canonical37 \
-            | tee /tmp/a9-raw83-85-canonical37.log
-          test -s /tmp/a9-raw83-85-canonical37/evidence/raw83-raw85-after-raw39-canonical37.json
-          cat /tmp/a9-raw83-85-canonical37/evidence/raw83-raw85-after-raw39-canonical37.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: canonical37-raw39-raw83-raw85-evidence
-          path: |
-            /tmp/a9-raw83-85-canonical37/evidence/
-            /tmp/a9-raw83-85-canonical37.log
-          if-no-files-found: warn
-          compression-level: 1
-          retention-days: 30
-
-  six-ready-conditional:
-    if: ${{ inputs.target == 'six-ready-conditional' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Source-check six-ready-parent quotient membership on accepted Canonical39
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          python -m py_compile im-results/agent9-raw83-canonical39/consume.py
-          python im-results/agent9-raw83-canonical39/consume.py \
-            --six-ready-only --work /tmp/a9-conditional33 \
-            | tee /tmp/a9-conditional33.log
-          test -s /tmp/a9-conditional33/evidence/six-ready-conditional33.json
-          cat /tmp/a9-conditional33/evidence/six-ready-conditional33.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: canonical33-six-ready-conditional-evidence
-          path: |
-            /tmp/a9-conditional33/evidence/
-            /tmp/a9-conditional33.log
-          if-no-files-found: warn
-          retention-days: 30
-
-  consume-raw83-85-112:
-    if: ${{ inputs.target == 'raw83-85-112' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Source-check Raw83, Raw85, Raw112 on accepted Canonical39
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          lean --version | grep -F '4.36.0-rc2'
-          python -m py_compile im-results/agent9-raw83-canonical39/consume83_85_112.py
-          python im-results/agent9-raw83-canonical39/consume83_85_112.py \
-            --work /tmp/a9-raw83-85-112-canonical36 \
-            | tee /tmp/a9-raw83-85-112-canonical36.log
-          test -s /tmp/a9-raw83-85-112-canonical36/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
-          cat /tmp/a9-raw83-85-112-canonical36/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: canonical36-raw39-raw83-raw85-raw112-evidence
-          path: |
-            /tmp/a9-raw83-85-112-canonical36/evidence/
-            /tmp/a9-raw83-85-112-canonical36.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
