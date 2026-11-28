@@ -62,6 +62,7 @@ const counters=[
 counters.forEach(add);
 const withECycles=process.argv.includes("--include-e-cycles");
 const withMissingThird=process.argv.includes("--include-missing-ef-third");
+const withFGrowth=process.argv.includes("--include-f-growth");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
 const withDepth4=process.argv.includes("--include-f-depth4")||withECycles;
@@ -151,7 +152,12 @@ if(withMissingThird){
  assert.equal(missingThirdSource.length,168,"168 omitted physical source-symmetry witnesses");
  missingThirdSource.forEach(add);
 }
-const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length;
+const fGrowthSource=withFGrowth?[
+  "1RB---_1RC---_0RD0RF_1LC1RD_------_---1LD",
+  "1RB---_1RC---_0RD0LD_1LC0RF_------_1RD---"
+].map(parseTable):[];
+fGrowthSource.forEach(add);
+const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length+fGrowthSource.length;
 function loadHalters(file){
  const s=readFileSync(join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
@@ -266,6 +272,7 @@ console.log(JSON.stringify({
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
   eConjugateCyclePatterns:eCycleSource.length,
   missingNonEFConjugateThirdPatterns:missingThirdSource.length,
+  fConjugateUnboundedGrowthPatterns:fGrowthSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
   rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
