@@ -7,7 +7,7 @@ Run0ExposureBound.zipRead_of_run0 and bounded_of_query. All kernel checked.
 import json,sys
 from pathlib import Path
 
-def main(info_path,out):
+def main(info_path,out,source_module='Raw36D100Exposure',bound_ns='BB6.Agent7D100ExposureBound'):
     d=json.loads(Path(info_path).read_text())
     assert d['slot'] in ('F0','B1'),d
     assert d['undefined_after'] in (23126,60671),d
@@ -15,13 +15,13 @@ def main(info_path,out):
     q=ord(d['slot'][0])-65; a='true' if d['slot'][1]=='1' else 'false'
     srcns=d['namespace']
     assert srcns.startswith('BB6.Agent7D100Exposure')
-    source=f'''import Raw36D100Exposure
+    source=f'''import {source_module}
 import Run0ExposureBound
 import FastZipWeight
 import Lean.Elab.Tactic.Omega
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
-namespace BB6.Agent7D100ExposureBound
+namespace {bound_ns}
 open BB6Coverage BB6Coverage.Agent10ZipAudit
 open BB6.Agent13BlankDelay BB6.Agent31ThreeHole
 open BB6.Agent50TNFPilot BB6.Agent7D100ExposureBridge
@@ -42,7 +42,7 @@ theorem bound (m : Machine) (hm : compatible table m) : WeightedBound {b} m :=
   bounded_of_query table {n} {b} ({q},{a})
     query hroot hno hole hweight hrest m hm
 #print axioms bound
-end BB6.Agent7D100ExposureBound
+end {bound_ns}
 '''
     Path(out).write_text(source)
     print(f'Generated kernel-checkable weighted-bound candidate {b} at {d["slot"]}')
