@@ -85,6 +85,34 @@ If **three** W copies exist, u2 must also satisfy the same first-letter type gua
 
 For q>=3 the combined pruner rejects if either the two-copy modulo-M gap, the three-copy modulo-2M gap, or the large-power even-slope divisibility condition fails. If q=2 it uses only the first. These are exact *necessary* conditions, not an exhaustive decision for the signed inverse model.
 
+## Exact rank-delay corollaries (finite-word power growth)
+
+The same integer inequalities admit a useful **inverted formulation**: how large must the half-rank already be *before* a repeated word is even arithmetically eligible?
+
+Let `rho_m = (A*T) mod m` in the least nonnegative convention. Inverting the two-copy bounds (9), a legal square W² requires
+
+```text
+  r0 >= max(0, min(3*rho_M, 3*(M-rho_M)-T)).          (10)
+```
+
+For three or more copies the known same-type guard at u2 upgrades this necessary bound to
+
+```text
+  r0 >= max(0, min(3*rho_(2M), 3*(2M-rho_(2M))-T)).   (11)
+```
+
+These follow *exactly*, without approximation: e.g. `rho_M<=floor(r0/3)` iff `r0>=3*rho_M`, and `M-rho_M<=floor((r0+T)/3)` iff `r0>=3*(M-rho_M)-T`. A fixed word with non-resonant `rho_M` therefore cannot appear as a square until rank proportional to `M=4^J`, exponential in its total F-run exponent J.
+
+For **q>=3** and `2*(M-1)` not dividing `A*T`, a legal q-th power additionally requires
+
+```text
+  r0 >= max(0, (3/2)*M^(q-2)-2*T).                   (12)
+```
+
+Here the quotient `M^(q-2)/2` is integral because `M=4^J` and J>=1. Indeed if the right-side bound failed, then `M^(q-2)>2*floor((r0+2T)/3)`, forcing the impossible even slope by the theorem. This is an **exact exponential delay for every fixed non-even-slope typed word**, not a probabilistic large-scale extrapolation. It also provides a computable upper bound on the repetition exponent at any fixed starting half-rank.
+
+The bounds are *necessary only*. Real paths face additional E/S guards, Bad leaves, and authentic-root ancestry constraints, so they may be impossible even at ranks above (10)–(12). For example, the nonempty legitimate signed prefix E2³ exists from `(u,D)=(183,32)`, `r0=565`: its paired inputs `(183,32)->(47,864)->(39,928)->(39,944)` satisfy the finite recurrence. E2⁴ fails from that same input at the next F divisibility. This is a concrete reminder that the quantitative no-go does **not** prohibit every finite cube.
+
 ## A strict finite slope-cone lemma (missing justification now made explicit)
 
 For `W=(x_1,...,x_a)` with all `j_i>=1` and `s_i=4^(j_i)`, direct telescoping yields the *exact nonnegative coefficient gap*
