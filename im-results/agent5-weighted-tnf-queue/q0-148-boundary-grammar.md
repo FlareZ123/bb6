@@ -92,3 +92,56 @@ run0 p (4 + 4 * scanCost(cs))
 This is the exact symbolic round ending at the **right-hand 1110 sentinel**, at time \`4|W|−12\` for \`|W|=scanCost(cs)+4\`. Every step is source-defined. It does **not** yet prove how the sentinel is processed, nor that another checkpoint is reached. The remaining mathematical task is a parametric right-edge gadget/return argument (possibly multiple alternating sweeps) that maps the resulting configuration back into \`G\` after finitely many steps.
 
 These derivations were checked independently against the exact transition table and committed to native Lean with \`#print axioms\`, but this note deliberately withholds the phrase "Lean verified" until GitHub Actions compilation succeeds. They are strictly intermediate and do not close the source leaf.
+
+
+## A genuinely local next-E hop (source-checkable, much stronger than the boundary return test)
+
+A further exact checker computation for the original q0-148 partial table is
+
+\`\`\`
+knownRun p 13 <A, left=0, right=01110110>
+ = <E, left=10101011, right=0>.
+\`\`\`
+
+The 8-symbol known-right prefix is enough. This is a *strictly local* move: all extra left/right tape tails are arbitrary and untouched. Compose it with \`firstRoundPositive\`: when the E1 right input is the final \`A=10\` of its current A-run **followed by a B=110 marker**, we have local right word \`010110\`, so the previous round leaves the exact input \`01110110\` for this 13-step transition. The Lean file now states
+
+\`\`\`
+markedHop(cs,L,R):
+  run0 p (17 + 4 * scanCost(cs))
+    <E, 10 ++ inputBits(cs) ++ 0 ++ L, 010110 ++ R>
+  = <E, 10101011 ++ rightScanOutput(reverse cs) ++ L,
+        0 ++ R>.
+\`\`\`
+
+This **does return to E1**, and establishes directly that the *new* E1 head has a zero as its immediate right neighbor. Its complete time is finite, explicit, and independent of the unspecified outer tape tails. \`markedHop\` is composed in Lean of original-table \`knownRun\` literals and inductive scanning lemmas. Source CI for the expanded file remains pending; the mathematical transfer identity follows from the exact finite local transitions above and the two list inductions.
+
+### Gap-vector arithmetic for an E-hop
+
+Let the entire tape word be \`A^g0 B A^g1 B ... B A^gm\`, with each inter-B gap at least one A, leading \`g0>=1\`. Suppose the head is at the **penultimate A** of group k with k<m, so there is exactly one A, then a B, to the right of this E head. Then \`cs\` encodes the prefix *before* the head and
+
+\[
+  \operatorname{scanCost}(cs)
+    =2\sum_{i=0}^{k} g_i +3k-4.
+\]
+
+The marked hop changes the gap vector with **no change in the number of B tokens**:
+
+\[
+\begin{cases}
+g_0\mapsto g_0-2,\quad g_1\mapsto g_1+3, & k=0,\\
+g_0\mapsto g_0-1,\quad g_k\mapsto g_k-1,\quad
+g_{k+1}\mapsto g_{k+1}+3, & k\ge1,
+\end{cases}
+\]
+
+and leaves all other gaps unchanged. Its exact step count is
+
+\[
+ T_k=8\sum_{i=0}^{k}g_i+12k+1.
+\]
+
+The **new E head is the third A (zero-based index 2)** in the enlarged next group k+1. This is penultimate only when the old gap \`g_(k+1)=1\`. This indexing point is vital: requiring the new E to be penultimate in arbitrary long next groups would be false, despite the exact gap arithmetic above.
+
+The remaining global proof must therefore handle three symbolic cases: (1) the marked hop with one A and a following B, now source-theorem candidate; (2) continuation within the *same* A-run when more than one A remains to the right of an E1 head; (3) boundary expansion when there is no B to the right. These cases appear algebraically sufficient to describe the infinite blank-tape trajectory, but they are not yet a closed invariant.
+
+The current results are held in \`im-results/\`, not \`results/\`, because none alone resolves q0-148 or proves BB(6).
