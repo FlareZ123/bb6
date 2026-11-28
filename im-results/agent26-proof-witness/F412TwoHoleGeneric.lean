@@ -113,6 +113,53 @@ theorem pF0E1_short (B : Nat) (hB : 128 ≤ B)
     (pF0E1_root fm em) (pF0E1_B1_unknown fm em)
     (pF0E1_rest fm em) hknown hslot
 
+/-- Exhaustively split one of the two remaining holes, uniformly for
+    all 24 ordinary transitions plus the explicit halt completion. The
+    bounded halt child uses the exact TNF delay, not a heuristic cutoff. -/
+theorem split_at_hole
+    (B : Nat) (hB : 128 ≤ B)
+    (p : PartialMachine) (slot : Slot) (n : Nat) (hn : n ≤ 120)
+    (hroot : p initialSlot = some (some ⟨true,true,1⟩))
+    (hunknown : p slot = none)
+    (hknown : knownRun p n = some ((knownRun p n).getD blank))
+    (hslot : readSlot ((knownRun p n).getD blank) = slot)
+    (hchildren : ∀ mv : Move, ∀ m : Machine,
+      compatible (refine p slot (some mv)) m → WeightedBound B m) :
+    ∀ m, compatible p m → WeightedBound B m := by
+  intro m hm
+  let c : Config := (knownRun p n).getD blank
+  have hr : knownRun p n = some c := hknown
+  have hu : p (readSlot c) = none := by
+    rw [hslot]
+    exact hunknown
+  have href := compatible_refine p m slot hm
+  cases ht : m slot with
+  | none =>
+    apply first_hole_weighted_halt B p n c hroot hr hu
+    · intro d hd
+      have hd6 : d < 6 := by
+        unfold possibleDelays at hd
+        exact List.mem_range.mp (List.mem_filter.mp hd).1
+      omega
+    · rw [hslot]
+      simpa [ht] using href
+  | some mv =>
+    exact hchildren mv m (by simpa [ht] using href)
+
+/-- The initial A0 remains assigned along every depth-seven alternative. -/
+theorem pF0_root (fm : Move) :
+    pF0 fm initialSlot = some (some ⟨true,true,1⟩) := by
+  simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
+    fP4,fP3,fP2,fP1,fResidual,fRoot,initialSlot]
+
+theorem pF0_B1_unknown (fm : Move) : pF0 fm (1,true) = none := by
+  simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
+    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable]
+
+theorem pF0_E1_unknown (fm : Move) : pF0 fm (4,true) = none := by
+  simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
+    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable]
+
 #print axioms bounded_last_hole
 #print axioms pF0B1_short
 #print axioms pF0E1_short
