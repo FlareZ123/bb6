@@ -15,6 +15,7 @@ on:
           - m39232
           - recover
           - parent-diagnose
+          - recover-split
           - complete
           - complete-min
           - complete-hybrid
@@ -508,6 +509,229 @@ jobs:
               print('TAIL',name,flush=True)
               for line in lines[-100:]:print(line[:450])
           PY
+
+  parent-split-defs:
+    if: ${{ inputs.target == 'recover-split' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Compile shared 24-way authenticated source definitions
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/split_lb_parent.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/split-parent/E11LB
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/split-parent/E11LB"
+          cd /tmp/raw56-pilot-prep
+          lean -j1 -o /tmp/split-parent/E11LB/Raw56LBTopDefs.olean E11LB/Raw56LBTopDefs.lean | tee /tmp/split-parent/Raw56LBTopDefs.log
+          test -s /tmp/split-parent/E11LB/Raw56LBTopDefs.olean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-split-defs-source-accepted
+          path: /tmp/split-parent
+          if-no-files-found: error
+
+  parent-split-branches:
+    if: ${{ inputs.target == 'recover-split' }}
+    needs: parent-split-defs
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ['checks','residuals']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-split-defs-source-accepted
+          path: /tmp/split-parent
+      - name: Kernel-check source top audit or exact residuals
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/split_lb_parent.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/split-parent/E11LB
+          PART='${{ matrix.part }}'
+          if [ "$PART" = checks ]; then
+            MOD=Raw56LBTopChecks
+            THEOREM=BB6.Agent4Raw56LB.E11LB.ctop
+          else
+            MOD=Raw56LBTopResiduals
+            THEOREM=BB6.Agent4Raw56LB.E11LB.exact_residuals
+          fi
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/split-parent/E11LB"
+          cd /tmp/raw56-pilot-prep
+          lean -j1 -o "/tmp/split-parent/E11LB/$MOD.olean" "E11LB/$MOD.lean" | tee "/tmp/split-parent/$MOD.log"
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" "/tmp/split-parent/$MOD.log" --require "$THEOREM"
+          test -s "/tmp/split-parent/E11LB/$MOD.olean"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-split-${{ matrix.part }}-source-accepted
+          path: /tmp/split-parent
+          if-no-files-found: error
+
+  parent-split-final:
+    if: ${{ inputs.target == 'recover-split' }}
+    needs: parent-split-branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-split-*-source-accepted
+          path: /tmp/split-parent
+          merge-multiple: true
+      - name: Compose source-accepted full parent and six-residual reduction
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/split_lb_parent.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/rootpilot-final/E11LB
+          cp /tmp/split-parent/E11LB/*.olean /tmp/rootpilot-final/E11LB/
+          python -u im-results/agent4-raw56-root-pilot/compile_lb.py final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --out /tmp/rootpilot-final
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBTop*.lean /tmp/rootpilot-final/E11LB/
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBAll.lean /tmp/rootpilot-final/E11LB/
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBReduced.lean /tmp/rootpilot-final/E11LB/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted-recovered
+          path: /tmp/rootpilot-final
+          if-no-files-found: error
 
   recover-assemble:
     if: ${{ inputs.target == 'recover' }}
