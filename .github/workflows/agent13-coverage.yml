@@ -943,6 +943,8 @@ jobs:
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-shifted.log BB6.Agent49.Box27ShiftedCounter.carry_return BB6.Agent49.Box27ShiftedCounter.padded_live BB6.Agent49.Box27ShiftedCounter.never
           python tools/lean_compile_closure.py --workdir "$W-shifted3" --jobs 4 --manifest "$W-shifted3/manifest.json" --theorem BB6.Agent49.Box27ShiftedCounter3.never "$D/Box27ShiftedCounter3.lean" 2>&1 | tee /tmp/raw10-box27-shifted3.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-shifted3.log BB6.Agent49.Box27ShiftedCounter3.carry_return BB6.Agent49.Box27ShiftedCounter3.padded_live BB6.Agent49.Box27ShiftedCounter3.never
+          python tools/lean_compile_closure.py --workdir "$W-shifted12" --jobs 4 --manifest "$W-shifted12/manifest.json" --theorem BB6.Agent49.Box27ShiftedCounter12.never "$D/Box27ShiftedCounter12.lean" 2>&1 | tee /tmp/raw10-box27-shifted12.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-shifted12.log BB6.Agent49.Box27ShiftedCounter12.carry_return BB6.Agent49.Box27ShiftedCounter12.padded_live BB6.Agent49.Box27ShiftedCounter12.never
       - name: Check exhaustive Raw10 Box27 five-hole slice
         if: inputs.target == 'weighted-tnf-raw10-box27-slice'
         run: |
