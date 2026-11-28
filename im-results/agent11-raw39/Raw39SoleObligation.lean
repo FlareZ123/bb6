@@ -38,8 +38,6 @@ theorem parent_cover_of_oneLE (h1 : Bound 28311 oneLE) :
     (parent_bound_of_oneLE h1 m hm k d hk hd)
     (by decide : 28311 ≤ 6766859)
 
-/-- The 40-cover global proof is factored into the original 1LE first-hole
-completion and the 39 exact remaining quotient representatives. -/
 /-- A direct source-certified sibling join applies at ANY threshold
 above the largest remaining sibling bound 15125, requiring the complete 1LE
 child only at that threshold. No all-threshold equivalence is needed. -/
