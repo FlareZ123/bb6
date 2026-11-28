@@ -1,0 +1,31 @@
+name: Agent 8 Raw54 1RD two-hole exact growth proof
+
+on:
+  workflow_dispatch:
+
+jobs:
+  raw54-two-hole-growth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact growing-run theorem against original-source dependencies
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/raw54-two-hole-growth
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/Raw54TwoHoleGrowth.lean" 2>&1 | tee /tmp/raw54-two-hole-growth.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-two-hole-growth.log BB6.Agent8Raw54.TwoHoleGrowth.epoch BB6.Agent8Raw54.TwoHoleGrowth.never BB6.Agent8Raw54.TwoHoleGrowth.cover
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-two-hole-growth-source-certificate
+          path: /tmp/raw54-two-hole-growth.log
+          retention-days: 90
