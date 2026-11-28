@@ -1,0 +1,824 @@
+{
+  "status": "Uncompiled source-Lean proof pilot",
+  "summary": {
+    "chosenC1": [
+      "0LF",
+      "0RF",
+      "1LF",
+      "1RF"
+    ],
+    "by": {
+      "0LF/halt": 1,
+      "0LF/side": 2,
+      "0RF/halt": 1,
+      "0RF/side": 13,
+      "1LF/halt": 1,
+      "1LF/side": 1,
+      "1RF/halt": 1,
+      "1RF/side": 11
+    },
+    "checkedCandidates": 31,
+    "physicalMass": "302734375",
+    "prefix": "Raw34 D1=1RD, C1 in 0LF,0RF,1LF,1RF"
+  },
+  "witnesses": [
+    {
+      "C1": "0LF",
+      "queriedSlot": "F0",
+      "action": "HALT",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        7,
+        16,
+        23,
+        0,
+        0,
+        1,
+        0
+      ],
+      "witness": {
+        "kind": "halt",
+        "slot": 10,
+        "t": 8
+      }
+    },
+    {
+      "C1": "0LF",
+      "queriedSlot": "F0",
+      "action": "0RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        7,
+        16,
+        23,
+        0,
+        0,
+        10,
+        0
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 4,
+        "period": 5,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0LF",
+      "queriedSlot": "F0",
+      "action": "1RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        7,
+        16,
+        23,
+        0,
+        0,
+        22,
+        0
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 4,
+        "period": 5,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "HALT",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        1
+      ],
+      "witness": {
+        "kind": "halt",
+        "slot": 11,
+        "t": 8
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0LA",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        2
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 0,
+        "period": 9,
+        "right": true,
+        "bound": 0
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0LB",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        3
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 1,
+        "period": 8,
+        "right": true,
+        "bound": 1
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0LC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        4
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 2,
+        "period": 7,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0LD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        5
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 3,
+        "period": 6,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0RA",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        8
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 0,
+        "period": 9,
+        "right": true,
+        "bound": 0
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0RB",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        9
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 1,
+        "period": 8,
+        "right": true,
+        "bound": 1
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        10
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 2,
+        "period": 7,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "0RD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        11
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 3,
+        "period": 6,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "1LC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        16
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 4,
+        "period": 5,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "1RA",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        20
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 0,
+        "period": 9,
+        "right": true,
+        "bound": 0
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "1RB",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        21
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 1,
+        "period": 8,
+        "right": true,
+        "bound": 1
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "1RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        22
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 2,
+        "period": 7,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "0RF",
+      "queriedSlot": "F1",
+      "action": "1RD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        23
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 6,
+        "period": 3,
+        "right": true,
+        "bound": 3
+      }
+    },
+    {
+      "C1": "1LF",
+      "queriedSlot": "F0",
+      "action": "HALT",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        19,
+        16,
+        23,
+        0,
+        0,
+        1,
+        0
+      ],
+      "witness": {
+        "kind": "halt",
+        "slot": 10,
+        "t": 8
+      }
+    },
+    {
+      "C1": "1LF",
+      "queriedSlot": "F0",
+      "action": "0RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        19,
+        16,
+        23,
+        0,
+        0,
+        10,
+        0
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 7,
+        "period": 2,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "HALT",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        1
+      ],
+      "witness": {
+        "kind": "halt",
+        "slot": 11,
+        "t": 8
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "0LD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        5
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 5,
+        "period": 4,
+        "right": true,
+        "bound": 3
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "0RA",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        8
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 0,
+        "period": 9,
+        "right": true,
+        "bound": 0
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "0RB",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        9
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 1,
+        "period": 8,
+        "right": true,
+        "bound": 1
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "0RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        10
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 2,
+        "period": 7,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "0RD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        11
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 3,
+        "period": 6,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1LC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        16
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 7,
+        "period": 2,
+        "right": true,
+        "bound": 3
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1LD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        17
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "bound": 3
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1RA",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        20
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 0,
+        "period": 9,
+        "right": true,
+        "bound": 0
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1RB",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        21
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 1,
+        "period": 8,
+        "right": true,
+        "bound": 1
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1RC",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        22
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 2,
+        "period": 7,
+        "right": true,
+        "bound": 2
+      }
+    },
+    {
+      "C1": "1RF",
+      "queriedSlot": "F1",
+      "action": "1RD",
+      "sourceCodes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        25,
+        16,
+        23,
+        0,
+        0,
+        0,
+        23
+      ],
+      "witness": {
+        "kind": "side",
+        "entry": 6,
+        "period": 3,
+        "right": true,
+        "bound": 3
+      }
+    }
+  ]
+}
