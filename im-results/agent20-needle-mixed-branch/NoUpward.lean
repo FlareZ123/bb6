@@ -77,7 +77,7 @@ theorem no_upward_division (v w : Nat)
     rw [hs]
     ring
   have hdvdiv : 2^v ∣ dv := by
-    exact ⟨2*v-3, by simp [dv]⟩
+    exact ⟨2*v-3, rfl⟩
   have hQpowdiv : 2^v ∣ Q := by
     apply (Nat.dvd_add_iff_right hdvdiv).mpr
     rwa [hQeq]
@@ -102,7 +102,7 @@ theorem no_upward_division (v w : Nat)
   have hDge : 2^(w+1) ≤ D := by dsimp [D]; omega
   have hmulbound : (2^v)*D ≤ Q := by
     rw [ht]
-    exact Nat.mul_le_mul_left D htbound |>.trans_eq (by ring)
+    simpa [Nat.mul_comm] using (Nat.mul_le_mul_left D htbound)
   have hQlt : Q < 2^w*(2*w-3) := by
     dsimp [Q,dw]; omega
   have hcoeff : 2*2^v < 2*w-3 := by
@@ -145,10 +145,12 @@ theorem no_upward_division (v w : Nat)
     have h2Q : D ∣ 2*Q := ⟨2*t, by rw [ht]; ring⟩
     have hDF : D ∣ 2*Q+F := by
       rw [hFidentity]
-      exact dvd_mul_right D _
+      exact ⟨2*w-3, rfl⟩
     exact (Nat.dvd_add_iff_right h2Q).mpr hDF
   have hmulsmall : 2^(v+1)*(2*v-3) ≤
       (2*(w-2))*(w-5) := Nat.mul_le_mul hpowbound hvcoef
+  have hmult : 2^(v+1)*(2*v-3) ≤ 2*(w-2)*(w-5) := by
+    simpa only [Nat.mul_assoc] using hmulsmall
   have hFbound : F ≤ 2*(w-2)*(w-5)+6*w-9 := by
     have hf : F = 2^(v+1)*(2*v-3)+3*(2*w-3) := by
       dsimp [F,dv]
