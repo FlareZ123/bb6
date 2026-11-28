@@ -1,13 +1,13 @@
 # F197: exact four-phase macro reduction (Raw132)
 
 Archived holdout literal: `1RB0RE_1RC0LE_0RD---_0RE0RA_1LF0LB_1LA1LF`.
-Only C1 is undefined. Raw132 is the retained prefix A0=1RB, B0=1RC, C0=0RD, D0=0RE. Agent2 has produced a reproducible guarded [blank-root self-embedding candidate](../agent2-f197-sweep/NonhaltingCertificate.md). The original partial-table transport below supplies the conditional bridge to all compatible machines. The full source-connected root theorem and Cover remain unaccepted.
+Only C1 is undefined. Raw132 is the retained prefix A0=1RB, B0=1RC, C0=0RD, D0=0RE. Agent2's [authentic blank-root nonhalting proof and weighted Cover](../../results/2026-11-28-f197-source-certified-positive-cylinder-agent2.md) have now passed the source-connected complete build, [CI 46100750502](https://github.com/FlareZ123/bb6/actions/runs/46100750502), for every one of the 25 compatible C1 completions. F197 is closed as a leaf; the distinct F321 root and the full Raw132 parent remain open.
 
 ## Strongest reset families
 
 [MixedCarry.md](MixedCarry.md) proves exact live returns for arbitrary interleavings of AT, TT, P=AAT, Q=TAT and AAA/TAA terminal, with arbitrary aligned left tail and exact cost 74+68m+14t. TTJ-carried form costs 209+68m+14t. The complete original-source import passed [CI 46084690743](https://github.com/FlareZ123/bb6/actions/runs/46084690743).
 
-[MarkerMixed.md](MarkerMixed.md) extends the arbitrary mixed prefixes to two-P/J descent and provides a generic wrapping theorem for aligned right-tail-parametric base routines. [EpochCycle.md](EpochCycle.md) gives an unbounded cycle consuming four repeated R=AATAAAT blocks while producing 18 leading P blocks, cost 2448*n+26828, and a generic word-level certificate checker for arbitrary mixed-reset compositions. The new marker and cycle modules passed local Lean with standard axioms against the literal source slice; complete import checks are pending. These families are finite exact transformations. Agent2's guarded self-embedding and root reach computation now address the changing deep tail; the remaining obligation is the complete original-source Lean proof of the root and loop, then the weighted Cover consumer.
+[MarkerMixed.md](MarkerMixed.md) extends the arbitrary mixed prefixes to two-P/J descent and provides a generic wrapping theorem for aligned right-tail-parametric base routines. [EpochCycle.md](EpochCycle.md) gives an unbounded cycle consuming four repeated R=AATAAAT blocks while producing 18 leading P blocks, cost 2448*n+26828, and a generic word-level certificate checker for arbitrary mixed-reset compositions. The new marker and cycle modules passed local Lean with standard axioms against the literal source slice; complete import checks are pending. These families are finite exact transformations. They underpin the now-accepted complete F197 blank-root theorem; the remaining obligation is a proof-bearing Raw132 parent complement and global quotient consumption, not another F197 root verification.
 
 ## Literal macro semantics
 
