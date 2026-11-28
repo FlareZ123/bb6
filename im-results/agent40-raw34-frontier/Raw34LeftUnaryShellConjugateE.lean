@@ -1,5 +1,6 @@
 import Raw34LeftUnaryShell
 import Raw34LeftUnaryShellRD
+import Raw34TwoColorLeftGrowth
 import Raw34BinaryCounterF
 
 set_option maxRecDepth 100000
@@ -29,6 +30,19 @@ def pE (r : Bool) : PartialMachine := fun s =>
   | 4,true  => some (some ⟨true,true,4⟩)
   | _,_ => none
 
+/-- E0=1RD, E1=1RE, D1=0RE: E/F-conjugate two-colour pump. -/
+def pEColor : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 2,true  => some (some ⟨true,false,2⟩)
+  | 3,false => some (some ⟨true,false,2⟩)
+  | 3,true  => some (some ⟨false,true,4⟩)
+  | 4,false => some (some ⟨true,true,3⟩)
+  | 4,true  => some (some ⟨true,true,4⟩)
+  | _,_ => none
+
 private def ef : StatePerm := swapStates (4 : Fin 6) 5
 
 def permPartial (p : PartialMachine) : PartialMachine := fun slot =>
@@ -48,6 +62,15 @@ theorem source_rd :
   have h : ∀ (s : Fin 6) (b : Bool),
       BB6.Agent40Raw34LeftUnaryShellRD.p (s,b) =
       permPartial (pE true) (s,b) := by decide
+  funext slot
+  rcases slot with ⟨s,b⟩
+  exact h s b
+
+theorem source_color :
+    BB6.Agent40Raw34TwoColorLeftGrowth.p = permPartial pEColor := by
+  have h : ∀ (s : Fin 6) (b : Bool),
+      BB6.Agent40Raw34TwoColorLeftGrowth.p (s,b) =
+      permPartial pEColor (s,b) := by decide
   funext slot
   rcases slot with ⟨s,b⟩
   exact h s b
@@ -92,9 +115,16 @@ theorem shell_rd_E_never (m : Machine)
   lift_never BB6.Agent40Raw34LeftUnaryShellRD.p (pE true) source_rd
     BB6.Agent40Raw34LeftUnaryShellRD.all_time_never m hm
 
+theorem color_E_never (m : Machine)
+    (hm : compatible pEColor m) : NeverHalts m :=
+  lift_never BB6.Agent40Raw34TwoColorLeftGrowth.p pEColor source_color
+    BB6.Agent40Raw34TwoColorLeftGrowth.all_time_never m hm
+
 #print axioms source_lc
 #print axioms source_rd
+#print axioms source_color
 #print axioms lift_never
 #print axioms shell_lc_E_never
 #print axioms shell_rd_E_never
+#print axioms color_E_never
 end BB6.Agent40Raw34LeftUnaryShellConjugateE
