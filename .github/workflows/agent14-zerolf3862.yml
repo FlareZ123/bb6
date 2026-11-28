@@ -15,6 +15,7 @@ on:
           - zerolf
           - raw139-local
           - e0-counts
+          - post53-source
           - c1-zeroRA
       parent_run_id:
         description: Completed conditional parent audit run (empty for proof-only)
@@ -89,6 +90,61 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' "$out/log"
           grep -F "'$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" "$out/log"
           find /tmp/agent14-zeroLF3862 -name '*.olean' -exec cp '{}' "$out/build/" ';'
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'post53-source'
+        with:
+          name: raw139-f1-ZeroLD-certified
+          run-id: 45612965271
+          github-token: ${{ github.token }}
+          path: .tmp/agent14-post53/f1-zeroLD
+      - name: Source-graft accepted C1=1LC and F1=0LD into 53-row Raw139 frontier
+        if: inputs.kind == 'post53-source'
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent6-champion-residual/generate_c1_one_lc.py
+          work=/tmp/agent14-post53
+          mkdir -p "$work"
+          f1_manifest="$(find .tmp/agent14-post53/f1-zeroLD -name manifest.json -print -quit)"
+          test -n "$f1_manifest"
+          f1_root="$(dirname "$f1_manifest")"
+          test -d "$f1_root/imports"
+          test -d "$f1_root/build"
+          python3 tools/lean_compile_closure.py \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve53Source.lean \
+            --source-root "$f1_root/imports" \
+            --precompiled-manifest "$f1_manifest" \
+            --precompiled-dir "$f1_root/build" \
+            --workdir "$work/build" \
+            --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label agent14-raw139-post12-53-source \
+            --theorem BB6.Agent14Raw139NormalizedPostTwelve53Source.raw139_p0_cover_from_53_source_extra \
+            --provenance-input im-results/agent6-champion-residual/generate_c1_one_lc.py \
+            --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
+            --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            | tee "$work/log"
+          ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.sourceAcceptedExtraTwo_cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.raw139_p0_cover_from_53_source_extra' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+      - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'post53-source'
+        with:
+          name: agent14-raw139-post12-53-source
+          path: |
+            /tmp/agent14-post53/log
+            /tmp/agent14-post53/manifest.json
+            /tmp/agent14-post53/build/Raw139NormalizedPostTwelve53Source.olean
+            im-results/agent6-champion-residual/C1OneLCParent.lean
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Audit finite normalized E0 cuts
         if: inputs.kind == 'e0-counts'
         run: |
