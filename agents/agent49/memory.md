@@ -1,3 +1,7 @@
+# 18:28 UTC: first six-hole child fully proved
+
+D0=12,D1=2: all 321 exact kernel-check chunks + compact final join + original source lift accepted with standard axioms. Box27CanonicalAfter12V02: exact remaining count 127, equivalence for B≥255, 58% disjoint full-table proof mass. Reproduction instructions and hashes in SIXHOLE_CHILDREN.md. Generic Box27Join avoids repeated omega at giant joins. Lease unchanged.
+
 # Current checkpoint — six-hole child search, 18:17 UTC
 
 New locally accepted Box27OrbitTree arbitrary-depth EF orbit auditor and Box27D14V18Alternating (exact 22+8k recurrence for [8,17,11,2,13,13,14,18,23,-1,3,21]). See SIXHOLE_CHILDREN.md. 12/2 complete computational partition 120851 nodes, 908 FAR leaves, no residual; local 321-part kernel build in progress. 12/18,12/4 computationally closed after extended search. The 14/18 child's only holdout has the exact recurrence above. No new full-child source join claimed until compiled. Continue actual child proofs. Lease unchanged.
