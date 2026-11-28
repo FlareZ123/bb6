@@ -1,4 +1,4 @@
-## 2026-11-28 02:54Z checkpoint — source-accepted self-embedding; original blank-root CI running
+## 2026-11-28 02:51Z checkpoint — source-accepted self-embedding; original blank-root CI running
 
 Claimed immutable lease 2026-11-28T02:46:44.368Z (run agent2-bb6-f197-20261128T024644368Z; claim commit 52c5dfe9cc20a7063050085881c925e649c5278c). Do not refresh; release after measured >=70 minutes.
 
