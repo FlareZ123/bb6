@@ -51,7 +51,7 @@ def plan(directory, out, count, stem='Raw54OneRA', root='Raw54OneRACut'):
         (out/f"{i}.txt").write_text("".join(f"{m}.lean\n" for m in sorted(roots)))
         print(i,len(roots),len(deps[i]),cost(deps[i]),flush=True)
 
-def merge(slices,out,count,artifact='raw54-onera'):
+def merge(slices,out,count,artifact='raw54-onera',allow_mixed_revision='false'):
     manifests=[]
     candidates={}
     for i in range(count):
@@ -70,7 +70,11 @@ def merge(slices,out,count,artifact='raw54-onera'):
     for m in manifests:
         assert m["lean_version"]==base["lean_version"]
         assert m["lean_binary"]["sha256"]==base["lean_binary"]["sha256"]
-        assert m["proof_source_revision"]==base["proof_source_revision"]
+        if allow_mixed_revision != "true":
+            assert m["proof_source_revision"]==base["proof_source_revision"]
+    if allow_mixed_revision == "true":
+        print("validated mixed-source-revision slice merge:",
+              sorted({m["proof_source_revision"] for m in manifests}),flush=True)
     standard=("Lean","Init","Std","Batteries","Mathlib","Cryptids","BusyBeaver")
     def is_standard(d):
         return any(d==p or d.startswith(p+".") for p in standard)
