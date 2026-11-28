@@ -6,7 +6,7 @@ on:
       target:
         description: "Finite exact section prelude or complete infinite invariant"
         type: choice
-        options: [core, grammar, carry, right, b, full, m61, m59, m176, m413, m558, m627, m711, m905, m44, raw45-m6, raw45-m1, raw45-m2, raw45-m5, raw45-m3, raw45-m4, raw45-b1la-a1lc-l1, raw45-b1la-a1lc-l2, raw45-b1la-a1lc-ngram, raw45-b1la-a1lc-cut, raw45-cut-kid04, raw45-sharp96, raw45-cut-assembled, raw45-exact96, raw45-eleven-cycles, raw45-d2-a, raw45-d2-b, raw45-d2-c, raw45-d2-d, raw45-d3-ngram, raw45-hard-d3-a, raw45-hard-d3-b, raw44-b1rc-c1re-twohole, raw44-b1rc-c1re-m4, raw44-b1rc-c1re-m6, raw44-b1rc-c1re-m5, raw44-cut-ng00, raw44-cut-kid00, raw44-cut-assembled, raw44-b1rc-thirteen, raw44-b1rc-c1r-a1re, raw44-b1rc-c1r-a1rf, raw44-b1rc-c1r-a1zerore, raw44-b1rc-c1r-a1zerorf, raw44-b1rc-c1ra-ngram10, raw44-b1rc-c1la-m3, raw44-b1rc-c1la-m3swap, raw44-cut-0la-kid00, raw44-cut-0la-assembled, raw44-b1rc-c1ra-m2, raw44-b1rc-c1ra-m2swap, raw44-b1rc-c1ra-m1, raw44-b1rc-c1ra-m1swap, raw44-cut-0ra-kid00, raw44-cut-0ra-assembled, raw44-cut-0rf-kid00, raw44-cut-0rf-assembled, raw44-b1rc-c1rf-twohole]
+        options: [core, grammar, carry, right, b, full, m61, m59, m176, m413, m558, m627, m711, m905, m44, raw45-m6, raw45-m1, raw45-m2, raw45-m5, raw45-m3, raw45-m4, raw45-b1la-a1lc-l1, raw45-b1la-a1lc-l2, raw45-b1la-a1lc-ngram, raw45-b1la-a1lc-cut, raw45-cut-kid04, raw45-sharp96, raw45-cut-assembled, raw45-exact96, raw45-eleven-cycles, raw45-d2-a, raw45-d2-b, raw45-d2-c, raw45-d2-d, raw45-d3-ngram, raw45-hard-d3-a, raw45-hard-d3-b, raw44-b1rc-c1re-twohole, raw44-b1rc-c1re-m4, raw44-b1rc-c1re-m6, raw44-b1rc-c1re-m5, raw44-cut-ng00, raw44-cut-kid00, raw44-cut-assembled, raw44-b1rc-thirteen, raw44-b1rc-c1r-a1re, raw44-b1rc-c1r-a1rf, raw44-b1rc-c1r-a1zerore, raw44-b1rc-c1r-a1zerorf, raw44-b1rc-c1r-a1zerore-f0rc, raw44-b1rc-c1ra-ngram10, raw44-b1rc-c1la-m3, raw44-b1rc-c1la-m3swap, raw44-cut-0la-kid00, raw44-cut-0la-assembled, raw44-b1rc-c1ra-m2, raw44-b1rc-c1ra-m2swap, raw44-b1rc-c1ra-m1, raw44-b1rc-c1ra-m1swap, raw44-cut-0ra-kid00, raw44-cut-0ra-assembled, raw44-cut-0rf-kid00, raw44-cut-0rf-assembled, raw44-b1rc-c1rf-twohole]
         default: core
 
 permissions:
@@ -109,6 +109,9 @@ jobs:
           fi
           if [[ "${{ inputs.target }}" == "raw44-b1rc-c1la-m3" ]]; then
             TARGET="im-results/agent16-raw44/Raw44B1RC_C1LA_M3Growth.lean"
+          fi
+          if [[ "${{ inputs.target }}" == "raw44-b1rc-c1r-a1zerore-f0rc" ]]; then
+            TARGET="im-results/agent16-raw44/Raw44B1RC_C1RA_A1ZeroRE_F0RC_Growth.lean"
           fi
           if [[ "${{ inputs.target }}" == "raw44-b1rc-c1ra-ngram10" ]]; then
             TARGET="im-results/agent16-raw44/Raw44B1RC_C1RA_NGram10.lean"
