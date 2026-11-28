@@ -1,0 +1,95 @@
+name: Agent44 Extra132 row resume 2
+
+on:
+  workflow_run:
+    workflows: ["Agent44 Extra132 row resume 1"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  resume:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ github.event.workflow_run.id }}
+          name: raw11-132-row-checkpoint
+          path: /tmp/checkpoint
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Recover exact prior source and accepted object state
+        run: |
+          set -euo pipefail
+          src="$(find /tmp/checkpoint -type f -name Agent5Raw11Extra132.lean -print -quit)"
+          receipt="$(find /tmp/checkpoint -type f -name repair-receipt.json -print -quit)"
+          test -n "$src"
+          test -n "$receipt"
+          mkdir -p /tmp/parent-source /tmp/parent-out
+          cp -a "$(dirname "$src")/." /tmp/parent-source/
+          cp -a "$(dirname "$receipt")/." /tmp/parent-out/
+          echo "source_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
+          echo "accepted_objects=$(find /tmp/parent-out -name '*.olean' | wc -l)"
+
+      - name: Resume bounded exact kernel DAG
+        id: advance
+        env:
+          RAW11_REPAIR_ID: '132'
+          RAW11_REPAIR_TARGET: Agent44Extra132GiantProof
+          RAW11_REPAIR_MAX_FRESH: '16'
+          RAW11_REPAIR_MODULE_TIMEOUT: '240'
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
+          if [ -f /tmp/parent-out/Agent5Raw11Extra132.olean ]; then
+            grep -F "'BB6.Agent5Raw11Extra132.cover' depends on axioms:" /tmp/checkpoint.log
+            echo "complete=true" >> "$GITHUB_OUTPUT"
+          else
+            grep -E 'checkpoint' /tmp/checkpoint.log
+            echo "complete=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-132-row-checkpoint
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: steps.advance.outputs.complete == 'true'
+        with:
+          name: parent-complete-132-repaired
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+          if-no-files-found: error
+          retention-days: 30
