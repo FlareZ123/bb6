@@ -1,0 +1,119 @@
+name: Agent 8 Raw54 1RD two-edge FAR extension source audit
+on:
+  workflow_dispatch:
+    inputs:
+      indices:
+        description: 'JSON array of 385..439 for Lean source validation'
+        required: true
+        default: '[385,403,404,439]'
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-residual-lasso
+          run-id: '46132016517'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-lasso
+      - name: Reconstruct 440 anchored FAR source candidates
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          L=/tmp/raw54-onerd-twoedge
+          mkdir -p "$L"
+          g++ -std=c++17 -O3 "$D/oneRD_mutant_bank.cpp" -o /tmp/oneRD-first
+          g++ -std=c++17 -O3 "$D/oneRD_bootstrap_mutants.cpp" -o /tmp/oneRD-boot
+          g++ -std=c++17 -O3 "$D/oneRD_two_edge_mutants.cpp" -o /tmp/oneRD-twoedge
+          /tmp/oneRD-first "$D/oneRD_leancert_bank.txt" /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$L/round1.tsv" 2>&1 | tee "$L/round1.log"
+          test "$(wc -l < "$L/round1.tsv")" -eq 251
+          cp "$L/round1.tsv" "$L/master.tsv"
+          for n in 2 3 4 5 6 7; do
+            /tmp/oneRD-boot /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$L/master.tsv" "$L/round$n.tsv" 2>&1 | tee "$L/round$n.log"
+            cat "$L/round$n.tsv" >> "$L/master.tsv"
+          done
+          test "$(wc -l < "$L/master.tsv")" -eq 385
+          python - <<'PY'
+          from pathlib import Path
+          L=Path('/tmp/raw54-onerd-twoedge')
+          old={x.split(chr(9))[0] for x in (L/'master.tsv').read_text().splitlines()}
+          rows=[x for x in Path('/tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv').read_text().splitlines()
+                if x.endswith('["open"]') and x.split(chr(9))[0] not in old]
+          assert len(rows)==243, len(rows)
+          twohole='1RB---_1RC0RD_0RD1RF_1LD0LE_1LB1RD_0RB---'
+          assert sum(x.split(chr(9))[0]==twohole for x in rows)==1
+          rows=[x for x in rows if x.split(chr(9))[0]!=twohole]
+          assert len(rows)==242 and all(x.split(chr(9))[0].count('---')==1 for x in rows)
+          (L/'remaining242.tsv').write_text(chr(10).join(rows)+chr(10))
+          PY
+          /tmp/oneRD-twoedge "$L/master.tsv" "$L/remaining242.tsv" "$L/round_twoedge.tsv" 2>&1 | tee "$L/round_twoedge.log"
+          test "$(wc -l < "$L/round_twoedge.tsv")" -eq 19
+          cat "$L/round_twoedge.tsv" >> "$L/master.tsv"
+          for n in 8 9 10 11 12; do
+            /tmp/oneRD-boot /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$L/master.tsv" "$L/boost$n.tsv" 2>&1 | tee "$L/boost$n.log"
+            cat "$L/boost$n.tsv" >> "$L/master.tsv"
+          done
+          test "$(wc -l < "$L/boost8.tsv")" -eq 22
+          test "$(wc -l < "$L/boost9.tsv")" -eq 5
+          test "$(wc -l < "$L/boost10.tsv")" -eq 4
+          test "$(wc -l < "$L/boost11.tsv")" -eq 5
+          test ! -s "$L/boost12.tsv"
+          test "$(wc -l < "$L/master.tsv")" -eq 440
+          python - <<'PY'
+          from pathlib import Path
+          rs=Path('/tmp/raw54-onerd-twoedge/master.tsv').read_text().splitlines()
+          codes=[x.split(chr(9))[0] for x in rs]
+          assert len(codes)==len(set(codes))==440
+          mass=sum(25**code.count('---') for code in codes)
+          assert mass==18200,mass
+          print('PASS: 440 unique FAR candidate cylinders, physical mass 18200. Each proof still requires Lean source acceptance.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw54-onerd-twoedge-generated
+          path: /tmp/raw54-onerd-twoedge
+          if-no-files-found: error
+          retention-days: 90
+  check:
+    needs: discovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        index: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-twoedge-generated
+          path: /tmp/raw54-onerd-twoedge
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact original-source FAR proof
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          IDX=${{ matrix.index }}
+          MOD=$(printf 'Raw54OneRDMask%03d' "$IDX")
+          NS=$(printf 'BB6.Agent8Raw54.OneRDMask%03d' "$IDX")
+          python "$D/far_mask_cert.py" /tmp/raw54-onerd-twoedge/master.tsv --index "$IDX" --out "$D/$MOD.lean"
+          W=/tmp/raw54-onerd-twoedge-check
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-onerd-twoedge-check.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-twoedge-check.log "$NS.valid" "$NS.cover"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-twoedge-proof-${{ matrix.index }}
+          path: |
+            /tmp/raw54-onerd-twoedge-check.log
+            im-results/agent8-raw54/Raw54OneRDMask*.lean
+          if-no-files-found: ignore
+          retention-days: 90
