@@ -1,56 +1,57 @@
-# Space Needle: mixed-valuation inverse-branch resonance
+# Space Needle: exact mixed-valuation inverse return periods
 
-**Agent 20, 28 November 2026.** Exact paper-level arithmetic establishes a directed incompatibility for all **42 ordered pairs** of distinct valuations in `{3,4,5,6,11,14,17}`, and sharper minimal resonance depths **11** (3→5) and **18** (5→3). These are restrictions on *prepared high-level inverse histories*, not decisions about the authentic blank-start Space Needle orbit or BB(6). The two immediate 3/5 exclusions and generic all-depth condition have Lean source modules and original-source adapters (`MixedValuationDisjoint.lean`, `NeedleMixedValuationSource.lean`); the original-source compilation is pending in manual run [46100959980](https://github.com/FlareZ123/bb6/actions/runs/46100959980). The complete 42-entry exact-period table, CRT existence, and explicit multiplicative orders are paper-level and computationally audited, not yet Lean-source certified.
+**Agent 20, 28 November 2026.** For seven source-connected Space Needle valuation labels \(\{3,4,5,6,11,14,17\}\), an exact integer theorem gives **all 42 directed inverse-branch return periods**: from 2 through **262,146**, with concrete arithmetic evidence and a constructive CRT sharpness proof. The general inverse potential equation comes from previously source-accepted Lean. New generic and original-source Lean proofs are authored in this directory and dispatched in manual [CI 46101403639](https://github.com/FlareZ123/bb6/actions/runs/46101403639) (pending acceptance); the earlier two immediate-direction source proofs are in [CI 46100959980](https://github.com/FlareZ123/bb6/actions/runs/46100959980) (pending acceptance). The complete **42-entry order table and all-depth existential sharpness remain paper-level**, audited by exact arithmetic, not Lean-kernel-accepted.
 
-## Mathematical statement
+**Scope:** These are restrictions on **prepared high-level inverse histories** of the genuine Space Needle machine. No authentic blank-start reachability, nonhalting, or Busy Beaver upper bound follows. This note does not claim BB(6) is solved.
 
-In the genuine high-level Space Needle map write the shifted counter as `B=d+2`. A valuation-`v` predecessor has shifted counter `P=2^v(2q+3)` and exact source edge
-[
-L_v B=D_v P+d_v,qquad
-L_v=2^{v+1},quad D_v=L_v+3,quad d_v=2^v(2v-3).
-]
-For `v≥2` the exact incoming-`v` congruence is `D_v | 3B+d_v`, with the ordinary source lower-bound condition `B≥3·2^v+v+3`. This is the source equation already used in the certified all-valuation theorem [Agent20NeedlePotentialSource.allValuationsSource](../agent20-needle-unified-hensel/SpaceNeedlePotentialSource.lean).
+## Exact source equation and cross-potential theorem
 
-**Cross-potential theorem.** Suppose a prepared target `B` admits a valuation-`w` parent and also admits a legal chain of `j` consecutive valuation-`v` reverse edges ending at `P_j`. If `P_j` admits a valuation-`w` parent as well, then
-[
-oxed{D_wmid(D_v^j-L_v^j)(d_w-d_v).}
-]
-The formula is over integers, so signed differences cause no ambiguity. Proof: the earlier source-certified chain potential implies
-[
-L_v^j(3B+d_v)=D_v^j(3P_j+d_v).
-]
-Subtracting the two `w`-potentials gives the **exact** identity
-[
-D_v^j(3P_j+d_w)-L_v^j(3B+d_w)
- =(D_v^j-L_v^j)(d_w-d_v).
-]
-Since both bracketed `w`-potentials are divisible by `D_w`, the necessary condition follows. No assumption about blank-root reachability is used.
+For the original source high-level dynamics write the shifted counter as \(B=d+2\). A legal valuation-\(v\) predecessor is \(P=2^v(2q+3)\), \(q\ge0\), satisfying
 
-At depth `j=1`, `D_v-L_v=3`, hence a mixed switch is impossible whenever
-[
-D_w
-mid3(d_w-d_v).
-]
-The exact [audit](mixed_branch_audit.py) checks this nondivisibility for all 42 ordered `v≠w` with `v,w∈{3,4,5,6,11,14,17}`. This pairwise conditional applies even when an initial target has *all seven* incoming valuations, as in the existing [six-arm prepared-target construction](../agent20-needle-joint-towers/SIX-DEEP-ARMS.md). A target with both `v`- and `w`-parents cannot switch from its `v`-parent immediately to a `w`-parent for any of these ordered pairs.
-
-## Complete all-depth return schedule for seven valuations
-
-The cross-potential condition is not merely a one-step prohibition. For the seven valuations
-\(W=\{3,4,5,6,11,14,17\}\), all seven moduli \(D_v\) are pairwise coprime, and every \(D_w\) is odd. If the target \(B\) already has a valuation-\(w\) parent and has \(k\) consecutive genuine valuation-\(v\) reverse steps to \(P_k\), then the exact potential identity implies
 \[
-D_w \mid (3P_k+d_w)
-\quad\Longleftrightarrow\quad
-D_w \mid (D_v^k-L_v^k)(d_w-d_v).
+L_v B=D_v P+d_v,\qquad
+L_v=2^{v+1},\quad D_v=L_v+3,\quad d_v=2^v(2v-3).
 \]
-The reverse implication uses \(\gcd(D_w,D_v)=1\) to cancel \(D_v^k\). Define \(M_{v,w}=D_w/\gcd(D_w,d_w-d_v)\). This condition is equivalent to
+
+The exact incoming-\(v\) congruence is \(D_v\mid3B+d_v\). Given \(v\ge2\), it supplies an actual legal predecessor if \(B\ge3\cdot2^v+v+3\); the bound ensures \(q\ge0\). The original-source uniform necessary-divisibility theorem [Agent20NeedlePotentialSource.allValuationsSource](../agent20-needle-unified-hensel/SpaceNeedlePotentialSource.lean) has already passed pinned Lean CI [46085435892](https://github.com/FlareZ123/bb6/actions/runs/46085435892).
+
+Let \(P_k\) be reached from \(B\) through \(k\) genuine **reverse** steps, every one of valuation \(v\). Their exact potential transport identity is
+
 \[
-\left(D_v L_v^{-1}\bmod M_{v,w}\right)^k=1\bmod M_{v,w},
+L_v^k(3B+d_v)=D_v^k(3P_k+d_v).
 \]
-because the modulus is odd and both \(D_v,L_v\) are units. Therefore the **exact possible return depths** for the \(w\)-label along a monochromatic \(v\)-inverse chain are the positive multiples of its finite multiplicative order \(h_{v,w}\), apart from the separate requirement that the end counter is large enough for a positive legal parent.
 
-The complete exact period matrix below is reproducible by the standard-library [audit](mixed_branch_audit.py). Rows are the label \(v\) repeated backwards, columns the alternate label \(w\) which the starting target already admits. An entry \(h\) means that a returned \(w\)-parent is arithmetically impossible at **every** depth \(k\) not divisible by \(h\).
+For any other valuation \(w\), plain algebra gives
 
-| preceding valuation v / returned valuation w | 3 | 4 | 5 | 6 | 11 | 14 | 17 |
+\[
+\boxed{D_v^k(3P_k+d_w)-L_v^k(3B+d_w)
+       =(D_v^k-L_v^k)(d_w-d_v).} \tag{1}
+\]
+
+Thus **if both \(B\) and \(P_k\) admit an incoming valuation-\(w\) predecessor**, then necessarily
+
+\[
+\boxed{D_w\mid(D_v^k-L_v^k)(d_w-d_v).} \tag{2}
+\]
+
+For our seven labels, all \(D_v\) are pairwise coprime (they are \(19,35,67,131,4099,32771,262147\)). Hence, provided \(B\) already has a valuation-\(w\) parent and a genuine valuation-\(v\) reverse chain exists, (1) and \(\gcd(D_v,D_w)=1\) show (2) is also **sufficient for the final congruence** \(D_w\mid3P_k+d_w\). Actual availability of the final \(w\)-parent additionally requires the positive-cofactor threshold \(P_k\ge3\cdot2^w+w+3\).
+
+At \(k=1\), the factor \(D_v-L_v=3\), so an immediate mixed switch is impossible whenever \(D_w\nmid 3(d_w-d_v)\). **All 42 distinct ordered pairs** of the seven labels have this property.
+
+## Exact 42-pair return schedule
+
+Set
+
+\[
+M_{v,w}=\frac{D_w}{\gcd(D_w,d_w-d_v)},\qquad
+z_{v,w}=D_v\,L_v^{-1}\pmod{M_{v,w}}.
+\]
+
+Every \(M_{v,w}\) is odd and coprime to \(D_v L_v\) for the selected seven labels. Condition (2) is therefore equivalent to \(z_{v,w}^k=1\bmod M_{v,w}\). Writing \(h_{v,w}\) for the multiplicative order of this unit, the **possible arithmetic return depths are exactly the positive multiples of \(h_{v,w}\)**.
+
+The matrix is generated by the independent standard-library [audit](mixed_branch_audit.py), which computes actual modular orders rather than trusting the printed values.
+
+| repeated reverse label \(v\) / returned label \(w\) | 3 | 4 | 5 | 6 | 11 | 14 | 17 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 3 | — | 2 | 11 | 130 | 683 | 16,385 | 262,146 |
 | 4 | 18 | — | 2 | 130 | 2,049 | 16,385 | 262,146 |
@@ -60,18 +61,29 @@ The complete exact period matrix below is reproducible by the standard-library [
 | 14 | 9 | 3 | 11 | 130 | 683 | — | 131,073 |
 | 17 | 9 | 12 | 22 | 65 | 1,366 | 16,385 | — |
 
-The periods are **sharp as prepared-configuration existence statements**. Given any pair \(v\ne w\) and any finite \(k\) divisible by \(h_{v,w}\), the two simultaneous congruences \(D_v^k\mid3B+d_v\) and \(D_w\mid3B+d_w\) have arbitrarily large positive integer solutions \(B\), because \(D_v,D_w\) are coprime and both are coprime to 3. For sufficiently large solutions, the fixed-point inverse formula gives \(k\) genuine legal positive-\(q\) valuation-\(v\) reverse edges; the period identity then forces the final \(w\) congruence and a legal incoming \(w\)-edge. Hence the table cannot be strengthened to a universal prohibition of all mixed labels. This is a constructive **CRT + positivity** argument, not a claim of blank-root reachability or an all-k Lean theorem.
+For example, a prepared counter admitting both valuation 3 and valuation 17 cannot regain a valuation-17 predecessor along a consecutive valuation-3 reverse chain before **262,146 steps**; the opposite order (17-chain returning valuation 3) has period **9**. The numbers count high-level *inverse edges*, not primitive TM steps.
 
-The most asymmetric entry is \(v=3,w=17\): a prepared target with both a valuation-3 and valuation-17 parent can have no valuation-17 parent along its valuation-3 ancestor chain until at least **262,146** reverse steps. The converse order \(v=17,w=3\) is only **9**. These are structural constraints on a family of high-level inverse branches, not numbers of primitive TM steps.
+### Sharpness for every entry and every permitted depth
 
-### Concrete sharp witnesses for the 3/5 pair
+Fix \(v\ne w\) and a finite \(k\) divisible by \(h_{v,w}\). The simultaneous congruences
 
-For \(v=3,w=5\), the ratio \(19/16\equiv-3\pmod{67}\) has order **11**. The positive shifted target \(B=6639944757198475\) satisfies \(B\equiv-8\pmod{19^{11}}\) and \(3B+224\equiv0\pmod{67}\). It admits both 3 and 5 first parents, 11 genuine valuation-3 reverse edges, no valuation-5 parent at depths 1–10, and a valuation-5 parent after the eleventh step at shifted counter \(1002754604531704\).
+\[
+D_v^k\mid3B+d_v,\qquad D_w\mid3B+d_w
+\]
 
-For \(v=5,w=3\), the ratio \(67/64\equiv-4\pmod{19}\) has order **18**. The positive target \(B=7155223300615540543431783171417079\) satisfies \(3B+224\equiv0\pmod{67^{18}}\) and \(3B+24\equiv0\pmod{19}\). Its 18 genuine valuation-5 reverse edges have no valuation-3 parent at depths 1–17, and regain one at depth 18 at shifted counter \(3137012685364791692237174865570400\). Both witnesses are audited with exact integers.
+have infinitely many \(B\) by the Chinese remainder theorem, since \(\gcd(D_v,D_w)=\gcd(3,D_vD_w)=1\). Choose \(B\) sufficiently large in that progression. The exact rational inverse \(T_v(B)=(L_vB-d_v)/D_v\) is integral through all \(k\) stages by the single fixed-point congruence; the parity of the quotient after extracting \(2^v\) is odd. With sufficiently large \(B\), every predecessor has \(q\ge0\), so these are *legal* source-connected high-level edges. Equation (1), the order hypothesis and coprimality of \(D_v,D_w\) force the final \(w\) congruence, and choosing \(B\) still larger ensures its actual legal \(w\)-predecessor.
 
-## Scope and next proof edge
+Thus **each period is optimal for unrestricted prepared counters**, not just a numerical obstruction. This construction does not show any of the counters are visited by the genuine blank-tape orbit.
 
-This identifies an exact *return-time barrier* for two competing valuation labels on one inverse ray and a reusable necessary obstruction for 42 ordered label switches. It improves inverse-grammar pruning, but it cannot exclude an authentic terminal feeder: the resonance examples demonstrate that first-step incompatibility is not perpetual. The generic mixed-depth divisibility theorem has newly authored source-Lean modules but awaits successful CI; the 42 exact periods and their existential sharpness remain paper-level derivations with a reproducible exact Python audit. The pinned original-source CI acceptance of the two immediate 3/5 statements must be checked before claiming source certification. Future value comes from integrating these periodic constraints into actual-root inverse search, not enlarging a static modular table.
+### Two exact explicit smallest-return witnesses
 
-Reproduce: `python3 im-results/agent20-needle-mixed-branch/mixed_branch_audit.py` (standard library only). The two Lean files are compiled in the *existing* manually dispatched workflow `.github/workflows/agent20-needle-index-potential.yml`; no new workflow was created.
+- For \(v=3,w=5\), \(D_v/L_v\equiv19/16\equiv-3\bmod67\), whose multiplicative order is **11**. \(B=6639944757198475\) satisfies \(B\equiv-8\bmod19^{11}\) and \(3B+224\equiv0\bmod67\). It has both 3- and 5-parents, 11 legal consecutive 3-parents, and a 5-parent of the eleventh parent \(P_{11}=1002754604531704\), but none at intermediate depths.
+- For \(v=5,w=3\), \(D_v/L_v\equiv67/64\equiv-4\bmod19\), order **18**. \(B=7155223300615540543431783171417079\) satisfies \(3B+224\equiv0\bmod67^{18}\) and \(3B+24\equiv0\bmod19\). It has 18 legal consecutive 5-parents and regains a 3-parent at \(P_{18}=3137012685364791692237174865570400\), with no 3-parent at intermediate depths.
+
+The [audit](mixed_branch_audit.py) rederives these CRT targets, checks every legal predecessor, confirms the 42 orders by modular multiplication, and asserts the intermediate absences.
+
+## Exact evidence boundaries and next use
+
+The prior original-source uniform potential theorem is source-accepted ([CI 46085435892](https://github.com/FlareZ123/bb6/actions/runs/46085435892)). New modules [MixedPotentialGeneral.lean](MixedPotentialGeneral.lean) and [NeedleMixedPotentialSource.lean](NeedleMixedPotentialSource.lean) express the **uniform all-depth** gap in Lean, while [MixedValuationDisjoint.lean](MixedValuationDisjoint.lean) and [NeedleMixedValuationSource.lean](NeedleMixedValuationSource.lean) handle the concrete one-step 3/5 cases. Their exact original-source build must pass the existing manually dispatched workflow [agent20-needle-index-potential.yml](../../.github/workflows/agent20-needle-index-potential.yml), and axiom profiles must have only standard axioms. No new workflow file was added.
+
+The 42 exact return periods, their CRT existential sharpness, and the two fully explicit prepared witnesses are **paper proofs plus exact-integer audit**, not yet source-Lean proof artifacts. For BB(6), this can prune root-targeted inverse searches and distinguish genuine obstructions from the six-arm prepared constructions in [SIX-DEEP-ARMS.md](../agent20-needle-joint-towers/SIX-DEEP-ARMS.md). It cannot by itself decide reachability of a terminal feeder from the authentic blank counter \(B=3\). A useful next step is to compose this return-period filter with the existing original-source exact inverse grammar for candidate feeder parameters and check whether it eliminates any *genuine blank-root* branch, not to generate disconnected modular tables.
