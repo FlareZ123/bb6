@@ -136,430 +136,310 @@ private theorem intro_23 (k:Nat) : AffineDead (24528*k+15831) (48*k+28) := by
 private theorem pred_0 (k a d:Nat)
   (hm:CounterMove a d (12288*k+7934) (12288*k+7933)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 18432*k+11901 := by omega
-      have hd : d = 6144*k+3965 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 12288*k+7933 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 18432*k+11901 := by omega
+      have hD : d = 6144*k+3965 := by omega
+      rw [hA,hD]
       exact intro_15 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 3072*k+1982 := by omega
-      have hd : d = 21504*k+13879 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 3072*k+1982 := by omega
+      have hD : d = 21504*k+13879 := by omega
+      rw [hA,hD]
       exact intro_1 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_1 (k a d:Nat)
   (hm:CounterMove a d (3072*k+1982) (21504*k+13879)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 13824*k+8922 := by omega
-      have hd : d = 10752*k+6938 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 21504*k+13879 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 13824*k+8922 := by omega
+      have hD : d = 10752*k+6938 := by omega
+      rw [hA,hD]
       exact intro_10 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 768*k+494 := by omega
-      have hd : d = 23808*k+15361 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 768*k+494 := by omega
+      have hD : d = 23808*k+15361 := by omega
+      rw [hA,hD]
       exact intro_2 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_2 (k a d:Nat)
   (hm:CounterMove a d (768*k+494) (23808*k+15361)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 12672*k+8175 := by omega
-      have hd : d = 11904*k+7679 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 23808*k+15361 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 12672*k+8175 := by omega
+      have hD : d = 11904*k+7679 := by omega
+      rw [hA,hD]
       exact intro_8 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 192*k+122 := by omega
-      have hd : d = 24384*k+15727 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 192*k+122 := by omega
+      have hD : d = 24384*k+15727 := by omega
+      rw [hA,hD]
       exact intro_3 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_3 (k a d:Nat)
   (hm:CounterMove a d (192*k+122) (24384*k+15727)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 12384*k+7986 := by omega
-      have hd : d = 12192*k+7862 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 24384*k+15727 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 12384*k+7986 := by omega
+      have hD : d = 12192*k+7862 := by omega
+      rw [hA,hD]
       exact intro_5 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 48*k+29 := by omega
-      have hd : d = 24528*k+15814 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 48*k+29 := by omega
+      have hD : d = 24528*k+15814 := by omega
+      rw [hA,hD]
       exact intro_4 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_4 (k a d:Nat)
   (hm:CounterMove a d (48*k+29) (24528*k+15814)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 24528*k+15814 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_5 (k a d:Nat)
   (hm:CounterMove a d (12384*k+7986) (12192*k+7862)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 12192*k+7862 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 3096*k+1995 := by omega
-      have hd : d = 21480*k+13847 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 3096*k+1995 := by omega
+      have hD : d = 21480*k+13847 := by omega
+      rw [hA,hD]
       exact intro_6 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_6 (k a d:Nat)
   (hm:CounterMove a d (3096*k+1995) (21480*k+13847)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 13836*k+8919 := by omega
-      have hd : d = 10740*k+6922 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 21480*k+13847 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 13836*k+8919 := by omega
+      have hD : d = 10740*k+6922 := by omega
+      rw [hA,hD]
       exact intro_7 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_7 (k a d:Nat)
   (hm:CounterMove a d (13836*k+8919) (10740*k+6922)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 10740*k+6922 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_8 (k a d:Nat)
   (hm:CounterMove a d (12672*k+8175) (11904*k+7679)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 18624*k+12015 := by omega
-      have hd : d = 5952*k+3838 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 11904*k+7679 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 18624*k+12015 := by omega
+      have hD : d = 5952*k+3838 := by omega
+      rw [hA,hD]
       exact intro_9 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_9 (k a d:Nat)
   (hm:CounterMove a d (18624*k+12015) (5952*k+3838)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 5952*k+3838 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_10 (k a d:Nat)
   (hm:CounterMove a d (13824*k+8922) (10752*k+6938)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 10752*k+6938 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 3456*k+2229 := by omega
-      have hd : d = 21120*k+13625 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 3456*k+2229 := by omega
+      have hD : d = 21120*k+13625 := by omega
+      rw [hA,hD]
       exact intro_11 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_11 (k a d:Nat)
   (hm:CounterMove a d (3456*k+2229) (21120*k+13625)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 14016*k+9042 := by omega
-      have hd : d = 10560*k+6811 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 21120*k+13625 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 14016*k+9042 := by omega
+      have hD : d = 10560*k+6811 := by omega
+      rw [hA,hD]
       exact intro_12 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_12 (k a d:Nat)
   (hm:CounterMove a d (14016*k+9042) (10560*k+6811)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 19296*k+12448 := by omega
-      have hd : d = 5280*k+3404 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 10560*k+6811 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 19296*k+12448 := by omega
+      have hD : d = 5280*k+3404 := by omega
+      rw [hA,hD]
       exact intro_14 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 3504*k+2259 := by omega
-      have hd : d = 21072*k+13588 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 3504*k+2259 := by omega
+      have hD : d = 21072*k+13588 := by omega
+      rw [hA,hD]
       exact intro_13 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_13 (k a d:Nat)
   (hm:CounterMove a d (3504*k+2259) (21072*k+13588)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 21072*k+13588 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_14 (k a d:Nat)
   (hm:CounterMove a d (19296*k+12448) (5280*k+3404)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 5280*k+3404 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_15 (k a d:Nat)
   (hm:CounterMove a d (18432*k+11901) (6144*k+3965)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 21504*k+13884 := by omega
-      have hd : d = 3072*k+1981 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 6144*k+3965 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 21504*k+13884 := by omega
+      have hD : d = 3072*k+1981 := by omega
+      rw [hA,hD]
       exact intro_16 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_16 (k a d:Nat)
   (hm:CounterMove a d (21504*k+13884) (3072*k+1981)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 23040*k+14875 := by omega
-      have hd : d = 1536*k+989 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 3072*k+1981 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 23040*k+14875 := by omega
+      have hD : d = 1536*k+989 := by omega
+      rw [hA,hD]
       exact intro_17 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_17 (k a d:Nat)
   (hm:CounterMove a d (23040*k+14875) (1536*k+989)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 23808*k+15370 := by omega
-      have hd : d = 768*k+493 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 1536*k+989 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 23808*k+15370 := by omega
+      have hD : d = 768*k+493 := by omega
+      rw [hA,hD]
       exact intro_18 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_18 (k a d:Nat)
   (hm:CounterMove a d (23808*k+15370) (768*k+493)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 24192*k+15617 := by omega
-      have hd : d = 384*k+245 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 768*k+493 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 24192*k+15617 := by omega
+      have hD : d = 384*k+245 := by omega
+      rw [hA,hD]
       exact intro_20 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      have ha : a = 5952*k+3841 := by omega
-      have hd : d = 18624*k+12016 := by omega
-      rw [ha,hd]
+  ·
+      have hA : a = 5952*k+3841 := by omega
+      have hD : d = 18624*k+12016 := by omega
+      rw [hA,hD]
       exact intro_19 k
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
-      omega
 
 private theorem pred_19 (k a d:Nat)
   (hm:CounterMove a d (5952*k+3841) (18624*k+12016)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 18624*k+12016 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_20 (k a d:Nat)
   (hm:CounterMove a d (24192*k+15617) (384*k+245)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 24384*k+15740 := by omega
-      have hd : d = 192*k+121 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 384*k+245 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 24384*k+15740 := by omega
+      have hD : d = 192*k+121 := by omega
+      rw [hA,hD]
       exact intro_21 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_21 (k a d:Nat)
   (hm:CounterMove a d (24384*k+15740) (192*k+121)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 24480*k+15801 := by omega
-      have hd : d = 96*k+59 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 192*k+121 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 24480*k+15801 := by omega
+      have hD : d = 96*k+59 := by omega
+      rw [hA,hD]
       exact intro_22 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_22 (k a d:Nat)
   (hm:CounterMove a d (24480*k+15801) (96*k+59)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
-      have ha : a = 24528*k+15831 := by omega
-      have hd : d = 48*k+28 := by omega
-      rw [ha,hd]
+  have hD : 3 ≤ 96*k+59 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
+      have hA : a = 24528*k+15831 := by omega
+      have hD : d = 48*k+28 := by omega
+      rw [hA,hD]
       exact intro_23 k
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem pred_23 (k a d:Nat)
   (hm:CounterMove a d (24528*k+15831) (48*k+28)) :
   AffineDead a d := by
-  cases hm with
-  | high h =>
+  have hD : 3 ≤ 48*k+28 := by omega
+  rcases large_second_only_high_far hm hD with ⟨ha,hd⟩ | ⟨ha,hd⟩
+  ·
       omega
-  | equal =>
-      omega
-  | far h1 h2 =>
-      omega
-  | middleEven h1 h2 hp =>
-      omega
-  | middleOdd h1 h2 hp =>
+  ·
       omega
 
 private theorem no_seed : ¬ AffineDead 1 1 := by
