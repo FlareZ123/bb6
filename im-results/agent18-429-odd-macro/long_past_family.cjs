@@ -38,6 +38,31 @@ function check(s) {
   const expectedAfterThree=(r%2===0?63*(k+r)-5:63*(k+r)-49);
   assert.equal(stages[3].height,BigInt(expectedAfterThree));
   assert.equal(stages[4].height,BigInt(expectedAfterThree)*4n**BigInt(q));
+  // Independently replay the same history in the exact radix-16 q0 macro.
+  // Macro digit 0/1/4/5 corresponds to chronological halfstep pairs
+  // 00/10/01/11 respectively.
+  const macro=[];
+  const appendMacro=(d,n)=>{for(let j=0;j<n;j++) macro.push(d);};
+  if(s%2===0) {
+    appendMacro(0,q/2); macro.push(5,1);
+    appendMacro(0,(r-1)/2); macro.push(1);
+    appendMacro(0,(k-2)/2);
+  } else {
+    appendMacro(0,(q-1)/2); macro.push(4,5);
+    appendMacro(0,r/2); macro.push(1);
+    appendMacro(0,(k-2)/2);
+  }
+  assert.equal(2*macro.length,depth);
+  let mp=p/2n,my=y/2n;
+  for(const d of macro) {
+    assert(my>0n && 3n*my<mp);
+    const length=BigInt(d===0?3:d===1?5:d===4?4:6);
+    const offset=BigInt(d===0?0:d===1?6:d===4?18:32);
+    const numerator=my+BigInt(d)*mp+offset;
+    assert.equal(numerator%16n,0n);
+    mp+=length;my=numerator/16n;
+  }
+  assert.equal(mp,T+2n);assert.equal(my,1n);
   return {s,k,reverseSteps:depth,rankLoss:(P-p).toString(),
     evenPhaseLatticeChecks:parityTests,
     thirdResetHeight:expectedAfterThree,
