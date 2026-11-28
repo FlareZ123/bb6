@@ -1,4 +1,4 @@
-import Leaf2265MacroAll
+import Leaf2265TracePrelude
 
 namespace BB6.Agent3Leaf2265
 set_option maxRecDepth 1000000
@@ -8,97 +8,97 @@ set_option maxHeartbeats 0
 
 theorem traceChunk16 : Runs 6802790636348341588416652124061757202402171540398300722562183217837648526949472660172850 (S 282654669038702993813925927265355794779842 (pre [false,false,false,true,false,true] blank)) (S 69007487558277098099103009586268504584923267 (pre [false,false,false,true,false,true,true,false,true] blank)) := by
   have s160 : Runs 599202464470340436097998621401814174561534582360034695829700784386594824687319385663 (S 282654669038702993813925927265355794779842 (pre [false,false,false,true,false,true] blank)) (S 706636672596757484534814818163389486949608 (pre [true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 141327334519351496906962963632677897389920 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 141327334519351496906962963632677897389920 (pre [true,false,true] blank))
   have s161 : Runs 2826546690387029938139259272653557947798434 (S 706636672596757484534814818163389486949608 (pre [true,false,true] blank)) (S 706636672596757484534814818163389486949609 (pre [false,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 706636672596757484534814818163389486949608 (pre [false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 706636672596757484534814818163389486949608 (pre [false,true] blank))
   have s162 : Runs 5653093380774059876278518545307115895596892 (S 706636672596757484534814818163389486949609 (pre [false,false,true] blank)) (S 706636672596757484534814818163389486949613 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one0010 706636672596757484534814818163389486949609 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (one0010 706636672596757484534814818163389486949609 (pre [] blank))
   have s163 : Runs 3745015402939627725612491383761338591009661803417476524684083383898033993244441121343 (S 706636672596757484534814818163389486949613 (pre [] blank)) (S 1766591681491893711337037045408473717374032 (pre [false,false,false,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 353318336298378742267407409081694743474806 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 353318336298378742267407409081694743474806 (pre [] blank))
   have s164 : Runs 23406346268372673285078071148508366193810368605442413360338407778992258373040583268013 (S 1766591681491893711337037045408473717374032 (pre [false,false,false,true,false,true] blank)) (S 4416479203729734278342592613521184293435083 (pre [true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 883295840745946855668518522704236858687015 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 883295840745946855668518522704236858687015 (pre [true,false,true] blank))
   have s165 : Runs 17665916814918937113370370454084737173740334 (S 4416479203729734278342592613521184293435083 (pre [true,false,true] blank)) (S 4416479203729734278342592613521184293435084 (pre [false,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 4416479203729734278342592613521184293435083 (pre [false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 4416479203729734278342592613521184293435083 (pre [false,true] blank))
   have s166 : Runs 35331833629837874226740740908169474347480692 (S 4416479203729734278342592613521184293435084 (pre [false,false,true] blank)) (S 4416479203729734278342592613521184293435088 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one0010 4416479203729734278342592613521184293435084 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (one0010 4416479203729734278342592613521184293435084 (pre [] blank))
   have s167 : Runs 146289664177329208031737944678177288711315267514331475124214274590926034555854456108973 (S 4416479203729734278342592613521184293435088 (pre [] blank)) (S 11041198009324335695856481533802960733587723 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 2208239601864867139171296306760592146717543 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 2208239601864867139171296306760592146717543 (pre [] blank))
   have s168 : Runs 914310401108307550198362154238608054445720697994521952634731612605326061048108690374093 (S 11041198009324335695856481533802960733587723 (pre [] blank)) (S 27602995023310839239641203834507401833969307 (pre [false,false,false,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 5520599004662167847928240766901480366793861 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 5520599004662167847928240766901480366793861 (pre [] blank))
   have s169 : Runs 5714440006926922188739763463991300340285753948420836854304483984165230363939651805298413 (S 27602995023310839239641203834507401833969307 (pre [false,false,false,true,false,true] blank)) (S 69007487558277098099103009586268504584923267 (pre [false,false,false,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 13801497511655419619820601917253700916984653 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 13801497511655419619820601917253700916984653 (pre [true,false,true] blank))
   have h := (chain s160 (chain s161 (chain s162 (chain s163 (chain s164 (chain s165 (chain s166 (chain s167 (chain s168 s169)))))))))
   simpa only [Nat.reduceAdd] using h
 
 theorem traceChunk17 : Runs 405477919360896443630257375482425522947440819127472628396702708090148755698676367530745535080 (S 69007487558277098099103009586268504584923267 (pre [false,false,false,true,false,true,true,false,true] blank)) (S 16847531142157494653101320699772584127178531965 (pre [] blank)) := by
   have s170 : Runs 35715250043293263679623521649945627126785961142517916965246553414487545980595255009266013 (S 69007487558277098099103009586268504584923267 (pre [false,false,false,true,false,true,true,false,true] blank)) (S 172518718895692745247757523965671261462308167 (pre [false,false,false,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 34503743779138549049551504793134252292461633 (pre [true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 34503743779138549049551504793134252292461633 (pre [true,false,true,true,false,true] blank))
   have s171 : Runs 223220312770582897997647010312160169542412254552956197597399780124184302893651421873290013 (S 172518718895692745247757523965671261462308167 (pre [false,false,false,true,false,true,true,false,true,true,false,true] blank)) (S 431296797239231863119393809914178153655770417 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 86259359447846372623878761982835630731154083 (pre [true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 86259359447846372623878761982835630731154083 (pre [true,false,true,true,false,true,true,false,true] blank))
   have s172 : Runs 1395126954816143112485293814451001059640076584486524276395270678985244744372649081871506263 (S 431296797239231863119393809914178153655770417 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 1078241993098079657798484524785445384139426042 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 215648398619615931559696904957089076827885208 (pre [true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 215648398619615931559696904957089076827885208 (pre [true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s173 : Runs 8719543467600894453033086340318756622750478642258356796489645165672934404474602920302653663 (S 1078241993098079657798484524785445384139426042 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 2695604982745199144496211311963613460348565108 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 539120996549039828899242262392722692069713020 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 539120996549039828899242262392722692069713020 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s174 : Runs 10782419930980796577984845247854453841394260434 (S 2695604982745199144496211311963613460348565108 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 2695604982745199144496211311963613460348565109 (pre [false,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 2695604982745199144496211311963613460348565108 (pre [false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 2695604982745199144496211311963613460348565108 (pre [false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s175 : Runs 54497146672505590331456789626992228892190491702807078770224222400190631865419210476291142969 (S 2695604982745199144496211311963613460348565109 (pre [false,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 6739012456862997861240528279909033650871412779 (pre [true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (twoOddZeroRound 1347802491372599572248105655981806730174282554 (pre [true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (twoOddZeroRound 1347802491372599572248105655981806730174282554 (pre [true,true,false,true,true,false,true,true,false,true] blank))
   have s176 : Runs 26956049827451991444962113119636134603485651118 (S 6739012456862997861240528279909033650871412779 (pre [true,true,false,true,true,false,true,true,false,true] blank)) (S 6739012456862997861240528279909033650871412782 (pre [true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 6739012456862997861240528279909033650871412779 (pre [true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 6739012456862997861240528279909033650871412779 (pre [true,false,true,true,false,true,true,false,true] blank))
   have s177 : Runs 26956049827451991444962113119636134603485651130 (S 6739012456862997861240528279909033650871412782 (pre [true,false,true,true,false,true] blank)) (S 6739012456862997861240528279909033650871412783 (pre [false,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 6739012456862997861240528279909033650871412782 (pre [false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 6739012456862997861240528279909033650871412782 (pre [false,true,true,false,true] blank))
   have s178 : Runs 340607166703159939571604935168701430576190573850140550284516165431446918549318598818317985619 (S 6739012456862997861240528279909033650871412783 (pre [false,false,true,true,false,true] blank)) (S 16847531142157494653101320699772584127178531964 (pre [true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (twoOddZeroRound 3369506228431498930620264139954516825435706391 (pre [true] blank))
+    simpa [pre, P, G, O, S_consP] using (twoOddZeroRound 3369506228431498930620264139954516825435706391 (pre [true] blank))
   have s179 : Runs 67390124568629978612405282799090336508714127858 (S 16847531142157494653101320699772584127178531964 (pre [true] blank)) (S 16847531142157494653101320699772584127178531965 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 16847531142157494653101320699772584127178531964 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (one 16847531142157494653101320699772584127178531964 (pre [] blank))
   have h := (chain s170 (chain s171 (chain s172 (chain s173 (chain s174 (chain s175 (chain s176 (chain s177 (chain s178 s179)))))))))
   simpa only [Nat.reduceAdd] using h
 
 theorem traceChunk18 : Runs 24168367347770717360392652480746836837973643500047170946586265952052207012237803234329236251266240 (S 16847531142157494653101320699772584127178531965 (pre [] blank)) (S 4113166782753294593042314623967916046674446280848 (pre [] blank)) := by
   have s180 : Runs 2128794791894749622322530844804383941101191087068804373542950873539582861926418766429843369023 (S 16847531142157494653101320699772584127178531965 (pre [] blank)) (S 42118827855393736632753301749431460317946329912 (pre [false,false,false,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 8423765571078747326550660349886292063589265982 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 8423765571078747326550660349886292063589265982 (pre [] blank))
   have s181 : Runs 13304967449342185139515817780027399631882444293758839056089505593294859869545802687007057757213 (S 42118827855393736632753301749431460317946329912 (pre [false,false,false,true,false,true] blank)) (S 105297069638484341581883254373578650794865824783 (pre [true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 21059413927696868316376650874715730158973164955 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 21059413927696868316376650874715730158973164955 (pre [true,false,true] blank))
   have s182 : Runs 421188278553937366327533017494314603179463299134 (S 105297069638484341581883254373578650794865824783 (pre [true,false,true] blank)) (S 105297069638484341581883254373578650794865824784 (pre [false,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 105297069638484341581883254373578650794865824783 (pre [false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 105297069638484341581883254373578650794865824783 (pre [false,true] blank))
   have s183 : Runs 842376557107874732655066034988629206358926598292 (S 105297069638484341581883254373578650794865824784 (pre [false,false,true] blank)) (S 105297069638484341581883254373578650794865824788 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one0010 105297069638484341581883254373578650794865824784 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (one0010 105297069638484341581883254373578650794865824784 (pre [] blank))
   have s184 : Runs 83156046558388657121973861125171247699265276847048936412600265824190615893887025127255022584973 (S 105297069638484341581883254373578650794865824788 (pre [] blank)) (S 263242674096210853954708135933946626987164561973 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 52648534819242170790941627186789325397432912393 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 52648534819242170790941627186789325397432912393 (pre [] blank))
   have s185 : Runs 519725290989929107012336632032320298120407980300636919431156932750059052735142572720023005205343 (S 263242674096210853954708135933946626987164561973 (pre [] blank)) (S 658106685240527134886770339834866567467911404932 (pre [false,false,false,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 131621337048105426977354067966973313493582280986 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 131621337048105426977354067966973313493582280986 (pre [] blank))
   have s186 : Runs 3248283068687056918827103950202001863252549876872399679592325558339001376196292413825464668484013 (S 658106685240527134886770339834866567467911404932 (pre [false,false,false,true,false,true] blank)) (S 1645266713101317837216925849587166418669778512333 (pre [true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 329053342620263567443385169917433283733955702465 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 329053342620263567443385169917433283733955702465 (pre [true,false,true] blank))
   have s187 : Runs 6581066852405271348867703398348665674679114049334 (S 1645266713101317837216925849587166418669778512333 (pre [true,false,true] blank)) (S 1645266713101317837216925849587166418669778512334 (pre [false,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 1645266713101317837216925849587166418669778512333 (pre [false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 1645266713101317837216925849587166418669778512333 (pre [false,true] blank))
   have s188 : Runs 13162133704810542697735406796697331349358228098692 (S 1645266713101317837216925849587166418669778512334 (pre [false,false,true] blank)) (S 1645266713101317837216925849587166418669778512338 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one0010 1645266713101317837216925849587166418669778512334 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (one0010 1645266713101317837216925849587166418669778512334 (pre [] blank))
   have s189 : Runs 20301769179294105742669399688762511645328436730625251002327673112526535815433480060369480921820223 (S 1645266713101317837216925849587166418669778512338 (pre [] blank)) (S 4113166782753294593042314623967916046674446280848 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 822633356550658918608462924793583209334889256168 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 822633356550658918608462924793583209334889256168 (pre [] blank))
   have h := (chain s180 (chain s181 (chain s182 (chain s183 (chain s184 (chain s185 (chain s186 (chain s187 (chain s188 s189)))))))))
   simpa only [Nat.reduceAdd] using h
 
 theorem traceChunk19 : Runs 351701909263320858398467077867214871372412521037532191632728767246411115938191901632022464474016808049897 (S 4113166782753294593042314623967916046674446280848 (pre [] blank)) (S 15690486079228571293038614745971359430978570102115904 (pre [true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
   have s190 : Runs 126886057370588160891683748054765697783302729566531213768030555791082118285178287858709489149801773 (S 4113166782753294593042314623967916046674446280848 (pre [] blank)) (S 10282916956883236482605786559919790116686115702123 (pre [] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 2056583391376647296521157311983958023337223140423 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 2056583391376647296521157311983958023337223140423 (pre [] blank))
   have s191 : Runs 793037858566176005573023425342285611145642059791077158974113054606328383946362293869851460078814093 (S 10282916956883236482605786559919790116686115702123 (pre [] blank)) (S 25707292392208091206514466399799475291715289255307 (pre [false,false,false,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 5141458478441618241302893279959895058343057851061 (pre [] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 5141458478441618241302893279959895058343057851061 (pre [] blank))
   have s192 : Runs 4956486616038600034831396408389285069660262873693846634202323469921454682668767344557195896153758413 (S 25707292392208091206514466399799475291715289255307 (pre [false,false,false,true,false,true] blank)) (S 64268230980520228016286165999498688229288223138267 (pre [false,false,false,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 12853646196104045603257233199899737645857644627653 (pre [true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 12853646196104045603257233199899737645857644627653 (pre [true,false,true] blank))
   have s193 : Runs 30978041350241250217696227552433031685376642960585577440299813883588847474189803423159035027613916013 (S 64268230980520228016286165999498688229288223138267 (pre [false,false,false,true,false,true,true,false,true] blank)) (S 160670577451300570040715414998746720573220557845667 (pre [false,false,false,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 32134115490260114008143082999749344114644111569133 (pre [true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 32134115490260114008143082999749344114644111569133 (pre [true,false,true,true,false,true] blank))
   have s194 : Runs 193612758439007813860601422202706448033604018503657448943212067263879685982461290193935370614219290013 (S 160670577451300570040715414998746720573220557845667 (pre [false,false,false,true,false,true,true,false,true,true,false,true] blank)) (S 401676443628251425101788537496866801433051394614167 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 80335288725650285020357707499373360286610278922833 (pre [true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 80335288725650285020357707499373360286610278922833 (pre [true,false,true,true,false,true,true,false,true] blank))
   have s195 : Runs 1210079740243798836628758888766915300210025115647853030748420996627871510562320610710074570567951350013 (S 401676443628251425101788537496866801433051394614167 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 1004191109070628562754471343742167003582628486535417 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 200838221814125712550894268748433400716525697307083 (pre [true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 200838221814125712550894268748433400716525697307083 (pre [true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s196 : Runs 7562998376523742728929743054793220626312656972799066379310995169495755623944347684432912326622397906263 (S 1004191109070628562754471343742167003582628486535417 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 2510477772676571406886178359355417508956571216338542 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroOddRound 502095554535314281377235671871083501791314243267708 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroOddRound 502095554535314281377235671871083501791314243267708 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s197 : Runs 47268739853273392055810894092457628914454106079994139765915993043634403787868579473530612475677823528663 (S 2510477772676571406886178359355417508956571216338542 (pre [false,false,false,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 6276194431691428517215445898388543772391428040846358 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (zeroEvenRound 1255238886338285703443089179677708754478285608169270 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (zeroEvenRound 1255238886338285703443089179677708754478285608169270 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s198 : Runs 25104777726765714068861783593554175089565712163385434 (S 6276194431691428517215445898388543772391428040846358 (pre [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 6276194431691428517215445898388543772391428040846359 (pre [false,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (one 6276194431691428517215445898388543772391428040846358 (pre [false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (one 6276194431691428517215445898388543772391428040846358 (pre [false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have s199 : Runs 295429624082958700348818088077860180715338162999963812870585174922711228755391508907630395372949256299219 (S 6276194431691428517215445898388543772391428040846359 (pre [false,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) (S 15690486079228571293038614745971359430978570102115904 (pre [true,true,false,true,true,false,true,true,false,true,true,false,true] blank)) := by
-    simpa [pre, P, G, O, rep, S_push] using (twoOddZeroRound 3138097215845714258607722949194271886195714020423179 (pre [true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
+    simpa [pre, P, G, O, S_consP] using (twoOddZeroRound 3138097215845714258607722949194271886195714020423179 (pre [true,true,false,true,true,false,true,true,false,true,true,false,true] blank))
   have h := (chain s190 (chain s191 (chain s192 (chain s193 (chain s194 (chain s195 (chain s196 (chain s197 (chain s198 s199)))))))))
   simpa only [Nat.reduceAdd] using h
 
