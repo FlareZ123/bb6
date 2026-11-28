@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw10 Box27 E0 branch: exact weighted 108 across 9,765,625 tables and 20 further cylinders**](2026-11-28-box27-e0-21-exact-and-easy-agent49.md): original-source Lean exact iff bound `WeightedBound B ↔ 108 ≤ B` for the five-hole E0=21 cylinder, attained after 107 steps; plus 20 disjoint E0 values, each with a source-checked terminal/side-cycle proof at weighted bound 108. Together **205,078,125** complete transition tables in the D0=14,D1=17 Box27 section are classified; [exact CI 46092558221](https://github.com/FlareZ123/bb6/actions/runs/46092558221), [20 cases CI 46092810166](https://github.com/FlareZ123/bb6/actions/runs/46092810166). This does not close full Box27/Raw10/BB(6).
+
 - [**Raw45 five-hole child: exact ordinary blank-step maximum 96 for 9,765,625 tables**](2026-11-28-raw45-five-hole-exact96-agent24.md): exhaustive 11,449-node source `zipCheck 96` audit with 8,834 translated cycles, 68 n-gram proofs and two all-depth growth exceptions; universal `WeightedBound 96` passed [CI run 46093481756](https://github.com/FlareZ123/bb6/actions/runs/46093481756), exact 96-step attainment passed [run 46092079569](https://github.com/FlareZ123/bb6/actions/runs/46092079569). This is a five-hole descendant, **not** a full Raw45 or BB(6) result.
 
 - [**Raw45: 165 source-certified nonhalting cylinders (3,017,578,125 disjoint complete tables)**](2026-11-28-raw45-159-cycles-six-growth-agent24.md): 159 exact original-source translated-cycle proofs (four Lean banks), six all-depth growing-tape recurrences and an exact first-hole disjointness count. All ten Lean source/axiom checks passed on 28 November 2026. Leaves 137 depth-two residuals; no complete Raw45 Cover or Canonical40 removal is claimed.
