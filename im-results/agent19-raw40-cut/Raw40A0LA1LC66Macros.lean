@@ -113,11 +113,11 @@ theorem splitGap (n k : Nat) (L R : List Bool) :
   have h4 := merge (k+1) L ([true,true]++W (n+1)++[true,true,true]++R)
   simp only [List.append_assoc,List.cons_append,List.nil_append] at h1 h2 h3 h4
   have H12 := join0 h1 h2
-  rw [show n+3+1=n+4 by omega] at H12
-  have H123 := join0 H12 (show run0 table (0+7) (A ([false,true]++O k++false::L) (W (n+4)++[true,true,true]++R)) = _ from by
-    simpa only [O,W,rep,List.append_assoc,List.cons_append,List.nil_append] using h3)
-  have H := join0 H123 (show run0 table (k+1+7) (A ([true]++O k++false::L) (W 1++[true,true,true]++W (n+1)++[true,true,true]++R)) = _ from by
-    simpa only [O,W,rep,List.append_assoc,List.cons_append,List.nil_append] using h4)
+  simp only [W, rep, List.cons_append, List.nil_append] at H12
+  simp only [O,W,rep,List.cons_append,List.nil_append] at h3
+  have H123 := join0 H12 h3
+  simp only [O,W,rep,List.cons_append,List.nil_append] at h4
+  have H := join0 H123 h4
   have e : (n+1+5)+(n+3+7)+(0+7)+(k+1+7)=2*n+k+31 := by omega
   have hw : O (k+4)++([true,true]++(W (n+1)++([true,true,true]++R))) =
       O (k+6)++(W (n+1)++([true,true,true]++R)) := by
