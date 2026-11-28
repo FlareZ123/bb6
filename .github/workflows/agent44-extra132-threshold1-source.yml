@@ -1,0 +1,72 @@
+name: Agent44 regenerate Extra132 with singleton kernel leaves
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45896597080
+          pattern: raw11-six-hole-*
+          merge-multiple: true
+          path: /tmp/six-hole
+
+      - name: Regenerate exact DAG with one-node kernel leaves
+        env:
+          SIX_HOLE_DATA: /tmp/six-hole
+          RAW11_EXTENDED_AUTOMATA: '1'
+          RAW11_REPAIR_SPLIT: '1'
+          RAW11_REPAIR_CERT_THRESHOLD: '1'
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs             132 /tmp/parent-source | tee /tmp/generation.log
+          test -s /tmp/parent-source/Agent5Raw11Extra132.lean
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          rows=[]
+          for p in Path('/tmp/parent-source').glob('*.lean'):
+              s=p.read_text()
+              sizes=[]
+              for m in re.finditer(r'\(\.automata ',s):
+                  st=m.end()
+                  if st>=len(s) or s[st] != '⟨': continue
+                  depth=0
+                  for i,ch in enumerate(s[st:],st):
+                      if ch=='⟨': depth+=1
+                      elif ch=='⟩':
+                          depth-=1
+                          if depth==0:
+                              sizes.append(i+1-st)
+                              break
+              if sizes: rows.append((max(sizes),p.name,len(sizes),p.stat().st_size))
+          rows.sort(reverse=True)
+          print('automata_modules',len(rows))
+          for r in rows[:20]: print('AUTOMATA_MODULE',*r)
+          top=rows[0]
+          assert top[0] > 6_000_000, top
+          assert top[2] == 1, top
+          Path('/tmp/parent-source/giant-module.txt').write_text(top[1]+'\n')
+          PY
+          sha256sum im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs             > /tmp/parent-source/generator.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parent-source-132-threshold1
+          path: |
+            /tmp/parent-source
+            /tmp/generation.log
+          if-no-files-found: error
+          retention-days: 30
