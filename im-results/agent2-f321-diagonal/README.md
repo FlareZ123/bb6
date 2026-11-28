@@ -64,3 +64,55 @@ This is an exact theorem about the published F321 source counter map, not an ori
 `Phase6Bridge.lean` transports the local reachability invariant into the repository's canonical `CounterReach 1 1` relation. GitHub Actions runs 46128503550 and 46128963897 both completed successfully against the repository dependency closure.
 
 A paper corollary of the two terminal formulas is that all sufficiently long middle-reset-to-High terminal candidates share `D≡4093 (mod12288)`; only the small parameters `61`, `637`, and `10237` precede that stable tail. The current uniform affine-ray generator does not close `4093 mod12288` because its inverse cone reaches a threshold case whose Far predecessor exists only for positive ray parameter. Splitting that boundary is the next concrete exact target.
+
+
+## Current root-specific frontier (Agent 2, 2026-11-28)
+
+The earlier `4093 mod 12288` boundary split is now partly resolved and, more
+importantly, its genuine obstruction is structurally identified.
+
+Kernel-accepted results now live under `results/`:
+
+- `2026-11-28-f321-twelve-refined-4093-source-rays-agent2.md` proves twelve
+  disjoint source-unreachable refinements modulo 786432, exactly 3/16 of the
+  4093 parent ray (CI 46139830074).
+- `2026-11-28-f321-minus-three-reset-tail-sieve-obstruction-agent2.md`
+  identifies the authentic M1/M2 reset-to-High spines, proves both converge
+  2-adically to -3, and proves that every fixed-depth `NoResidueWord`
+  certificate is eventually defeated by the all-F inverse word on those
+  authentic tails (CI 46139289738 and 46139762995).
+
+The source-level response is now in `AnchorEpoch.lean`.  Equal and both Middle
+branches are treated uniformly as **small-second anchors** (output second counter
+1 or 2).  Every positive-time root run decomposes canonically into completed
+anchor epochs separated by pure High/Far runs, followed by one final High/Far
+suffix.  Consequently any hypothetical halt has a genuine root-reachable last
+anchor and an exact terminal-seeded High/Far inverse word reaching that anchor,
+with no large-second or bounded-depth cutoff.
+
+The current committed source derives the following stronger pending-kernel
+normal form:
+
+- the final High/Far suffix is nonempty and its first **two** moves are High;
+- only High can grow the second counter, so `D+3 <= 5*2^h` for some
+  `h <= suffix length`;
+- for inverse-word counts `H,F`,
+  `shift=H+2F`, `sumDecrease=H+6F`, and
+  `sumDecrease+4*length=5*shift`;
+- the authentic last anchor obeys
+  `R+c+5*shift = 2D+1+4*length`;
+- `c=1` forces even High count, while `c=2` forces odd High count; together
+  with the forced HH prefix this gives at least two Highs for c=1 and at least
+  three for c=2.
+
+These AnchorEpoch statements are intentionally retained in `im-results/`
+until a source-closure runner slot is available; they are not yet promoted as
+academic results.  Queue pressure was severe (Critic broadcast at 11:53 UTC),
+so stale/secondary Agent-2 audits were cancelled rather than competing with
+the global Canonical38/Raw112/Raw42 acceptance path.
+
+Finally, `DiagonalCoordinates.lean` now also contains the direct rank theorem
+that every live `CounterMove` increases `X=a+d+5` by at least one, hence
+any terminal gate `(D+1,D)` reached in `n` source-counter moves satisfies
+`n+1 <= 2D`.  This is committed as intermediate source structure pending the
+next kernel audit.
