@@ -119,6 +119,7 @@ def restore_transport(work: Path, linked: Path, prior40: dict, pin40: dict,
                 continue
             observed[file.name] = file
     assert set(objects) == set(observed)
+    carried = []
     for name, digest in objects.items():
         assert name == Path(name).name
         assert c.a68.sha(observed[name]) == digest, name
@@ -127,6 +128,7 @@ def restore_transport(work: Path, linked: Path, prior40: dict, pin40: dict,
             assert c.a68.sha(dest) == digest, name
         else:
             shutil.copy2(observed[name], dest)
+            carried.append(dest)
     assert (linked / "Raw39Canonical40Bridge.olean").is_file()
     assert (linked / "Raw47KernelBridge.olean").is_file()
     return report, {
@@ -134,7 +136,7 @@ def restore_transport(work: Path, linked: Path, prior40: dict, pin40: dict,
         "artifact_id": item["id"],
         "artifact_sha256": pin[2],
         "root_sha256": report["root_sha256"],
-    }
+    }, carried
 
 
 def final_source(folder: Path):
@@ -214,9 +216,9 @@ def main():
     prior40, pin40 = raw47.restore_canonical40(work, linked, prior41, pin41)
     assert prior40["remaining_residual_count"] == 40
 
-    transport_report, transport_pin = restore_transport(
+    transport_report, transport_pin, carried = restore_transport(
         work, linked, prior40, pin40, args.direct38_run_id)
-    roots = []
+    roots = list(carried)
     profiles = {}
     root39, ax39 = source_check(
         A11 / "Raw39Canonical39Successor.lean",
