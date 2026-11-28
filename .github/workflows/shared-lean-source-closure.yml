@@ -88,15 +88,22 @@ jobs:
       - name: Compile exact transitive Lean source, reject compiler errors
         env:
           PROOF_ROOT: ${{ inputs.root }}
+          PREPARATION_PROFILE: ${{ inputs.preparation_profile }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/lean-source-closure
+          overrides=()
+          if [[ "$PREPARATION_PROFILE" == "raw40-a0la" ]]; then
+            # prepare_a0la.py explicitly uses agent32-raw59's generator.
+            # The raw42 FastBiDFA module has a different source identity.
+            overrides+=(--override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean)
+          fi
           python tools/lean_compile_closure.py \
             --workdir /tmp/lean-source-closure/compiled \
             --jobs 2 \
             --manifest /tmp/lean-source-closure/manifest.json \
             --label "standalone source closure ${PROOF_ROOT}" \
-            "$PROOF_ROOT" 2>&1 | tee /tmp/lean-source-closure/compile.log
+            "${overrides[@]}" "$PROOF_ROOT" 2>&1 | tee /tmp/lean-source-closure/compile.log
       - name: Audit printed theorem axiom dependencies
         env:
           PROOF_ROOT: ${{ inputs.root }}
