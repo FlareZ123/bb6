@@ -37,7 +37,7 @@ theorem high_valid_of_valuation (s : Pair) (n : Nat)
   · rw [ha,ht,htwo]
     have hmass : (2*t-2-odd s)+2+odd s=2*t := by omega
     rw [hmass]
-    ac_rfl
+    simp
   · rw [hydef]
     omega
 
