@@ -2,6 +2,15 @@ name: Agent24 Raw45 depth-three full residual 0
 run-name: "Agent24 Raw45 D3 full residual 0 source check"
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Raw45 depth-three residual source target
+        required: false
+        default: residual0
+        type: choice
+        options:
+          - residual0
+          - residual1
 
 permissions:
   contents: read
@@ -22,6 +31,10 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual0.lean"
+          if [[ "${{ inputs.target }}" == "residual1" ]]; then
+            TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual1.lean"
+          else
+            TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual0.lean"
+          fi
           python tools/lean_compile_closure.py --workdir /tmp/agent24-d3-full0 --jobs 4 "$TARGET" 2>&1 | tee /tmp/agent24-d3-full0.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent24-d3-full0.log
