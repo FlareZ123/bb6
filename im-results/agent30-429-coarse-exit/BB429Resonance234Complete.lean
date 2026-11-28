@@ -67,12 +67,16 @@ theorem return_from_exact_burst_even_complete
     have hforced := four_scaled54 H r a e I (a-108*word4 e I) hH hr hZ
       (by simpa [L] using hB)
     have hres : a=36+108*word4 e I := by
-      rcases hforced with hzero|h36
+      rcases hforced with hzero|h9|h27|h36
       · rw [hzero,Int.mul_zero] at hZ
         have he := negative_error P r a y L U V e ph hy hU' hV' hb I
           (by dsimp [L]; omega)
         have hp := hphys I (by dsimp [L]; omega)
         rw [hZ,Int.zero_mul,Int.sub_zero] at he
+        omega
+      · rw [ha] at h9
+        omega
+      · rw [ha] at h27
         omega
       · omega
     have hresfixed :
