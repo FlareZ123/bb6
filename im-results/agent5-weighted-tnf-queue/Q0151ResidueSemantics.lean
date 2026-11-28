@@ -1,4 +1,4 @@
-import Lean.Elab.Tactic.Omega
+import Std
 import Q0151MacroSteps
 
 set_option maxHeartbeats 0
