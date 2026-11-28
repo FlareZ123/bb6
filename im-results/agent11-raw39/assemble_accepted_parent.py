@@ -157,7 +157,8 @@ def compile_missing(module,linked,evidence,index,busy,compiled):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work",type=Path,required=True)
-    ap.add_argument("--onele-run",type=int,required=True)
+    ap.add_argument("--onele-run",type=int)
+    ap.add_argument("--ten-only",action="store_true",help="check all accepted child source closures except final 1LE")
     args=ap.parse_args()
     work=args.work.resolve()
     work.mkdir(parents=True,exist_ok=False)
@@ -168,7 +169,8 @@ def main():
     compiler_sha=digest(prefix/"bin"/"lean")
     check("4.36.0-rc2" in compiler_version,"wrong Lean version")
     seen={}
-    source_pins=[*PINS,dynamic_pin(args.onele_run)]
+    check(args.ten_only or bool(args.onele_run), "full parent requires successful --onele-run")
+    source_pins=[*PINS] if args.ten_only else [*PINS,dynamic_pin(args.onele_run)]
     docs={}
     for pin in source_pins:
         branch=pin[0]
@@ -188,34 +190,41 @@ def main():
                       "module_count":manifest["module_count"],
                       "weighted_bound":pin[-1]}
         print(f"Authenticated {branch}: {manifest['module_count']} objects",flush=True)
-    check(len(docs)==11 and len(seen)>1000,
+    expected_count=10 if args.ten_only else 11
+    check(len(docs)==expected_count and len(seen)>1000,
           f"unexpected parent object union: {len(docs)} branches, {len(seen)} objects")
     index=source_index()
     busy=set();compiled=[]
     for mod in ("Raw39AcceptedSix","Raw39AcceptedSeven","Raw39AcceptedEight",
                 "Raw39AcceptedNine","ExactAuditWeight",
                 "Raw390LELateWeight","Raw391LELateWeight","Raw391LEBoundLift",
-                "Raw39ExactJoin","Raw39CompleteJoin"):
+                "Raw39ExactJoin",("Raw39TenChildPartial" if args.ten_only else "Raw39CompleteJoin")):
         compile_missing(mod,linked,evidence,index,busy,compiled)
-    final=evidence/"Raw39CompleteJoin.log"
+    final=evidence/("Raw39TenChildPartial.log" if args.ten_only else "Raw39CompleteJoin.log")
     check(final.exists(),"missing final source compilation")
+    targets=([f"BB6.Agent11Raw39TenChild.{n}" for n in
+             ("zeroLE_bound","conditional_parent_bound","conditional_parent_cover","conditional_parent_exact")]
+             if args.ten_only else THEOREMS)
     subprocess.run([
         sys.executable,str(REPO/"im-results/agent4-raw109/audit_axioms.py"),
-        str(final),*THEOREMS],check=True)
+        str(final),*targets],check=True)
     check("sorryAx" not in final.read_text() and
           "native_decide" not in final.read_text(),
           "unapproved axioms in complete parent source consumer")
-    receipt={"status":"source-accepted Raw39 eleven-child exact weighted Bound",
+    receipt={"status":("source-accepted Raw39 ten-child conditional Bound" if args.ten_only
+                      else "source-accepted Raw39 eleven-child exact weighted Bound"),
              "bound":28311,"parent_table":"1RB---_1RC---_0RD---_1LD0RA_------_------",
              "source_revision":subprocess.check_output(
                  ["git","rev-parse","HEAD"],text=True).strip(),
              "producers":docs,"unique_objects":len(seen),
-             "newly_compiled":compiled,"theorems":THEOREMS,
-             "root_sha256":digest(linked/"Raw39CompleteJoin.olean"),
+             "newly_compiled":compiled,"theorems":targets,
+             "root_sha256":digest(linked/("Raw39TenChildPartial.olean" if args.ten_only else "Raw39CompleteJoin.olean")),
              "lean_version":compiler_version,"lean_sha256":compiler_sha}
     (evidence/"parent-accepted.json").write_text(
         json.dumps(receipt,indent=2,sort_keys=True)+"\n")
-    print("PASS: exact Raw39 parent Bound 28311, source-connected all eleven children",flush=True)
+    print(("PASS: exact Raw39 parent Bound conditional on 1LE, ten-source child closure"
+           if args.ten_only else
+           "PASS: exact Raw39 parent Bound 28311, source-connected all eleven children"),flush=True)
 
 if __name__=="__main__":
     main()
