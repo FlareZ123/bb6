@@ -90,6 +90,76 @@ theorem E_sweep_left_ones (n : Nat) (L R : List Bool) :
   simpa [List.append_assoc] using
     sweepL p 4 [true] [] [true] [false] 1 one n L R
 
+theorem B_turn_to_C (L R : List Bool) :
+    run0 p 2 ⟨1, true :: L, false :: true :: R⟩ =
+      some ⟨2, true :: true :: true :: L, R⟩ := by
+  rfl
+
+/-- Fixed tail of an I-return: finish the erased B block, observe a 1 in D,
+    and return through E0/F0 to A on the preceding erased zero. -/
+theorem C_I_turn_to_A (L R : List Bool) :
+    run0 p 5 ⟨2, true :: L, false :: true :: R⟩ =
+      some ⟨0, L, false :: true :: true :: R⟩ := by
+  rfl
+
+/-- Exact first I-return used inside every A triad.  Parameters are shifted so
+    the scanned right runs have lengths a+1, b+5, c+1 and z+2. -/
+theorem I_return (a b c z : Nat) (L R : List Bool) :
+    run0 p (a+b+12)
+      ⟨0, false :: L,
+        rep [true] (a+1) ++ [false] ++
+        rep [true] (b+5) ++ [false] ++
+        rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0,
+        rep [false] (b+4) ++ rep [true] (a+3) ++ L,
+        [false] ++ rep [true] (c+2) ++ rep [false] (z+2) ++ R⟩ := by
+  let tail : List Bool :=
+    [false] ++ rep [true] (b+5) ++ [false] ++
+      rep [true] (c+1) ++ rep [false] (z+2) ++ R
+  let afterB : List Bool :=
+    [false] ++ rep [true] (c+1) ++ rep [false] (z+2) ++ R
+  have h1 :
+      run0 p 1
+        ⟨0, false :: L, rep [true] (a+1) ++ tail⟩ =
+      some ⟨1, true :: true :: L, rep [true] a ++ tail⟩ := by
+    simp [tail, rep, run0, step0, p, move0, List.append_assoc]
+  have h2 := B_sweep_ones a (true :: L) tail
+  have h3 :
+      run0 p 2
+        ⟨1, true :: rep [true] a ++ true :: L,
+          [false] ++ rep [true] (b+5) ++ afterB⟩ =
+      some
+        ⟨2, true :: true :: true :: rep [true] a ++ true :: L,
+          rep [true] (b+4) ++ afterB⟩ := by
+    have ht := B_turn_to_C (rep [true] a ++ true :: L)
+      (rep [true] (b+4) ++ afterB)
+    simpa [rep, List.append_assoc] using ht
+  have h4 := C_sweep_ones (b+4)
+    (true :: true :: rep [true] a ++ true :: L) afterB
+  have h5 :
+      run0 p 5
+        ⟨2,
+          true :: rep [false] (b+4) ++
+            true :: true :: rep [true] a ++ true :: L,
+          [false] ++ rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+        ⟨0,
+          rep [false] (b+4) ++ rep [true] (a+3) ++ L,
+          [false] ++ rep [true] (c+2) ++ rep [false] (z+2) ++ R⟩ := by
+    have ht := C_I_turn_to_A
+      (rep [false] (b+4) ++ true :: true :: rep [true] a ++ true :: L)
+      (rep [true] c ++ rep [false] (z+2) ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have h12 := join0 h1 h2
+  have h123 := join0 h12 h3
+  have h1234 := join0 h123 h4
+  have h := join0 h1234 h5
+  simpa [tail, afterB, rep, List.append_assoc] using h
+
+#print axioms B_turn_to_C
+#print axioms C_I_turn_to_A
+#print axioms I_return
 #print axioms B_sweep_ones
 #print axioms C_sweep_ones
 #print axioms A_sweep_left_ones
