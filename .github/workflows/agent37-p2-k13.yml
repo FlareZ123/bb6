@@ -146,7 +146,8 @@ jobs:
           lean "$Q/E2DoubleZeroGuard.lean" | tee -a axioms.log
           lean -o "$Q/E2UnaryTailAll.olean" "$Q/E2UnaryTailAll.lean" | tee -a axioms.log
           lean "$Q/E2UnaryPhysical.lean" | tee -a axioms.log
-          lean "$Q/E2DoubleZeroNoGuard.lean" | tee -a axioms.log
+          lean -o "$Q/E2DoubleZeroNoGuard.olean" "$Q/E2DoubleZeroNoGuard.lean" | tee -a axioms.log
+          lean "$Q/E2DoubleZeroZero.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
 
   safe_e:
