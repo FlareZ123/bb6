@@ -63,4 +63,4 @@ Lean 4.36.0-rc2 compiled the seven-module source closure. The axiom audit report
 
 ## Scope
 
-This is a residual-level nonhalting theorem, not a completed Raw43 parent Cover and not a change to the global Canonical38 residual count. The full B1LE/E0LF child source-acceptance run is tracked separately (run 46162375708).
+This is a residual-level nonhalting theorem, not a completed Raw43 parent Cover and not a change to the global Canonical38 residual count. In the B1LE/E0LF candidate bank, this replaces the only external 9,922-state BiDFA certificate; after substitution, no numeric/external DFA entries remain in the spec (the remaining BiDFA certificates are inline). The full B1LE/E0LF child source-acceptance run is tracked separately (run 46162375708).
