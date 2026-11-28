@@ -60,8 +60,11 @@ const counters=[
  "1RB---_1RC---_0RD0LC_1LC1RF_------_1RD---"
 ].map(parseTable);
 counters.forEach(add);
-const withLeft=process.argv.includes("--include-f-left");
+const withCycles=process.argv.includes("--include-f-cycles");
+const withLeft=process.argv.includes("--include-f-left")||withCycles;
 const withRay=process.argv.includes("--include-f-ray")||withLeft;
+const fDirIndex=process.argv.indexOf("--f-depth3-dir");
+const fDepth3Dir=fDirIndex<0?"/tmp/a40-raw34-f-cycleunion":process.argv[fDirIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -79,7 +82,27 @@ const raySource=withRay?[
 ]:[];
 if(withRay)assert.equal(raySource.length,withLeft?44:36);
 raySource.forEach(add);
-const counterCount=counters.length+raySource.length;
+function parseSourceCycles(text){
+ const rows=[...text.matchAll(/⟨\\[([\\d,\\s]+)\\],/g)].map(m=>
+   m[1].split(",").map(x=>Number(x.trim())));
+ for(const p of rows){
+   assert.equal(p.length,12,"source cycle witness must have 12 physical slots");
+   for(const [i,a] of rootActions)assert.equal(p[i],codeOf.get(a));
+ }
+ return rows.map(p=>slots.map(i=>p[i]));
+}
+let cycleSource=[];
+if(withCycles){
+ cycleSource.push(...parseSourceCycles(readFileSync(join(dir,"Raw34FDepth2Cycles.lean"),"utf8")));
+ assert.equal(cycleSource.length,34);
+ for(let i=0;i<12;i++){
+   const name="Raw34FDepth3SideShard"+String(i).padStart(3,"0")+".lean";
+   cycleSource.push(...parseSourceCycles(readFileSync(join(fDepth3Dir,name),"utf8")));
+ }
+ assert.equal(cycleSource.length,626,"34 two-slot and 592 source-validated three-slot cycles");
+ cycleSource.forEach(add);
+}
+const counterCount=counters.length+raySource.length+cycleSource.length;
 function loadHalters(file){
  const s=readFileSync(join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
@@ -191,7 +214,10 @@ console.log(JSON.stringify({
   status:"Exact source-bank 25-way complement rank; branches are OPEN hypotheses",
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
-  rayPatterns:raySource.length, rayNewPhysicalGain:withRay?String(5471912359n-grand):"0",
+  rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
+  rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
+  rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
+  additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
   earlyHaltPatterns:n8,lateHaltPatterns:n9,graphMasks:maskNames,
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
   totalResidualD1not1RD:String(grand),
