@@ -153,7 +153,7 @@ theorem progress_c (s : List Bool) (st : List (List Bool))
         obtain ⟨decoded,ha,hg,hr⟩ := BB6.Agent5Q0151SourceActions11.c_six_refines k s hs st rest hlive
         exact pop_step hc hst ha hg hr
 
-theorem physical_progress (x : P) (hx : Region x) :
+theorem physical_progress (x : BB6Coverage.Agent13PackedZipper.P) (hx : Region x) :
     ∃ y, Region y ∧ Goes x y := by
   obtain ⟨b,s,st,rs,he,hs,hst,hc⟩ := hx
   subst x

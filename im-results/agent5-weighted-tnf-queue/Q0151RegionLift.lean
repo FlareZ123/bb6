@@ -30,7 +30,7 @@ open BB6.Agent5Q0151StackSaturation
 def StackOK (ss : List (List Bool)) : Prop :=
   ∀ s, s ∈ ss → SegGood s ∧ segAppend emptySegment s ∈ savedSegments
 
-def Region (x : P) : Prop :=
+def Region (x : BB6Coverage.Agent13PackedZipper.P) : Prop :=
   ∃ b : Bool, ∃ s : List Bool, ∃ ss : List (List Bool),
     ∃ rs : List Nat,
       x = boundary (srcQ b) s ss (runBits rs) ∧
