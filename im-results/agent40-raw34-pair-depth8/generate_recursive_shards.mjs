@@ -279,7 +279,7 @@ const report={
   parentCodes:manifest.parentCodes,d1:manifest.d1,f0:manifest.f0,
   physicalParentCompletions:manifest.physicalParentCompletions,
   nodeCount:nodes.length,residualCount:rows.length,rootIndex:manifest.rootIndex,
-  rootSlot:rootSplit.slot,rootChildCount:rootSplit.children.length,
+  rootSlot:11,rootSlotLean:rootSplit.slot,rootChildCount:rootSplit.children.length,
   shards:topShards,bound:128,threshold,
   directModuleCount:directModules.length,
   aggregateModuleCount:aggregateModules.length,
@@ -293,6 +293,7 @@ const report={
 assert.equal(report.physicalParentCompletions,"244140625");
 assert.equal(report.nodeCount,16976);
 assert.equal(report.residualCount,4274);
+assert.equal(rootSplit.slot,"(⟨5, by decide⟩, true)");
 assert.equal(report.rootChildCount,25);
 assert(report.maxDirectNodes<=threshold);
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
