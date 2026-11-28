@@ -175,7 +175,7 @@ jobs:
           (cd /tmp/split && lean -o Raw36D114Kid16.olean Raw36D114Kid16.lean) 2>&1 | tee /tmp/kid16.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/kid16.log BB6.Agent29Raw36D114.kid16_bound
           mkdir -p /tmp/out
-          cp /tmp/split/Raw36D114Kid16.lean /tmp/split/Raw36D114Kid16.olean /tmp/kid16.log /tmp/out/
+          cp /tmp/split/Raw36D114Kid16*.lean /tmp/split/Raw36D114Kid16*.olean /tmp/kid16.log /tmp/out/
       - uses: actions/upload-artifact@v4
         with:
           name: raw36-d114-kid-16-recovery
