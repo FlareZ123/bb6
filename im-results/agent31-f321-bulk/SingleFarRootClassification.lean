@@ -4,19 +4,25 @@ import Mod384Source
 import Lean.Elab.Tactic.Omega
 
 /-!
-Complete root classification of the F321 terminal suffix whose forward H/F
-language is High^n followed by one final Far.
+Complete source-root classification of the F321 terminal suffix whose forward
+H/F language is High^n followed by one final Far.
 
 The earlier HighFarTerminalFamily constructed the n = 24k+22 family as an
 infinite source-faithful danger family.  This file proves the converse at the
-authentic source root: every root-reachable small-second state supporting a
-terminal inverse word highThenFar n is forced into exactly that family.
+authentic source root: every source-reachable small-second state supporting a
+formal terminal inverse word highThenFar n is forced into exactly that family.
 
-The new ingredient is the accepted conservative modulo-384 source graph.  At
-second counter 1 it permits only first-counter residues 6,8,14,22 modulo 24
-apart from the blank seed itself.  The exact terminal equation and d == 1
-(mod 6) force d == 13 (mod 24), so the inverse-word sum equation eliminates
-all n == 4 (mod 6) phases except n == 22 (mod 24).
+The key new ingredient is the accepted conservative modulo-384 source graph.
+At second counter 1 it permits only first-counter residues 6,8,14,22 modulo 24
+apart from the blank seed itself.  The exact one-F terminal equation and exact
+inverse-word sum equation combine to
+
+  7*R + 7*n + 36 = 2^(n+5).
+
+Integrality already forces n == 1 (mod 3).  Reducing the displayed equation
+modulo 24, and using the two-cycle 2^e = 16/8 (mod 24) for even/odd e >= 3,
+eliminates every remaining phase except n == 22 (mod 24) and R == 22
+(mod 24).  Thus no independent terminal residue assumption is needed.
 
 No anchor-decomposition theorem is used here: the hypothesis is an authentic
 CounterReach witness from (1,1), so this result is independent of the pending
@@ -30,7 +36,6 @@ open BB6.Agent31F321Density
 open BB6.Agent31F321Mod384
 open BB6.Agent31F321HighFarFamily
 open BB6.Agent31F321HighFarRootTargets
-open BB6.Agent2F321Phase6Bridge
 
 /-- Exact finite projection of the accepted mod-384 overapproximation at
     second counter 1. -/
@@ -67,62 +72,90 @@ theorem highThenFar_sumDecrease (n : Nat) :
   | succ n ih =>
       simp [highThenFar, compile, advance, ih]
 
-/-- The mod-384 source quotient plus the exact one-F terminal equation collapses
-    the root-compatible High-count phase from n == 4 (mod 6) to the single
-    class n == 22 (mod 24). -/
+/-- Powers of two modulo 24 have a two-cycle once the exponent is at least 3. -/
+private theorem pow2_mod24_phase_ge3 (e : Nat) (h : 3 ≤ e) :
+    (e%2=0 ∧ 2^e%24=16) ∨ (e%2=1 ∧ 2^e%24=8) := by
+  let k := e-3
+  have he : e = k+3 := by
+    dsimp [k]
+    omega
+  have hk :
+      (k%2=0 ∧ 2^(k+3)%24=8) ∨
+      (k%2=1 ∧ 2^(k+3)%24=16) := by
+    induction k with
+    | zero =>
+        left
+        decide
+    | succ k ih =>
+        have hs : k+1+3 = (k+3)+1 := by omega
+        rw [hs, Nat.pow_succ, Nat.mul_mod]
+        rcases ih with h0 | h1
+        · right
+          constructor <;> omega
+        · left
+          constructor <;> omega
+  rw [he]
+  rcases hk with h0 | h1
+  · right
+    constructor <;> omega
+  · left
+    constructor <;> omega
+
+/-- Exact source-root phase theorem for a High^n/F terminal inverse suffix.
+    No terminal d-mod-6 assumption is needed. -/
 theorem highThenFar_root_mod24
     {m n d R c : Nat}
     (hroot : CounterReach 1 1 m R c)
     (hc : c=1 ∨ c=2)
-    (hd6 : d % 6 = 1)
     (hp : FormalInversePath (d:Int) (highThenFar n) (R:Int) (c:Int)) :
     c = 1 ∧ n % 24 = 22 := by
-  have hphase := highThenFar_root_phase hc hd6 hp
-  have hc1 : c=1 := hphase.1
-  have hn6 : n%6=4 := hphase.2
+  have hc1 : c=1 := by
+    rcases hc with rfl | rfl
+    · rfl
+    · exact False.elim (highThenFar_anchor_two_impossible hp)
   subst c
+
+  have hn3 := highThenFar_anchor_one_mod3 hp
 
   have hcand := formal_inverse_terminal_candidate hp
   rw [highThenFar_denom, highThenFar_num_one] at hcand
   have hdnat : 7*d = 2^(n+4)+3 := by
     exact_mod_cast hcand
 
-  have hn4 : 4 ≤ n := by omega
-  have hpow : 64 ∣ 2^(n+4) := by
-    have hle : 6 ≤ n+4 := by omega
-    simpa using (Nat.pow_dvd_pow 2 hle)
-  obtain ⟨z,hz⟩ := hpow
-  have hd64 : d%64=37 := by
-    rw [hz] at hdnat
-    omega
-  have hd24 : d%24=13 := by omega
-
   have hsum := (formal_inverse_path_certificate hp).2
   unfold sumAt at hsum
   rw [highThenFar_sumDecrease] at hsum
   have hRsum : R+n+6=2*d := by omega
 
+  have hpowSucc : 2^(n+5) = 2*2^(n+4) := by
+    rw [show n+5=(n+4)+1 by omega, Nat.pow_succ]
+    omega
+  have hmaster : 7*R+7*n+36=2^(n+5) := by
+    omega
+
   have hR24 := reached_second_one_mod24_or_seed hroot
+  have hn1 : 1 ≤ n := by omega
+  have hp24 := pow2_mod24_phase_ge3 (n+5) (by omega)
 
   constructor
   · rfl
-  · rcases hR24 with hseed | h6 | h8 | h14 | h22 <;> omega
+  · rcases hR24 with hseed | h6 | h8 | h14 | h22 <;>
+      rcases hp24 with hp0 | hp1 <;> omega
 
-/-- Converse-complete identification: every authentic-root-compatible
+/-- Converse-complete identification: every authentic-source-compatible
     High^n/F terminal inverse suffix is exactly one member of the previously
     constructed danger family, including its terminal parameter and anchor. -/
 theorem highThenFar_root_is_danger_family
     {m n d R c : Nat}
     (hroot : CounterReach 1 1 m R c)
     (hc : c=1 ∨ c=2)
-    (hd6 : d % 6 = 1)
     (hp : FormalInversePath (d:Int) (highThenFar n) (R:Int) (c:Int)) :
     ∃ k,
       n = dangerN k ∧
       d = dangerT k ∧
       R = dangerR k ∧
       c = 1 := by
-  have hphase := highThenFar_root_mod24 hroot hc hd6 hp
+  have hphase := highThenFar_root_mod24 hroot hc hp
   have hc1 := hphase.1
   have hn24 := hphase.2
   subst c
@@ -161,27 +194,9 @@ theorem highThenFar_root_is_danger_family
 
   exact ⟨k,hkN,hdT,hR,rfl⟩
 
-/-- Direct corollary for a genuine terminal gate: any source-root-compatible
-    High^n/F suffix ending at that terminal is forced into the danger family. -/
-theorem terminal_highThenFar_root_is_danger_family
-    {N m n D R c : Nat}
-    (hterm : CounterReach 1 1 (N+1) (D+1) D)
-    (hroot : CounterReach 1 1 m R c)
-    (hc : c=1 ∨ c=2)
-    (hp : FormalInversePath (D:Int) (highThenFar n) (R:Int) (c:Int)) :
-    ∃ k,
-      n = dangerN k ∧
-      D = dangerT k ∧
-      R = dangerR k ∧
-      c = 1 := by
-  have hD6 := counterReach_terminal_mod6
-    (n:=N+1) (d:=D) (by omega) hterm
-  exact highThenFar_root_is_danger_family hroot hc hD6 hp
-
 #print axioms live_second_one_mod24
 #print axioms reached_second_one_mod24_or_seed
 #print axioms highThenFar_sumDecrease
 #print axioms highThenFar_root_mod24
 #print axioms highThenFar_root_is_danger_family
-#print axioms terminal_highThenFar_root_is_danger_family
 end BB6.Agent31F321SingleFar
