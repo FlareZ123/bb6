@@ -359,7 +359,7 @@ if(process.argv.includes("--trie-count")){
    const uniq=[];for(const id of out)if(uniq.length===0||uniq[uniq.length-1]!==id)uniq.push(id);
    return [uniq,nextMask(mask,at,code)];
  };
- const memo=new Map();
+ let memo=new Map(),peakMemoStates=0,totalMemoStates=0;
  function residual(active,mask,at){
    for(const id of active)if(trie[id].terminal)return 0n;
    if(at===8)return mask===0?1n:0n;
@@ -381,6 +381,9 @@ if(process.argv.includes("--trie-count")){
  const totalByD1=[],top=[];let grand=0n,peak=0n;
  for(let d=1;d<=25;d++){
    if(alphabet[d-1]==="1RD")continue;
+   // D1 slices are disjoint. Releasing the prior slice's DP table bounds
+   // memory without changing any union/counting semantics.
+   memo=new Map();
    const mass=under([d]);grand+=mass;
    totalByD1.push({D1:alphabet[d-1],unclassified:String(mass)});
    for(let c=1;c<=25;c++)for(let b=1;b<=25;b++){
@@ -391,6 +394,8 @@ if(process.argv.includes("--trie-count")){
        if(n>peak)peak=n;
      }
    }
+   peakMemoStates=Math.max(peakMemoStates,memo.size);
+   totalMemoStates+=memo.size;
  }
  totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
    BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
@@ -411,7 +416,8 @@ if(process.argv.includes("--trie-count")){
    graphMasks:maskNames,fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
    totalResidualD1not1RD:String(grand),plusAgent23Residual:String(grand+110397542n),
    nonzeroThreeSlotPrefixes:top.length,bestThreeSlotResidual:String(peak),
-   trieNodes:trie.length,trieMemoStates:memo.size,mddNodes:0,
+   trieNodes:trie.length,triePeakD1MemoStates:peakMemoStates,
+   trieTotalD1MemoStates:totalMemoStates,mddNodes:0,
    D1Distribution:totalByD1,topThreeSlotPrefixes:top.slice(0,45)
  },null,2));
  process.exit(0);
