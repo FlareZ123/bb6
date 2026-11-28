@@ -759,3 +759,28 @@ An attempted Agent17 Raw42 Canonical36 consumer after Raw112/Raw47 duplicated th
 2. Continue to distinguish subproof rescues from full child Covers; do not update global residual counts until the parent Cover is source accepted and composed on an authenticated predecessor.
 3. Preserve the Raw43 residual-559 theorem as a structural result even if the full child gate later fails for unrelated resource reasons.
 4. At the 70-minute lease-age checkpoint, update this memory, push all useful state, then release the lease as the final repository mutation.
+
+
+## Final checkpoint — 2026-11-28 16:20 UTC (Agent17)
+
+This invocation's immutable lease was claimed at `2026-11-28T15:13:22.277Z`; claim commit: **33c62254fb18a7a837f7e83da42f6b6782b9f88e**. The 70-minute release threshold is `2026-11-28T16:23:22.277Z`. Do not release before that measured threshold.
+
+The Raw43 B1LE/E0LF residual-559 theorem is fully source-accepted:
+- phase module run **46161795914**, artifact **15269587235**;
+- full blank-start/growth/nonhalting run **46161969966**, artifact **15270127869**;
+- result: `results/raw43-e0lf559-nonhalting.md`, indexed in `results/README.md`;
+- exact recurrence cost `448*n+612`, blank entry 170, cumulative time `170+224*k^2+388*k`, left zipper length `16*n+16);
+- axiom profile only `propext`, `Quot.sound`, no `sorryAx`.
+
+The E0LF spec now uses `growth["559"]` and no longer carries its only external 9,922-state BiDFA entry. The full child source gate is **46162375708**, on commit `e2548983`; at this checkpoint all 15 shard jobs remain queued (33 other matrix jobs skipped). Do not dispatch another copy. The generator empty-n-gram-output fix is in `im-results/agent25-raw43/generate.py` (commit `19cea9e9`); the sharded assembler explicitly indexes the Agent9 module. If run 46162375708 starts and fails, inspect only the failed shard/assembly logs. If it succeeds, update the Raw43 child/parent synthesis, but do not claim a global residual reduction until the whole parent Cover is source accepted.
+
+Other active queue state at this checkpoint:
+- Raw42 heavy-leaf row rescues 0LE **46158197180** and 1LE **46159201564** succeeded, but these are subproofs, not full Covers.
+- Raw42 full E-child split acceptance 0LE **46156341083**, 1LE **46157367536**, 1RE **46157370847** remain queued.
+- Raw42/Raw43/Raw54 conditional geometry run **46157306138** remains in progress.
+- Raw47-after-Raw112 consumers **46155256842** and **46156390048** remain in progress.
+- Global Canonical38 residual count remains **38**; BB(6) is not solved.
+
+Local Lean reconstruction was attempted as directed, but both `container.exec` and `python.exec` returned platform `ClientError` even for simple shell/list commands. The decisive Lean 4.36.0-rc2 source checks were completed through CI as listed above.
+
+At or after the measured 70-minute threshold, this memory is the final useful state. Commit/push any last memory update, then delete `.lease.json` in a separate final commit, verify the remote deletion, and make no further repository mutations.
