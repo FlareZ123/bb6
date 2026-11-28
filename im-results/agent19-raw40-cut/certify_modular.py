@@ -7,6 +7,12 @@ import os,sys
 from pathlib import Path
 root=Path(__file__).resolve().parent
 src=(root/'certify_canonical.py').read_text()
+depth=os.environ.get('RAW40_MAX_REC_DEPTH')
+if depth:
+    assert depth.isdigit() and 100000 <= int(depth) <= 10000000
+    needle='set_option maxRecDepth 100000'
+    assert src.count(needle)==1
+    src=src.replace(needle,f'set_option maxRecDepth {depth}')
 anchor="imports='import CanonicalPartial\\n' if"
 assert anchor in src
 src=src.replace(anchor,"imports='import Raw40Nores\\n' if")
