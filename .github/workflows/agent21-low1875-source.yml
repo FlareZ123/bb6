@@ -161,6 +161,6 @@ jobs:
           lean --version
           python3 tools/lean_compile_closure.py \
             im-results/agent21-c-shadow-density/DyadicSourceCheckerDensity.lean \
-            im-results/agent21-c-shadow-density/DyadicOpenMonotone.lean \
+            im-results/agent21-c-shadow-density/DyadicCheckerMonotone.lean \
             im-results/agent21-c-shadow-density/DyadicSource.lean \
             --workdir /tmp/a21-dyadic-duality --jobs 4 --lean "$(command -v lean)"
