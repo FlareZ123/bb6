@@ -13,6 +13,7 @@ on:
           - boundary
           - strict
           - lattice
+          - tower
 
 permissions:
   contents: read
@@ -56,6 +57,9 @@ jobs:
               ;;
             lattice)
               target=im-results/agent15-c-halting/M8BoundaryLattice.lean
+              ;;
+            tower)
+              target=im-results/agent15-c-halting/M8TowerLattice.lean
               ;;
           esac
           python3 tools/lean_compile_closure.py \
