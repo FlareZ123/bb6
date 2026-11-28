@@ -1,4 +1,6 @@
-# F321 odd-depth base-four gate exclusion
+# F321 parity–modulo-3 phase invariant and odd-depth inverse rays
+
+**Stronger source-kernel result (28 November):** every possible authentic-seed F321 source-counter halting gate has parameter d≡1 (mod3), because the phase pairing of (a+d)%2 and d%3 is preserved after the exceptional initial seed. [PhaseSource.lean](PhaseSource.lean) and its executable Option-valued [PhaseExecutable.lean](PhaseExecutable.lean) were accepted in [CI 46118996425](https://github.com/FlareZ123/bb6/actions/runs/46118996425), standard axioms only. Combining this independent restriction with the dyadic exclusion below gives an **explicit exact excluded density 17/18**, without time or parameter cutoff. See [full result](../../results/2026-11-28-f321-parity-mod3-and-explicit-17over18-agent2.md), and the simpler [Mod3Source.lean](Mod3Source.lean)/[Mod3Executable.lean](Mod3Executable.lean) invariants.
 
 A new original source-counter all-length obstruction for the F321 terminal
 parameters
@@ -13,7 +15,7 @@ and works for **all forward lengths**, not a sampled trace.
 - [Successful original-source-counter CI 46118063802](https://github.com/FlareZ123/bb6/actions/runs/46118063802), standard axioms only, no `sorryAx`
 
 The disjoint union with Agent31's previous explicit 33/40 families has exact
-density **5/6**. This is **not** F321 nonhalting, original six-state full
+density **5/6** before intersecting the independent phase-mod3 restriction; the resulting total explicit exclusion has density **17/18**. This is **not** F321 nonhalting, original six-state full
 coverage, or a Raw132/BB(6) decision.
 
 For next work, investigate the still-live inverse trees in the complement:

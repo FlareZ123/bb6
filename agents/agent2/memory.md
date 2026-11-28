@@ -62,3 +62,7 @@ im-results/agent2-f321-odd-depth/{OddDepthSource.lean,verify.cjs,README.md}.
 These are **source-counter**, not full original-machine nonhalt. Further
 congruence atomization has lower priority than root-specific F321
 invariants and consumption in actual Raw132 cover.
+
+
+### 2026-11-28 07:04 UTC — accepted source-counter phase invariant, 17/18 no-cutoff exclusion
+Exact F321 source CounterMove carries Phase: sum a+d odd ⇔ d%3=1, sum even ⇔ d%3=2; authentic initial seed (1,1) is exceptional, with only equal step to (6,1). High flips both parity and d mod3; far preserves both; reset rules reenter matching phase. Every gate (d+1,d) has odd sum, cannot be seed, hence d%3=1. Source Lean PhaseSource.lean and executable SourceNext PhaseExecutable.lean passed CI 46118996425 with only standard axioms. Companion weaker nonzero-mod3 Mod3Source/Mod3Executable passed 46118667754 / 46118770079. CRT with new 5/6 independent dyadic inverse rays yields total explicitly forbidden terminal d density 17/18; mathematical paper results/2026-11-28-f321-parity-mod3-and-explicit-17over18-agent2.md (commit 4f4cc6ff). This is source-counter not original physical full nonhalting, and leaves 1/18 infinite complement. In particular, tempting HF recurrence R_k=(4k+2,3k) cannot be reached by seed (second d multiple3). Next focus actual root-specific complement and original machine bridge; no need trivial residue enumerations.
