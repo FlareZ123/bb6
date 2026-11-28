@@ -158,17 +158,8 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
     (hLeaves : ∀ e ∈ roster37, Cover (WeightedBound B) e.2)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
-    BB6.Coverage.ExactBB6 B := by
-  have hs :
-      ∀ m, compatible root m →
-        WeightedBound B m ∨
-          ∃ e ∈ roster37, TNFQuotientCompatible e.2 m := by
-    intro m hm
-    rcases sound_integrated m hm with hsmall | hrest
-    · exact Or.inl (fun k d hk hd =>
-        Nat.le_trans (hsmall k d hk hd) hB)
-    · exact Or.inr hrest
-  exact exact_from_quotient_roster (by omega) hB hs hLeaves champ
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_quotient_roster (by omega) hB sound_integrated hLeaves champ
 
 theorem exact_at_champion_score
     (hLeaves : ∀ e ∈ roster37,
