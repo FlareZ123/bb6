@@ -163,9 +163,38 @@ def shard(variant: str, index: int, count: int) -> None:
     )
 
 
+def recover_shards(variant: str, count: int, shards_root: Path, pins: str) -> str:
+    """Reuse successful producer artifacts even when their assembly job failed."""
+    pin = json.loads(pins)
+    if not isinstance(pin, dict) or set(pin) != {"shard_run_id", "shard_revision"}:
+        raise ValueError("resume pins must contain shard_run_id and shard_revision")
+    run_id, revision = pin["shard_run_id"], pin["shard_revision"]
+    if not isinstance(run_id, int) or isinstance(run_id, bool) or run_id <= 0:
+        raise ValueError("invalid shard run ID")
+    if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("invalid shard revision")
+    repo = os.environ["GITHUB_REPOSITORY"]
+    meta = json.loads(capture(["gh", "api", f"repos/{repo}/actions/runs/{run_id}"]))
+    if (
+        meta.get("id") != run_id
+        or meta.get("head_sha") != revision
+        or meta.get("status") != "completed"
+        or meta.get("path") != ".github/workflows/agent10-four-hole.yml"
+        or not meta.get("display_title", "").startswith(f"raw43-b0le-sharded raw43={variant} ")
+    ):
+        raise RuntimeError("pinned run does not match the completed Raw43 shard producer")
+    for index in range(count):
+        name = f"raw43-b0le-shard-{index}"
+        run(["gh", "run", "download", str(run_id), "--repo", repo,
+             "--name", name, "--dir", str(shards_root / name)])
+    return revision
+
+
 def assemble(variant: str, count: int, shards_root: Path) -> None:
     generated = prepare(variant)
-    revision = os.environ["GITHUB_SHA"]
+    pins = os.environ.get("RAW43_RESUME_PINS", "{}")
+    revision = (recover_shards(variant, count, shards_root, pins)
+                if pins != "{}" else os.environ["GITHUB_SHA"])
     union = Path("/tmp/a25-b0le-shard-union")
     run([
         "python", str(HERE / "merge_b0le_source_shards.py"),
