@@ -65,11 +65,18 @@ theorem literal_codes :
 theorem codes_nodup :
     (parents.map BB6.Agent47PhaseFrontier.tableCode).Nodup := by decide +kernel
 
+theorem member_via_sameTable (p : PartialMachine)
+    (h : prior.any (fun q => Q0ExhaustiveTree.sameTable q p) = true) :
+    p ∈ prior := by
+  obtain ⟨q,hq,he⟩ := List.any_eq_true.mp h
+  exact (Q0ExhaustiveTree.sameTable_sound he) ▸ hq
+
 theorem all_members_in_152 :
     ∀ p ∈ parents, p ∈ prior := by
   intro p hp
   simp [parents] at hp
-  rcases hp with rfl|rfl|rfl|rfl <;> decide +kernel
+  rcases hp with rfl|rfl|rfl|rfl <;>
+    exact member_via_sameTable _ (by decide +kernel)
 
 theorem exact_census :
     (prior.length,remaining.length) = (152,148) := by decide +kernel
