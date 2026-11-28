@@ -16,6 +16,11 @@ on:
         description: Prior checkpoint run id (leave empty for bootstrap)
         required: false
         type: string
+      prior_artifact:
+        description: Prior checkpoint artifact name override
+        required: false
+        default: ''
+        type: string
       max_fresh:
         description: Maximum fresh Lean modules to compile this run
         required: true
@@ -74,7 +79,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FlareZ123/bb6
           run-id: ${{ inputs.prior_run }}
-          name: raw11-${{ inputs.parent_id }}-checkpoint
+          name: ${{ inputs.prior_artifact != '' && inputs.prior_artifact || format('raw11-{0}-checkpoint', inputs.parent_id) }}
           path: /tmp/checkpoint
 
       - name: Recover source and accepted object state
@@ -119,7 +124,7 @@ jobs:
         if: inputs.row_split_extra132 && inputs.parent_id == '132' && inputs.prior_run == ''
         run: |
           set -euo pipefail
-          python im-results/agent44-raw11-extra28/split_two_sided_leaf.py             /tmp/parent-source/Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean
+          python im-results/agent44-raw11-extra28/split_two_sided_leaf.py             /tmp/parent-source/Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean             '1RB1RD1RC1RE0LA0LD1LA1LC0RF---0RC0RE'
           test -s /tmp/parent-source/Agent44Extra132GiantProof.lean
           test -s /tmp/parent-source/TwoSidedAutomataRows.lean
           echo "row_split_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
@@ -148,6 +153,7 @@ jobs:
             echo "parent_id=${RAW11_REPAIR_ID}"
             echo "source_run=${{ inputs.source_run }}"
             echo "prior_run=${{ inputs.prior_run }}"
+            echo "prior_artifact=${{ inputs.prior_artifact }}"
             echo "max_fresh=${RAW11_REPAIR_MAX_FRESH}"
             echo "target_module=${RAW11_REPAIR_TARGET}"
             echo "head_sha=${GITHUB_SHA}"
