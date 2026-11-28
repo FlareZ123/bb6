@@ -124,9 +124,10 @@ theorem valvalid_iff_not_divisible (b : Nat) (s : Pair) :
   · intro h
     have hle := valuation_le b (q s)
     have hlt : valuation b (q s)<b := by
-      by_contra hh
-      have hv : valuation b (q s)=b := by omega
-      exact h ((valuation_full_iff b (q s)).mp hv)
+      by_cases hh : valuation b (q s)<b
+      · exact hh
+      · have hv : valuation b (q s)=b := by omega
+        exact (h ((valuation_full_iff b (q s)).mp hv)).elim
     exact ⟨by omega,valuation_below b (q s) hlt⟩
 
 #print axioms valvalid_iff_not_divisible

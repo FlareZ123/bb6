@@ -19,6 +19,7 @@ theorem high_valid_of_valuation (s : Pair) (n : Nat)
   have htwo : I (n+2)=I (n+1)*2 := by
     unfold I P
     rw [show n+2=(n+1)+1 by omega,Nat.pow_succ,Int.natCast_mul]
+    rfl
   have hdiv : q s / I (n+1)=2*t := by
     rw [ht,htwo]
     have he : (I (n+1)*2)*t=I (n+1)*(2*t) := by ac_rfl
@@ -37,7 +38,7 @@ theorem high_valid_of_valuation (s : Pair) (n : Nat)
   · rw [ha,ht,htwo]
     have hmass : (2*t-2-odd s)+2+odd s=2*t := by omega
     rw [hmass]
-    simp
+    ac_rfl
   · rw [hydef]
     omega
 
