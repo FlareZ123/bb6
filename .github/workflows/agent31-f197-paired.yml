@@ -14,6 +14,7 @@ on:
           - at-monoid-growth
           - epoch-marker
           - self-embedding
+          - original-cylinder
           - computer-certificate
           - root-scout
           - root-generate
@@ -110,7 +111,7 @@ jobs:
           ! grep -q sorryAx /tmp/epoch-marker.log
 
       - name: Check F197 self-embedding from generated finite certificates
-        if: ${{ inputs.target == 'self-embedding' || inputs.target == 'blank-root' }}
+        if: ${{ inputs.target == 'self-embedding' || inputs.target == 'blank-root' || inputs.target == 'original-cylinder' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -127,6 +128,11 @@ jobs:
           for m in PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryBulk TraceLogic PackedCheck SeedCore RootCore; do
             cp "$e/$m.lean" "$b/"
           done
+          if [ "${{ inputs.target }}" = "original-cylinder" ]; then
+            cp "$PWD/im-results/agent8-coverage-contract/Frontier.lean" "$b/"
+            cp "$d/CoverBridge.lean" "$b/"
+            cp "$e/F197CylinderCover.lean" "$b/"
+          fi
           cd "$b"
           export LEAN_PATH=.
           for m in Macro PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryData OrdinaryBulk TraceLogic PackedCheck SeedCore RootCore TraceStates; do
@@ -141,6 +147,11 @@ jobs:
           printf '%s\n' OpBank*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
           printf '%s\n' SelfPre*.lean SelfPost*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
           lean -j 1 -o SelfTheorem.olean SelfTheorem.lean | tee -a "$RLOG"
+          if [ "${{ inputs.target }}" = "original-cylinder" ]; then
+            compile Frontier.lean
+            compile CoverBridge.lean
+            compile F197CylinderCover.lean
+          fi
           if [ "${{ inputs.target }}" = "blank-root" ]; then
             compile RootStates.lean
             printf '%s\n' RootBank*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
