@@ -190,6 +190,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
+          name: raw42-part2-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
           github-token: ${{ github.token }}
           run-id: ${{ env.SOURCE_RUN }}
           pattern: raw42-group1-1LB-part-*
