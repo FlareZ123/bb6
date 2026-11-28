@@ -24,11 +24,15 @@ theorem path_of_word : ∀ (ds : List Digit) (p y : Nat),
     intro p y h
     change decide (num d p y % 16 = 0) &&
       IsWord ds (nextP d p) (nextY d p y) = true at h
-    have hpair := Bool.and_eq_true.mp h
-    have hmod : num d p y % 16 = 0 := of_decide_true hpair.1
-    have htail : IsWord ds (nextP d p) (nextY d p y) = true := hpair.2
-    simpa only [List.length_cons] using
-      (Path.cons d hmod (ih (nextP d p) (nextY d p y) htail))
+    cases hx : decide (num d p y % 16 = 0) with
+    | false =>
+      simp [hx] at h
+    | true =>
+      have hmod : num d p y % 16 = 0 := of_decide_true hx
+      have htail : IsWord ds (nextP d p) (nextY d p y) = true := by
+        simpa [hx] using h
+      simpa only [List.length_cons] using
+        (Path.cons d hmod (ih (nextP d p) (nextY d p y) htail))
 
 /-- The s=0 instance of the infinite 3k inverse family, paired into
     source q0 macro digits: 0^6,5,1,0^7,1,0^8. -/
