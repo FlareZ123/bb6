@@ -190,16 +190,16 @@ def main() -> None:
     proof_ns = "BB6.Agent44Extra132Giant"
 
     write_module(out, prefix + "Left", ["TwoSidedAutomata"], proof_ns,
-                 "def left : BB6.Agent4Automata.Stack := " + left)
+                 "def left : BB6.Agent4Automata.Stack := " + left + "\n#print axioms left")
     write_module(out, prefix + "Right", ["TwoSidedAutomata"], proof_ns,
-                 "def right : BB6.Agent4Automata.Stack := " + right)
+                 "def right : BB6.Agent4Automata.Stack := " + right + "\n#print axioms right")
 
     row_mods: list[str] = []
     for j, row in enumerate(rows):
         name = prefix + f"RowData{j:02}"
         row_mods.append(name)
         write_module(out, name, ["TwoSidedAutomata"], proof_ns,
-                     f"def row{j:02} : BB6.Agent1NGram.Trie := {row}")
+                     f"def row{j:02} : BB6.Agent1NGram.Trie := {row}\n#print axioms row{j:02}")
 
     data_name = prefix + "Data"
     write_module(
@@ -207,7 +207,7 @@ def main() -> None:
         "open BB6.Agent4Automata\n"
         f"def table : PartialMachine := {table_expr(literal_table)}\n"
         "def cert : BB6.Agent4Automata.Cert := ⟨left,right,#["
-        + ",".join(f"row{j:02}" for j in range(12)) + "]⟩",
+        + ",".join(f"row{j:02}" for j in range(12)) + "]⟩\n#print axioms cert",
     )
 
     checked_mods: list[str] = []
