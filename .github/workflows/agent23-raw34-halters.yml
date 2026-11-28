@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third]
+        options: [pilot, full, depth2, highmass, union, third, far]
         default: pilot
 
 permissions:
@@ -87,6 +87,16 @@ jobs:
           mkdir -p /tmp/agent23-raw34-halters
           python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 4 \
             im-results/agent23-raw34-frontier/Raw34D1RDTop120Third*.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+      - name: Test unrestricted source-certified FAR discovery on early-unknown Raw34 machines
+        if: inputs.mode == 'far'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
+            im-results/agent23-raw34-frontier/Raw34UnrestrictedFARPilot.lean \
             2>&1 | tee /tmp/agent23-raw34-halters/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
