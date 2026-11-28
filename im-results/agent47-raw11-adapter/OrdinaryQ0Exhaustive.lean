@@ -15,7 +15,7 @@ normalization/blank-delay slack is needed to bound primitive blank steps.
 namespace BB6.Agent47OrdinaryQ0Exhaustive
 open BB6Coverage BB6.Agent13BlankDelay
 open Q0ExhaustiveTree
-open BB6.Agent5ExactOneHole (OrdinaryBound)
+open BB6.Agent5ExactOneHole
 
 theorem hole_sharp (B n : Nat) (p : PartialMachine) (c : FinRayCfg)
     (h : holeOK (B+5) p n c = true) :
