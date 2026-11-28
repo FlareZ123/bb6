@@ -3,173 +3,157 @@ import EGenericTurn
 import PacketSource
 
 set_option maxRecDepth 8192
-set_option maxHeartbeats 20000000
+set_option maxHeartbeats 16000000
 set_option linter.unusedSimpArgs false
 
 namespace BB6.Agent37E2UnaryTail
 open CryptidBoundary BB6.Agent31PacketSource
 open BB6.Agent2EGenericTurn
 
-/-- The fourth bit following the initial 0 111 is a physical branch bit.
-    A zero leaves a five-bit alternating tail; a one creates six bits. -/
-private def zeroFront : List Bool :=
-  [true,true,false,true,true,true,false]
+/-- E,p=2 frontier when the packet tail starts with 0,111 and a bit. -/
+private def front (b : Bool) : List Bool :=
+  [true,true,false,true,true,true,b]
 
-private def oneFront : List Bool :=
-  [true,true,false,true,true,true,true]
+/-- The complete 20-step A/0-to-C/1 turn, before a universal C-pair pump. -/
+private def turned (b : Bool) : List Bool :=
+  if b then [true,false,true,false,true,false,true]
+       else [true,false,true,false,true,false]
 
-private def zeroOut : List Bool :=
-  [true,true,false] ++ List.replicate 6 true ++
-    [false,true,false,true,false]
+/-- The corresponding packet suffix after converting one more leading
+    one into the unary block. -/
+private def tail (b : Bool) : List Bool :=
+  if b then [false,true,false,true,false,true]
+       else [false,true,false,true,false]
 
-private def oneOut : List Bool :=
-  [true,true,false] ++ List.replicate 6 true ++
-    [false,true,false,true,false,true]
+/-- The input's arbitrary left tape is untouched; the binary fourth
+    marker bit changes only the end of the output word. -/
+theorem local_turn (L ys : List Bool) (b : Bool) :
+    run 20 (⟨L,false,front b ++ ys,0⟩ : Cfg) =
+      ⟨L,true,turned b ++ ys,2⟩ := by
+  cases b <;>
+    simp [front,turned,run,step,goL,goR,List.append_assoc]
 
-/-- Finite original-table computation, independent of the arbitrary
-    left pair stack and of the untouched suffix. -/
-theorem zeroFront32 (m : Nat) (ys : List Bool) :
-    run 32 (eStart m 0 (zeroFront ++ ys)) =
-      sweepD m (zeroOut ++ ys) := by
-  simp [eStart,zeroFront,zeroOut,sweepD,
-    run,step,goL,goR,pairs,List.append_assoc]
+private theorem oppairsFalse (q : Nat) :
+    oppairs q ++ [false] = false :: pairs q := by
+  induction q with
+  | zero => rfl
+  | succ q ih =>
+      simpa [oppairs,pairs,List.append_assoc] using
+        congrArg (fun xs : List Bool => false :: true :: xs) ih
 
-theorem oneFront32 (m : Nat) (ys : List Bool) :
-    run 32 (eStart m 0 (oneFront ++ ys)) =
-      sweepD m (oneOut ++ ys) := by
-  simp [eStart,oneFront,oneOut,sweepD,
-    run,step,goL,goR,pairs,List.append_assoc]
-
-theorem zeroRun (m : Nat) (ys : List Bool) :
-    run (2*m+35) (eStart m 0 (zeroFront ++ ys)) =
-      ⟨[],false,List.replicate (2*m+3) true ++ (zeroOut ++ ys),5⟩ := by
-  rw [show 2*m+35=32+(2*m+3) by omega,
-      run_add,zeroFront32,sweepD_run]
-
-theorem oneRun (m : Nat) (ys : List Bool) :
-    run (2*m+35) (eStart m 0 (oneFront ++ ys)) =
-      ⟨[],false,List.replicate (2*m+3) true ++ (oneOut ++ ys),5⟩ := by
-  rw [show 2*m+35=32+(2*m+3) by omega,
-      run_add,oneFront32,sweepD_run]
-
-private theorem repInput (k : Nat) :
+private theorem prefixOnes (k : Nat) :
     List.replicate (3*k+4) true =
-      true :: true :: List.replicate (3*k+2) true := by
+      [true,true] ++ List.replicate (3*k+2) true := by
   rw [show 3*k+4=2+(3*k+2) by omega,
       ← List.replicate_append_replicate]
   rfl
 
-private theorem repOutput (k : Nat) :
+private theorem outputOnes (k : Nat) :
     List.replicate (8*k+5) true =
       List.replicate (8*k+3) true ++ [true,true] := by
   rw [show 8*k+5=(8*k+3)+2 by omega,
       ← List.replicate_append_replicate]
   rfl
 
-private theorem zeroInput (k : Nat) (ys : List Bool) :
-    packet (3*k+4) 0 2
-        (false :: true :: true :: true :: false :: ys) =
+private theorem inputShape (k q : Nat) (b : Bool) (ys : List Bool) :
+    packet (3*k+4) q 2 (false :: true :: true :: true :: b :: ys) =
       init (List.replicate (3*k+2) true ++
-        false :: (zeroFront ++ ys)) := by
-  rw [show packet (3*k+4) 0 2
-      (false :: true :: true :: true :: false :: ys) =
-      (⟨[],false,List.replicate (3*k+4) true ++
-        (false :: ([true,true,false,true,true,true,false] ++ ys)),5⟩ : Cfg) by
-        simp [packet,word,oppairs,List.replicate,List.append_assoc]]
-  rw [repInput]
-  simp [init,zeroFront,List.append_assoc]
+        false :: (pairs q ++ (front b ++ ys))) := by
+  have hw :
+      oppairs q ++ (false :: (List.replicate 2 true ++
+          (false :: true :: true :: true :: b :: ys))) =
+        false :: (pairs q ++ (front b ++ ys)) := by
+    calc
+      _ = (oppairs q ++ [false]) ++ (List.replicate 2 true ++
+            (false :: true :: true :: true :: b :: ys)) := by
+              simp [List.append_assoc]
+      _ = _ := by
+        rw [oppairsFalse]
+        simp [front,List.replicate,List.append_assoc]
+  simp only [packet,word,init]
+  rw [prefixOnes, hw]
+  simp [List.append_assoc]
 
-private theorem oneInput (k : Nat) (ys : List Bool) :
-    packet (3*k+4) 0 2
-        (false :: true :: true :: true :: true :: ys) =
-      init (List.replicate (3*k+2) true ++
-        false :: (oneFront ++ ys)) := by
-  rw [show packet (3*k+4) 0 2
-      (false :: true :: true :: true :: true :: ys) =
-      (⟨[],false,List.replicate (3*k+4) true ++
-        (false :: ([true,true,false,true,true,true,true] ++ ys)),5⟩ : Cfg) by
-        simp [packet,word,oppairs,List.replicate,List.append_assoc]]
-  rw [repInput]
-  simp [init,oneFront,List.append_assoc]
+private theorem turned_eq (b : Bool) :
+    turned b = true :: tail b := by
+  cases b <;> rfl
 
-private theorem zeroOutput (k : Nat) (ys : List Bool) :
+private theorem ones_q (q : Nat) :
+    [true,true,true] ++ (List.replicate (2*(q+1)) true ++ [true]) =
+      List.replicate (2*q+6) true := by
+  calc
+    _ = List.replicate 3 true ++
+          (List.replicate (2*(q+1)) true ++ List.replicate 1 true) := rfl
+    _ = (List.replicate 3 true ++ List.replicate (2*(q+1)) true) ++
+          List.replicate 1 true := by rw [List.append_assoc]
+    _ = List.replicate (3+2*(q+1)) true ++ List.replicate 1 true := by
+          rw [List.replicate_append_replicate]
+    _ = List.replicate (3+2*(q+1)+1) true := by
+          rw [List.replicate_append_replicate]
+    _ = _ := by congr 1; omega
+
+private theorem outputShape (k q : Nat) (b : Bool) (ys : List Bool) :
     (⟨[],false,List.replicate (8*k+3) true ++
-      (zeroOut ++ ys),5⟩ : Cfg) =
-    packet (8*k+5) 0 6
-      ([false,true,false,true,false] ++ ys) := by
-  rw [show List.replicate (8*k+3) true ++ (zeroOut ++ ys) =
-      (List.replicate (8*k+3) true ++ [true,true]) ++
-       (false :: List.replicate 6 true ++
-         ([false,true,false,true,false] ++ ys)) by
-      simp [zeroOut,List.replicate,List.append_assoc]]
-  rw [← repOutput]
-  simp [packet,word,oppairs,List.append_assoc]
+      outPacket q (turned b) ys,5⟩ : Cfg) =
+      packet (8*k+5) 0 (2*q+6) (tail b ++ ys) := by
+  have hword :
+      List.replicate (8*k+3) true ++ outPacket q (turned b) ys =
+      List.replicate (8*k+5) true ++
+        (false :: (List.replicate (2*q+6) true ++ (tail b ++ ys))) := by
+    calc
+      _ = List.replicate (8*k+3) true ++
+          ([true,true] ++
+             (false :: (([true,true,true] ++
+                 (List.replicate (2*(q+1)) true ++ [true])) ++
+                 (tail b ++ ys)))) := by
+              cases b <;>
+                simp [outPacket,turned,tail,List.append_assoc]
+      _ = List.replicate (8*k+3) true ++
+          ([true,true] ++
+             (false :: (List.replicate (2*q+6) true ++
+                 (tail b ++ ys)))) := by rw [ones_q]
+      _ = _ := by rw [outputOnes]; simp [List.append_assoc]
+  simpa [packet,word,oppairs] using
+    congrArg (fun rs : List Bool => (⟨[],false,rs,5⟩ : Cfg)) hword
 
-private theorem oneOutput (k : Nat) (ys : List Bool) :
-    (⟨[],false,List.replicate (8*k+3) true ++
-      (oneOut ++ ys),5⟩ : Cfg) =
-    packet (8*k+5) 0 6
-      ([false,true,false,true,false,true] ++ ys) := by
-  rw [show List.replicate (8*k+3) true ++ (oneOut ++ ys) =
-      (List.replicate (8*k+3) true ++ [true,true]) ++
-       (false :: List.replicate 6 true ++
-         ([false,true,false,true,false,true] ++ ys)) by
-      simp [oneOut,List.replicate,List.append_assoc]]
-  rw [← repOutput]
-  simp [packet,word,oppairs,List.append_assoc]
-
-/-- Every k and every suffix: q=0, p=2 E boundary with 0 111 0 guard.
-    Neither the unary parameter nor the suffix is numerically bounded. -/
-theorem e_two_1110 (k : Nat) (ys : List Bool) :
-    run (12*k*k+49*k+68)
-      (packet (3*k+4) 0 2
-        (false :: true :: true :: true :: false :: ys)) =
-      packet (8*k+5) 0 6
-        ([false,true,false,true,false] ++ ys) := by
-  rw [zeroInput]
-  have ht : 12*k*k+49*k+68 =
-    (12*k*k+41*k+33)+(2*(4*k)+35) := by omega
-  rw [ht,run_add,prefix_E]
-  change run (2*(4*k)+35) (eStart (4*k) 0 (zeroFront ++ ys)) = _
-  rw [zeroRun]
-  rw [show 2*(4*k)+3=8*k+3 by omega]
-  exact zeroOutput k ys
-
-/-- Every k and every suffix: q=0, p=2 E boundary with 0 111 1 guard.
-    This includes arbitrarily many further ones, not just the fixed 01^6
-    section used in the older P2 reset theorem. -/
-theorem e_two_1111 (k : Nat) (ys : List Bool) :
-    run (12*k*k+49*k+68)
-      (packet (3*k+4) 0 2
-        (false :: true :: true :: true :: true :: ys)) =
-      packet (8*k+5) 0 6
-        ([false,true,false,true,false,true] ++ ys) := by
-  rw [oneInput]
-  have ht : 12*k*k+49*k+68 =
-    (12*k*k+41*k+33)+(2*(4*k)+35) := by omega
-  rw [ht,run_add,prefix_E]
-  change run (2*(4*k)+35) (eStart (4*k) 0 (oneFront ++ ys)) = _
-  rw [oneRun]
-  rw [show 2*(4*k)+3=8*k+3 by omega]
-  exact oneOutput k ys
-
-/-- Complete binary branch for a q=0 E-two boundary with at least three
-    ones after its zero, regardless of the next bit and remaining tape. -/
-theorem e_two_111_any (k : Nat) (b : Bool) (ys : List Bool) :
-    run (12*k*k+49*k+68)
-      (packet (3*k+4) 0 2
+/-- Original D-machine all-q E-two rule when the right packet starts
+    0,111,b: source-accurate primitive count, arbitrary k and q, all
+    binary suffixes, and an explicit branch on the next bit. -/
+theorem e_two_111_all (k q : Nat) (b : Bool) (ys : List Bool) :
+    run (12*k*k+49*k+68+4*q)
+      (packet (3*k+4) q 2
         (false :: true :: true :: true :: b :: ys)) =
-      packet (8*k+5) 0 6
-        ((if b then [false,true,false,true,false,true]
-               else [false,true,false,true,false]) ++ ys) := by
-  cases b with
-  | false => exact e_two_1110 k ys
-  | true => exact e_two_1111 k ys
+      packet (8*k+5) 0 (2*q+6) (tail b ++ ys) := by
+  rw [inputShape]
+  have ht : 12*k*k+49*k+68+4*q =
+      12*k*k+49*k+20+48+4*q := by omega
+  rw [ht]
+  rw [BB6.Agent2EGenericTurn.full_E_from_turn k q 20
+      (front b) (turned b) ys
+      (fun L => local_turn L ys b)]
+  exact outputShape k q b ys
 
-#print axioms zeroFront32
-#print axioms oneFront32
+/-- Bit-zero branch without any restriction on the alternating depth. -/
+theorem e_two_1110 (k q : Nat) (ys : List Bool) :
+    run (12*k*k+49*k+68+4*q)
+      (packet (3*k+4) q 2
+        (false :: true :: true :: true :: false :: ys)) =
+      packet (8*k+5) 0 (2*q+6)
+        ([false,true,false,true,false] ++ ys) :=
+  e_two_111_all k q false ys
+
+/-- Bit-one branch without any restriction on the alternating depth. -/
+theorem e_two_1111 (k q : Nat) (ys : List Bool) :
+    run (12*k*k+49*k+68+4*q)
+      (packet (3*k+4) q 2
+        (false :: true :: true :: true :: true :: ys)) =
+      packet (8*k+5) 0 (2*q+6)
+        ([false,true,false,true,false,true] ++ ys) :=
+  e_two_111_all k q true ys
+
+#print axioms local_turn
+#print axioms e_two_111_all
 #print axioms e_two_1110
 #print axioms e_two_1111
-#print axioms e_two_111_any
 
 end BB6.Agent37E2UnaryTail
