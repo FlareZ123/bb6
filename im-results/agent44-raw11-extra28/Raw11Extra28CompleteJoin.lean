@@ -61,10 +61,10 @@ def completeRoute (h : Certificates) : Route 158 :=
   ]
 
 theorem route_checked (h : Certificates) :
-    check 158 parent (completeRoute h) = true := by decide +kernel +revert
+    check 158 parent (completeRoute h) = true := by rfl
 
 theorem no_residual (h : Certificates) :
-    residuals 158 parent (completeRoute h) = [] := by decide +kernel +revert
+    residuals 158 parent (completeRoute h) = [] := by rfl
 
 /-- All twelve authentic child Covers suffice, at their distinct checked
     bounds, for the entire Extra28 parent at bound 158. -/
