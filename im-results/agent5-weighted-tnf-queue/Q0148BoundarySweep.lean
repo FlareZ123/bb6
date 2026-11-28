@@ -180,6 +180,88 @@ theorem scanRightChunks (cs : List RightChunk) (L R : List Bool) :
       simpa only [rightScanCost,inputRightChunks,outputRightChunks,
         List.cons_append,List.nil_append,List.append_assoc] using h
 
+
+/-- The three-step E1 entry from the section boundary. It deposits
+    1110 on the right and starts the long leftward C0 scan. -/
+theorem entryOne :
+    Auto.knownRun p 3 ⟨4,[true,false],[false,true,false]⟩ =
+      some ⟨2,[false],[true,true,true,false]⟩ := by decide +kernel
+
+/-- Left reversal after scanning all marked chunks when a leading A
+    separator was present. -/
+theorem leftEndPositive :
+    Auto.knownRun p 1 ⟨2,[false,false],[]⟩ =
+      some ⟨0,[false],[false]⟩ := by decide +kernel
+
+/-- Left reversal when the initial 110 marker has *no* leading A
+    separator. The moving head reaches two blank cells left of the
+    original finite support, and creates one new 1 on the way. -/
+theorem leftEndZero :
+    Auto.knownRun p 4 ⟨2,[false,true,true,false,false],[]⟩ =
+      some ⟨0,[false],[true,false,true,false]⟩ := by decide +kernel
+
+/-- Arbitrarily many separated markers and A blocks: E1 reaches the
+    first blank A0 reversal in exactly 3+scanCost(cs)+1 source steps,
+    uniformly for ALL untouched tape tails L,R. -/
+theorem halfSweepPositive (cs : List LeftChunk) (L R : List Bool) :
+    run0 p (3 + (scanCost cs + 1))
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+         [false,true,false] ++ R⟩ =
+    some ⟨0,[false] ++ L,
+            [false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+  have h1 : run0 p 3
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+         [false,true,false] ++ R⟩ =
+      some ⟨2,[false] ++ inputBits cs ++ [false] ++ L,
+               [true,true,true,false] ++ R⟩ := by
+    simpa only [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p 3 entryOne (inputBits cs ++ [false] ++ L) R
+  have h2 := scanChunks cs ([false] ++ L) ([true,true,true,false] ++ R)
+  have h3 : run0 p 1
+       ⟨2,[false] ++ [false] ++ L,
+          outputBits cs ++ [true,true,true,false] ++ R⟩ =
+       some ⟨0,[false] ++ L,
+                [false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+    simpa only [Auto.extend,List.nil_append,List.append_assoc] using
+      Auto.knownRun_sound p 1 leftEndPositive L
+         (outputBits cs ++ [true,true,true,false] ++ R)
+  have h := join0 h1 (join0 h2 h3)
+  simpa only [List.append_assoc] using h
+
+/-- Symmetric boundary case with NO leading A before the first 110
+    marker. The final left reversal consumes the unguarded initial 110,
+    creates a new support cell, and never evaluates the missing F1. -/
+theorem halfSweepZero (cs : List LeftChunk) (L R : List Bool) :
+    run0 p (3 + (scanCost cs + 4))
+      ⟨4,[true,false] ++ inputBits cs ++ [true,true,false,false] ++ L,
+         [false,true,false] ++ R⟩ =
+    some ⟨0,[false] ++ L,
+            [true,false,true,false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+  have h1 : run0 p 3
+      ⟨4,[true,false] ++ inputBits cs ++ [true,true,false,false] ++ L,
+         [false,true,false] ++ R⟩ =
+      some ⟨2,[false] ++ inputBits cs ++ [true,true,false,false] ++ L,
+               [true,true,true,false] ++ R⟩ := by
+    simpa only [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p 3 entryOne (inputBits cs ++ [true,true,false,false] ++ L) R
+  have h2 := scanChunks cs ([true,true,false,false] ++ L) ([true,true,true,false] ++ R)
+  have h3 : run0 p 4
+       ⟨2,[false] ++ [true,true,false,false] ++ L,
+          outputBits cs ++ [true,true,true,false] ++ R⟩ =
+       some ⟨0,[false] ++ L,
+               [true,false,true,false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+    simpa only [Auto.extend,List.nil_append,List.append_assoc] using
+      Auto.knownRun_sound p 4 leftEndZero L
+         (outputBits cs ++ [true,true,true,false] ++ R)
+  have h := join0 h1 (join0 h2 h3)
+  simpa only [List.append_assoc] using h
+
+#print axioms entryOne
+#print axioms leftEndPositive
+#print axioms leftEndZero
+#print axioms halfSweepPositive
+#print axioms halfSweepZero
+
 #print axioms rightMarkerOne
 #print axioms scanRightOne
 #print axioms scanRightChunks
