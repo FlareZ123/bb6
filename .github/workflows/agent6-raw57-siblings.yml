@@ -587,6 +587,7 @@ jobs:
             --precompiled-manifest /tmp/raw56-le-base/a1-raw56-root-consumer/manifest.json \
             --precompiled-dir /tmp/raw56-le-base/a1-raw56-root-consumer \
             --source-root "/tmp/raw56-le-e0/${E0}gen" \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --manifest /tmp/raw56-le-e0-closure/manifest.json --label "raw56-le-e0-${E0}" \
             --theorem "BB6.Agent1Raw56.LE${E0}.all_quotient" --weighted-bound 7014 \
             --parent-table "1RB---_1RC---_0RD---_1LD1LE_${E0}0LE_------" \
