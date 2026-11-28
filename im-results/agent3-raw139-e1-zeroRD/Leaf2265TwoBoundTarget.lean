@@ -2,6 +2,8 @@ import Leaf2265Bridge
 import TwoBoundAudit
 import ChampionPow1024
 
+set_option maxRecDepth 1000000
+
 namespace BB6.Agent3Raw139D0OneLFTarget
 open BB6Coverage
 open BB6.Agent13BlankDelay
