@@ -1,6 +1,7 @@
 import FinitePowerSlopeCycle
 import SharpValuationFamily
 import TypedCostBounds
+import SharpTypedCycle
 
 namespace PeriodicMacro
 open ValuationPacking
@@ -83,6 +84,24 @@ theorem slopeWalkSources_exact_capacity {K : Nat} {xs : List Letter}
   have hb := exact_edge_family_capacity K es hK hnodup
   rwa [hjs] at hb
 
+/-- Once a typed strict slope cycle has pairwise distinct finite source slopes,
+    the exact four-adic capacity contradicts the real E/S rank-cost envelope. -/
+theorem no_distinct_typed_slope_cycle
+    (x : Letter) (xs : List Letter) {ds : List Nat} {d : Nat}
+    (h : SlopeWalkSources (T (x::xs)) (x::xs) ds d d)
+    (hj : ∀ y : Letter, y∈x::xs → 0<y.j)
+    (hlarge : ∃ y : Letter, y∈x::xs ∧ 1<y.j)
+    (hd : 0<d) (hcone : 3*d<T (x::xs))
+    (hn : ds.Nodup) : False := by
+  have hcap := slopeWalkSources_exact_capacity h hj hd hcone hn
+  have hlow := typed_cost_lower x xs hj
+  have hhigh := typed_cost_upper_strict (x::xs) hj hlarge
+  have hK : 0<T (x::xs) := by omega
+  have hexceed := ValuationPacking.typed_cost_exceeds_capacity
+    (T (x::xs)) (J (x::xs)) hK hlow hhigh
+  omega
+
 #print axioms slopeWalkSources_edges
 #print axioms slopeWalkSources_exact_capacity
+#print axioms no_distinct_typed_slope_cycle
 end PeriodicMacro
