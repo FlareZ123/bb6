@@ -1,5 +1,5 @@
 name: Agent7 Raw36 direct D1=0LB complete parent source proof
-run-name: Raw36 direct 0LB all 320 exact leaves to weighted450 Cover
+run-name: Raw36 direct 0LB sharded 320-leaf weighted450 Cover
 on:
   workflow_dispatch:
     inputs:
@@ -12,9 +12,9 @@ permissions:
   contents: read
   actions: read
 jobs:
-  exact-parent:
+  common:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -52,12 +52,13 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Reconstruct all exact original-machine Lean audit objects
+      - name: Generate exact source and kernel-check shared dependency closure
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          mkdir -p /tmp/a7-direct01-full
           python im-results/agent7-raw36-direct/derive_drift.py \
             --out /tmp/a7-direct01-full/Raw36D101Hard10.lean --chunk 180
           python im-results/agent7-raw36-direct/generate_direct.py \
@@ -65,35 +66,112 @@ jobs:
             im-results/agent7-raw36-direct/evidence01.xz.b64 \
             ${{ inputs.max_parts }} 1 all \
             2>&1 | tee /tmp/a7-direct01-generated.log
-      - name: Kernel-verify universal original-cylinder Cover weighted 450
-        run: |
-          set -euo pipefail
+          mapfile -t roots < <(find /tmp/a7-direct01-full -maxdepth 1 -type f -name '*.lean' \
+            ! -name 'Raw36D101Kid*.lean' ! -name 'Raw36D101.lean' | sort)
+          test "${#roots[@]}" -gt 0
           python tools/lean_compile_closure.py \
-            --workdir /tmp/a7-direct01-checked \
+            --workdir /tmp/a7-direct01-common \
             --source-root /tmp/a7-direct01-full \
-            --jobs 4 --manifest /tmp/a7-direct01-checked/manifest.json \
-            --label 'raw36-direct-D1-0LB-entire-original-tree' \
-            --theorem BB6.Agent29Raw36D101.cover \
-            --parent-table '1RB---_1RC---_0RD---_0LD0LB_------_------' \
-            --weighted-bound 450 \
-            --artifact-name raw36-direct01-original-cover450 \
+            --jobs 4 \
+            --manifest /tmp/a7-direct01-common/common-manifest.json \
+            --label 'raw36-direct-D1-0LB-shared-dependencies' \
             --provenance-input im-results/agent7-raw36-direct/evidence01.xz.b64 \
             --provenance-input im-results/agent7-raw36-direct/extra-hard01.json \
             --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
             --provenance-input im-results/agent7-raw36-direct/derive_drift.py \
-            /tmp/a7-direct01-full/Raw36D101.lean \
-            2>&1 | tee /tmp/a7-direct01-audit.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-direct01-audit.log \
+            "${roots[@]}" \
+            2>&1 | tee /tmp/a7-direct01-common.log
+          cp /tmp/a7-direct01-full/Raw36D101Kid*.lean /tmp/a7-direct01-full/Raw36D101.lean /tmp/a7-direct01-common/
+          cp /tmp/a7-direct01-generated.log /tmp/a7-direct01-common/generation.log
+          cp /tmp/a7-direct01-common.log /tmp/a7-direct01-common/common-audit.log
+      - name: Retain shared original-source dependency closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/a7-direct01-common/
+          if-no-files-found: error
+          retention-days: 60
+
+  children:
+    needs: common
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        kid: [0,1,2,3,4,6,7,8,9,10,12,13,14,15,16,18,19,20,21,22]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/d101
+      - name: Kernel-check exact child
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/d101
+          kid=$(printf 'Raw36D101Kid%02d' ${{ matrix.kid }})
+          (cd /tmp/d101 && lean -o "$kid.olean" "$kid.lean") 2>&1 | tee "/tmp/$kid.log"
+          suffix=${kid#Raw36D101Kid}
+          python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" \
+            "BB6.Agent29Raw36D101.kid${suffix}_bound"
+          mkdir -p /tmp/out
+          cp "/tmp/d101/$kid.lean" "/tmp/d101/$kid.olean" "/tmp/$kid.log" /tmp/out/
+      - name: Retain checked child object
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-direct01-kid-${{ matrix.kid }}
+          path: /tmp/out/
+          if-no-files-found: error
+          retention-days: 60
+
+  assemble:
+    needs: [common, children]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/d101
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw36-direct01-kid-*
+          path: /tmp/d101
+          merge-multiple: true
+      - name: Assemble and audit exact weighted450 parent Cover
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/d101
+          (cd /tmp/d101 && lean -o Raw36D101.olean Raw36D101.lean) 2>&1 | tee /tmp/d101-root.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/d101-root.log \
             BB6.Agent29Raw36D101.bound BB6.Agent29Raw36D101.cover
-          cp /tmp/a7-direct01-audit.log /tmp/a7-direct01-checked/audit.log
-      - uses: actions/upload-artifact@v4
-        if: always()
+          python im-results/agent29-raw36/build_closure_manifest.py \
+            --work /tmp/d101 --root Raw36D101 \
+            --label raw36-d1-01 --artifact-name raw36-direct01-original-cover450 \
+            --theorem BB6.Agent29Raw36D101.cover --bound 450 \
+            --parent-table '1RB---_1RC---_0RD---_0LD0LB_------_------' \
+            --provenance 'census_run=46122807180,hard_run=46125317196,sharded_source=${{ github.sha }}'
+          cp /tmp/d101-root.log /tmp/d101/audit.log
+      - name: Retain source-checked D1=0LB closure
+        uses: actions/upload-artifact@v4
         with:
           name: raw36-direct01-original-cover450
-          path: |
-            /tmp/a7-direct01-generated.log
-            /tmp/a7-direct01-audit.log
-            /tmp/a7-direct01-checked/
-            /tmp/a7-direct01-full/
-          if-no-files-found: warn
+          path: /tmp/d101/
+          if-no-files-found: error
           retention-days: 60
