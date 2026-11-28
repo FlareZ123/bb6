@@ -1,3 +1,4 @@
+import Lean.Elab.Tactic.Omega
 import Q0151MacroSteps
 
 set_option maxHeartbeats 0
@@ -29,16 +30,14 @@ theorem gateRun_units (mode : Bool) (k : Nat) (suffix : List Nat) :
   induction k with
   | zero => rfl
   | succ k ih =>
-      simp only [List.replicate_succ, List.cons_append, gateRun, gateStep_one,
-        Option.some_bind]
-      exact ih
+      simpa [List.replicate_succ, gateRun, gateStep_one] using ih
 
-theorem gateRun_insert (mode : Bool) (prefix suffix : List Nat) (k : Nat) :
-    gateRun mode (prefix ++ List.replicate k 1 ++ suffix) =
-      gateRun mode (prefix ++ suffix) := by
-  induction prefix generalizing mode with
+theorem gateRun_insert (mode : Bool) (preRuns suffix : List Nat) (k : Nat) :
+    gateRun mode (preRuns ++ List.replicate k 1 ++ suffix) =
+      gateRun mode (preRuns ++ suffix) := by
+  induction preRuns generalizing mode with
   | nil => simpa using gateRun_units mode k suffix
-  | cons length prefix ih =>
+  | cons length preRuns ih =>
       simp only [List.cons_append, gateRun]
       cases h : gateStep mode length with
       | none => simp [h]
@@ -52,9 +51,9 @@ structure GateMask where
 def gateMask (xs : List Nat) : GateMask :=
   ⟨(gateRun false xs).isSome, (gateRun true xs).isSome⟩
 
-theorem gateMask_insert (prefix suffix : List Nat) (k : Nat) :
-    gateMask (prefix ++ List.replicate k 1 ++ suffix) =
-      gateMask (prefix ++ suffix) := by
+theorem gateMask_insert (preRuns suffix : List Nat) (k : Nat) :
+    gateMask (preRuns ++ List.replicate k 1 ++ suffix) =
+      gateMask (preRuns ++ suffix) := by
   simp only [gateMask, gateRun_insert]
 
 def cat (n : Nat) : Nat :=
