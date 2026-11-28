@@ -1,17 +1,30 @@
-name: Agent3 Raw112 after serial Raw47 plus Raw39 Canonical38
-run-name: Canonical38 Raw47+Raw39 plus Raw112 -> Canonical37
+name: Agent3 Raw112 consumer from accepted Canonical38
+run-name: Canonical38 plus Raw112 -> Canonical37 (${{ inputs.mode }})
 
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: Canonical38 predecessor lineage
+        type: choice
+        options: [direct, serial]
+        default: direct
+        required: true
       canonical39_run_id:
-        description: Successful Raw47 Canonical39 producer run
+        description: Serial mode only - successful Raw47 Canonical39 producer run
         type: string
-        required: true
+        default: ''
+        required: false
       serial38_run_id:
-        description: Successful serial Raw47+Raw39 Canonical38 producer run
+        description: Serial mode only - successful serial Raw47+Raw39 Canonical38 run
         type: string
-        required: true
+        default: ''
+        required: false
+      direct38_run_id:
+        description: Direct mode only - accepted direct Raw39+Raw47 Canonical38 run
+        type: string
+        default: ''
+        required: false
       raw112_run_id:
         description: Successful Raw112 whole-parent producer run
         type: string
@@ -34,7 +47,28 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Consume Raw112 from exact accepted serial Canonical38 roster
+
+      - name: Consume Raw112 from accepted direct Canonical38 roster
+        if: inputs.mode == 'direct'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIRECT38_RUN_ID: ${{ inputs.direct38_run_id }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$DIRECT38_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent9-raw112-direct38/consume.py
+          python im-results/agent9-raw112-direct38/consume.py \
+            --work /tmp/a9-canonical37-direct \
+            --direct38-run-id "$DIRECT38_RUN_ID" \
+            --raw112-run-id "$RAW112_RUN_ID" | tee /tmp/a9-canonical37-direct.log
+          test -s /tmp/a9-canonical37-direct/canonical37-direct38-raw112-delta/delta.json
+          cat /tmp/a9-canonical37-direct/canonical37-direct38-raw112-delta/delta.json
+
+      - name: Consume Raw112 from accepted serial Canonical38 roster
+        if: inputs.mode == 'serial'
         env:
           GH_TOKEN: ${{ github.token }}
           CANONICAL39_RUN_ID: ${{ inputs.canonical39_run_id }}
@@ -54,8 +88,20 @@ jobs:
             --raw112-run-id "$RAW112_RUN_ID" | tee /tmp/a3-canonical37.log
           test -s /tmp/a3-canonical37/canonical37-raw47-raw39-raw112-delta/delta.json
           cat /tmp/a3-canonical37/canonical37-raw47-raw39-raw112-delta/delta.json
+
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && inputs.mode == 'direct'
+        with:
+          name: canonical37-direct38-raw112-thin-delta
+          path: |
+            /tmp/a9-canonical37-direct/canonical37-direct38-raw112-delta/**
+            /tmp/a9-canonical37-direct.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.mode == 'serial'
         with:
           name: canonical37-raw47-raw39-raw112-thin-delta
           path: |
