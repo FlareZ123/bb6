@@ -168,6 +168,19 @@ theorem anchorMove_bounds {a d R c : Nat}
       unfold X
       omega
 
+theorem anchorMove_output_shape {a d R c : Nat}
+    (h : AnchorMove a d R c) :
+    R % 2 = 0 ∧ (c=1 ∨ c=2) ∧ (c=2 → R%4=2) := by
+  unfold AnchorMove at h
+  rcases h with hE | hM
+  · rcases hE with ⟨rfl,rfl,rfl⟩
+    omega
+  · rcases hM with h2 | h1
+    · rcases h2 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      omega
+    · rcases h1 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      omega
+
 theorem anchorEpoch_witness_growth
     {n R c a d R' c' : Nat}
     (hhf : HFRun n R c a d)
@@ -289,6 +302,17 @@ theorem root_anchor_decomposition {n A D : Nat}
     (h : CounterReach 1 1 (n+1) A D) :
     AnchorDecomposition 6 1 A D :=
   counterReach_anchor_decomposition (root_tail_from_six_one h)
+
+theorem root_anchorChain_endpoint_shape
+    {q R c : Nat}
+    (h : AnchorChain q 6 1 R c) :
+    R%2=0 ∧ (c=1 ∨ c=2) ∧ (c=2 → R%4=2) := by
+  cases h with
+  | nil =>
+      omega
+  | step h he =>
+      rcases he with ⟨m,a,d,hhf,ha⟩
+      exact anchorMove_output_shape ha
 
 theorem anchorChain_end_positive {q R c A e : Nat}
     (h : AnchorChain q R c A e) (hc : 1 ≤ c) : 1 ≤ e := by
@@ -465,6 +489,44 @@ theorem terminal_last_anchor_cost_equation
   norm_num at hcostZ
   refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,?_⟩
   omega
+
+/-- Arbitrary final H/F words inherit a root-specific dyadic shift phase.
+    This is strictly more general than the earlier High-only length congruences. -/
+theorem terminal_last_anchor_shift_phase
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) ∧
+      R + c + 5*(compile w).shift =
+        2*D + 1 + 4*m ∧
+      (c=2 → (compile w).shift % 4 = 3) ∧
+      (c=1 →
+        ((R%4=0 ∧ (compile w).shift%4=2) ∨
+         (R%4=2 ∧ (compile w).shift%4=0))) := by
+  rcases terminal_last_anchor_cost_equation h with
+    ⟨q,R,c,m,w,hchain,hc,hlen,hw,hcost⟩
+  have hshape := root_anchorChain_endpoint_shape hchain
+  have hD6 : D%6=1 :=
+    counterReach_terminal_mod6 (n:=n+1) (d:=D) (by omega) h
+  refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,hcost,?_,?_⟩
+  · intro hc2
+    have hR4 := hshape.2.2 hc2
+    omega
+  · intro hc1
+    have hReven := hshape.1
+    by_cases hR0 : R%4=0
+    · left
+      exact ⟨hR0,by omega⟩
+    · right
+      have hR2 : R%4=2 := by omega
+      exact ⟨hR2,by omega⟩
+
+#print axioms anchorMove_output_shape
+#print axioms root_anchorChain_endpoint_shape
+#print axioms terminal_last_anchor_shift_phase
 
 #print axioms compile_cost_identity
 #print axioms terminal_last_anchor_cost_equation
