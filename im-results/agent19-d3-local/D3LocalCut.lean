@@ -2,6 +2,7 @@ import Agent46Raw13Base
 import D3LocalPumps
 import D3LocalF0Variants
 import D3LocalRD
+import D3LocalRD0LA
 import D3SiblingSource
 
 set_option maxRecDepth 100000
@@ -97,7 +98,32 @@ def cut : Cut :=
     .unresolved,
     .unresolved,
     .split 15 (5,false) (byCutMove [
-    .unresolved,
+    .split 18 (3,true) (byCutMove [
+      .closed (.cycle 0 39 false (3)),
+      .closed (.proven BB6Coverage.Agent31Pump.D3F0.v0LA BB6Coverage.Agent31Pump.D3F0.never_v0LA),
+      .closed (.cycle 44 18 false (-2)),
+      .closed (.cycle 18 18 false (2)),
+      .closed (.cycle 1 43 false (3)),
+      .closed (.last 19 (5,true)),
+      .closed (.cycle 2 26 false (3)),
+      .closed (.cycle 2 20 false (3)),
+      .closed (.cycle 21 11 true (1)),
+      .closed (.cycle 17 19 true (0)),
+      .closed (.cycle 2 26 false (3)),
+      .closed (.last 49 (5,true)),
+      .closed (.cycle 3 16 false (3)),
+      .closed (.cycle 23 3 false (-1)),
+      .closed (.cycle 19 8 false (-1)),
+      .closed (.last 24 (5,true)),
+      .closed (.last 20 (5,true)),
+      .closed (.last 19 (5,true)),
+      .closed (.cycle 17 10 true (0)),
+      .closed (.last 43 (5,true)),
+      .closed (.cycle 34 46 false (4)),
+      .closed (.proven BB6Coverage.Agent31Pump.D3RD0LA.p BB6Coverage.Agent31Pump.D3RD0LA.never),
+      .closed (.cycle 17 10 true (0)),
+      .closed (.cycle 51 22 false (-1))
+    ]),
     .unresolved,
     .unresolved,
     .unresolved,
@@ -235,9 +261,9 @@ def remaining : List (List Move × PartialMachine) := residuals parent 4 cut
 
 theorem checked : check 21269 parent 4 cut = true := by decide
 
-theorem remaining_count : remaining.length = 69 := by decide
+theorem remaining_count : remaining.length = 68 := by decide
 
-theorem remaining_mass : openMass 6 4 cut = 171738800 := by decide
+theorem remaining_mass : openMass 6 4 cut = 171737550 := by decide
 
 def d3Leaf : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -258,7 +284,7 @@ def otherRemaining : List (List Move × PartialMachine) :=
   remaining.filter (fun e => !tableOK e.2 d3Leaf)
 
 theorem d3_count : (remaining.filter (fun e => tableOK e.2 d3Leaf)).length = 1 := by decide
-theorem other_count : otherRemaining.length = 68 := by decide
+theorem other_count : otherRemaining.length = 67 := by decide
 
 theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
     WeightedBound 21269 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
