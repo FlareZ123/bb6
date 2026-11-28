@@ -74,7 +74,7 @@ theorem carry_return (v : Variant) (ds : List Bool) (L R : List Bool) (b : Bool)
     | true =>
       have h1 := carry_more v L R false
       have h2 := carry_zero v (true::true::true::L) R
-      have h3 := unwind v v L (false::false::extraBit v::false::false::true::R)
+      have h3 := unwind v L (false::false::extraBit v::false::false::true::R)
       exact ⟨14,[extraBit v,extraBit v,true],by decide,join0 (join0 h1 h2) h3⟩
   | cons a ds ih =>
     cases b with
