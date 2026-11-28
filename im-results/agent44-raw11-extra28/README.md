@@ -9,8 +9,8 @@ not a global BB(6) reduction.
 
 **Best currently established local proof status:** eight of the twelve
 nontrivial first-D1 children have complete, locally Lean-4.36.0-rc2-checked
-original-source certificate trees. Of the other four candidate proof trees, **D1=1RE (index19) is now
-original-source Lean accepted** at weighted bound158. Indices16–18 and the
+original-source certificate trees. Of the four previously unaccepted candidate proof trees, **D1=0LE (index16) and D1=1RE (index19) are now
+original-source Lean accepted** at weighted bounds 81 and 158 respectively. Indices17–18 and the
 final parent composition have not yet passed a complete source audit. Thus the candidate parent bound 158
 is **conditional**, never a published universal bound.
 
@@ -24,14 +24,14 @@ The other twelve indices, with their proposed weighted bounds, are:
 | D1 index | Action | Bound | Evidence state |
 | ---: | --- | ---: | --- |
 | 7 | 1RB | 72 | locally kernel checked |
-| 8 | 0LC | 42 | locally kernel checked |
+| 8 | 0LC | 42 | **original-source Lean kernel accepted**; [matrix job 8, run 46105742866](https://github.com/FlareZ123/bb6/actions/runs/46105742866) |
 | 9 | 0RC | 84 | locally kernel checked |
 | 10 | 1LC | 101 | locally kernel checked |
 | 12 | 0LD | 64 | locally kernel checked |
 | 13 | 0RD | 79 | locally kernel checked |
 | 14 | 1LD | 96 | locally kernel checked |
 | 15 | 1RD | 119 | locally kernel checked |
-| 16 | 0LE | 81 | complete candidate, join outstanding |
+| 16 | 0LE | 81 | **original-source Lean kernel accepted**; [matrix job 16, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
 | 17 | 0RE | 150 | complete candidate, join outstanding |
 | 18 | 1LE | 141 | complete candidate, join outstanding |
 | 19 | 1RE | 158 | **original-source Lean kernel accepted**; [matrix job 19, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
