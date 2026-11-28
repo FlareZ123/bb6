@@ -29,22 +29,29 @@ theorem blank_to_section13 :
   simpa only [show 6412 + 1759 = 8171 by decide] using
     (join Raw14037ClusterEntry.entry37 section0_to_section13)
 
+/-- The exact state reached after draining the 22-bank suffix. -/
+def drained : BState :=
+  ⟨4,true,
+    S 1 :: (oddword (iterate 22 (bankWord 13) .t1155).1 ++ ([] : List Sym)),
+    tailWord (iterate 22 (bankWord 13) .t1155).2⟩
+
 /-- Closed-form ER-bank arithmetic identifies the 22-bank drain endpoint with
 the finite bridge state already certified independently. -/
 theorem drain_endpoint :
-    (boundary 4 true
-      (S 1 :: (oddword (iterate 22 (bankWord 13) .t1155).1 ++ ([] : List Sym)))
-      (tailWord (iterate 22 (bankWord 13) .t1155).2)) =
-      Raw14037RootBridge.afterBank.prim := by
+    drained = Raw14037RootBridge.afterBank := by
+  unfold drained
   rw [Raw140ERSuffixClosed.iterate_closed]
   decide +kernel
 
 theorem section13_to_afterBank :
     Reach M37 section13.prim Raw14037RootBridge.afterBank.prim := by
   have h := Raw14037EREntry.drainBank 13 22 ([] : List Sym)
-  rw [drain_endpoint] at h
-  simpa only [section13, U, List.replicate_succ, List.replicate_zero,
-    List.cons_append, List.append_assoc, List.append_nil, List.nil_append] using h
+  have h' : Reach M37 section13.prim drained.prim := by
+    simpa only [section13, drained, BState.prim, U,
+      List.replicate_succ, List.replicate_zero, List.cons_append,
+      List.append_assoc, List.append_nil, List.nil_append] using h
+  rw [drain_endpoint] at h'
+  exact h'
 
 theorem blank_to_afterBank :
     Reach M37 primBlank Raw14037RootBridge.afterBank.prim := by
