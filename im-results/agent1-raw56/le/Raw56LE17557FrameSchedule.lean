@@ -348,17 +348,36 @@ theorem prefixWeight_unbounded (t : Nat) :
   rw [peak_weight]
   omega
 
+/-- Second-right-run length carried by a rank-r normal-A action. -/
+def normalB (r : Nat) : Nat := 2^(r+4) - 3
+
+theorem normalB_ge6 (r : Nat) : 6 ≤ normalB r := by
+  unfold normalB
+  have hp : 16 ≤ 2^(r+4) := by
+    have h : 2^4 ≤ 2^(r+4) := Nat.pow_le_pow_right' (by omega) (by omega)
+    norm_num at h ⊢
+    exact h
+  omega
+
+/-- The formerly empirical normal-A residue guard is forced by frame rank. -/
+theorem normalB_mod8 (r : Nat) : normalB r % 8 = 5 := by
+  unfold normalB
+  have hpow : 2^(r+4) % 8 = 0 := by
+    rw [show r+4 = 3 + (r+1) by omega, Nat.pow_add, Nat.mul_mod]
+    norm_num
+  omega
+
 /-- A rank-r frame is born from normal A with b = 2^(r+4)-3:
     its low runway is b-6. -/
 theorem frame_initial_low (r : Nat) :
-    lowRemaining r [] = 2^(r+4) - 9 := by
+    lowRemaining r [] = normalB r - 6 := by
   unfold lowRemaining countB countC
   simp [Nat.pow_succ]
   omega
 
 /-- The corresponding high runway is 2*b-11. -/
 theorem frame_initial_high (r : Nat) :
-    highRemaining r [] = 2^(r+5) - 17 := by
+    highRemaining r [] = 2 * normalB r - 11 := by
   unfold highRemaining countB countC
   simp [Nat.pow_succ]
   omega
@@ -380,6 +399,8 @@ theorem frame_closes (r : Nat) :
   · unfold prefixWeight
     omega
 
+#print axioms normalB_ge6
+#print axioms normalB_mod8
 #print axioms frame_succ_refine
 #print axioms frame_initial_low
 #print axioms frame_initial_high
