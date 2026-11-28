@@ -37,6 +37,14 @@ def check (p : PartialMachine) (c : FastCert) : Bool :=
   (List.finRange 6).all (fun q => bits.all (fun a =>
     (row c q a).all (fun i => stateStepOK p c q a (i/c.nr) (i%c.nr))))
 
+theorem check_of_rows {p c} (hl : edgeOK c.el 0 false 0 = true)
+    (hr : edgeOK c.er 0 false 0 = true) (hs : stateOK c 0 false 0 0 = true)
+    (hc : ∀ q a, (row c q a).all
+      (fun i => stateStepOK p c q a (i/c.nr) (i%c.nr)) = true) :
+    check p c = true := by
+  simp only [check,Bool.and_eq_true,List.all_eq_true]
+  exact ⟨⟨⟨hl,hr⟩,hs⟩,fun q _ a _ => hc q a⟩
+
 theorem state_checked {p c q a l r} (h : check p c = true)
     (hs : stateOK c q a l r = true) : stateStepOK p c q a l r = true := by
   simp only [stateOK,Bool.and_eq_true,decide_eq_true_eq] at hs
