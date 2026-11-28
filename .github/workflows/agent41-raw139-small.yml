@@ -116,6 +116,8 @@ jobs:
             --theorem F421SecondaryLifetimes.secondarySourceP \
             --theorem F421SecondaryLifetimes.iterateSourceP \
             --theorem F421SecondaryLifetimes.firstSecondaryP \
+            --theorem F421SecondaryLifetimes.iterateSourceFar \
+            --theorem F421SecondaryLifetimes.firstSecondaryFar \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
@@ -139,6 +141,7 @@ jobs:
             im-results/agent41-f421/F421SourceLifetimeBridge.lean \
             im-results/agent41-f421/F421SecondaryPSource.lean \
             im-results/agent41-f421/F421SecondaryLifeIter.lean \
+            im-results/agent41-f421/F421SecondaryFar.lean \
             im-results/agent41-f421/F421MergedDrain.lean \
             im-results/agent41-f421/F421PrimaryEvents.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
