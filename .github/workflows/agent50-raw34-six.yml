@@ -1,11 +1,22 @@
 name: Agent 50 Raw34 six-hole complete Cover
 on:
   workflow_dispatch:
+    inputs:
+      explore:
+        description: "Discovery-only exact six-hole source split; report unresolved tables without false certification"
+        type: boolean
+        default: false
+      explore_c1:
+        description: "C1 action in Raw34 D1=0LD branch"
+        type: choice
+        options: [0LA, 0RA, 1LA, 1RA, 0LB, 0RB, 1LB, 1RB, 0LE, 0RE, 1LE, 1RE]
+        default: 0LA
 permissions:
   contents: read
   actions: read
 jobs:
   prepare:
+    if: ${{ !inputs.explore }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -45,6 +56,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   children:
+    if: ${{ !inputs.explore }}
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -101,6 +113,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   compose:
+    if: ${{ !inputs.explore }}
     needs: children
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -143,4 +156,44 @@ jobs:
           if-no-files-found: error
           compression-level: 1
           retention-days: 30
-
+  explore-six-hole:
+    if: ${{ inputs.explore }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Explore exact residual frontier without promoting simulations to proof
+        env:
+          C1: ${{ inputs.explore_c1 }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-plan
+          W=/tmp/a50-raw34-explore
+          mkdir -p "$W/out"
+          case "$C1" in
+            0LA|0RA|1LA|1RA|0LB|0RB|1LB|1RB|0LE|0RE|1LE|1RE) ;;
+            *) echo "Unsupported C1 action $C1" >&2; exit 1 ;;
+          esac
+          PARENT="1RB---_1RC---_0RD${C1}_1LC0LD_------_------"
+          echo "Exploring $PARENT"
+          g++ -O3 -std=c++17 "$D/far.cpp" -o "$W/far"
+          python "$D/generate_six.py" --far "$W/far" --parent "$PARENT" --name "Raw34D1LD_C1$C1" --summary-only --output "$W/out" > "$W/generator.log" 2>&1
+          python - "$W/out/summary.json" <<'PY' | tee "$W/residuals.txt"
+          import json,sys
+          v=json.load(open(sys.argv[1]))
+          print('parent',v['parent'],'weighted candidate',v['weighted_bound'])
+          print('nodes',v['nodes'],'stats',v['stats'],'mass',v['mass'])
+          print('residual cylinders',sum(len(c['residuals']) for c in v['children']))
+          for c in v['children']:
+              if c['residuals']: print(c['name'],c['residuals'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-d1ld-six-explore-${{ inputs.explore_c1 }}
+          path: |
+            /tmp/a50-raw34-explore/out/summary.json
+            /tmp/a50-raw34-explore/residuals.txt
+            /tmp/a50-raw34-explore/generator.log
+          if-no-files-found: warn
+          retention-days: 30
