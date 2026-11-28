@@ -33,11 +33,18 @@ def main():
     assert 0<n<=1318,n # incidence quotient compresses 1318 raw configurations to 108
     generated="\n".join([
        "import TwoSidedAutomata",
+       "import WeightedTNF",
        "set_option maxRecDepth 100000",
        "set_option maxHeartbeats 0",
        "namespace "+NS,
        "open BB6Coverage",
        source,
+       "theorem any_weighted_cover (B : Nat) :",
+       "    Cover (WeightedBound B) M0.table := by",
+       "  apply Cover.leaf",
+       "  intro m hm",
+       "  exact BB6.Agent13BlankDelay.weighted_never B m (M0.never m hm)",
+       "#print axioms any_weighted_cover",
        "end "+NS,
        ""])
     staging=work.with_name(work.name+"-inputs")
@@ -63,7 +70,7 @@ def main():
     observed.update({x:"" for x in re.findall(
        r"'([^']+)' does not depend on any axioms",result.stdout)})
     expected=NS+".M0.never"
-    assert expected in observed,observed
+    assert expected in observed and (NS+".any_weighted_cover") in observed,observed
     assert all(set(s.strip() for s in ax.split(",") if s.strip())<=ALLOWED
                for ax in observed.values()),observed
     receipt={
@@ -74,7 +81,7 @@ def main():
       "source_literal_sha256":hashlib.sha256(TARGET.encode()).hexdigest(),
       "certificate_kind":"r","parameters":{"k":6,"c":9,"m":5,"reachable":1318},
       "abstract_stack_shape":list(shape),\n      "compressed_reachable_states":n,"raw_reachable_states":1318,
-      "theorem":expected,"axioms":observed,
+      "theorem":expected,"all_B_cover_theorem":NS+".any_weighted_cover",\n      "axioms":observed,
       "source_sha256":base.file_sha(target),
       "root_olean_sha256":base.file_sha(work/"Raw36D110E01LB.olean"),
       "dependent_accepted_parent":parent["claim"],
