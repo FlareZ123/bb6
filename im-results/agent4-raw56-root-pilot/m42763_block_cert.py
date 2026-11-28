@@ -1,0 +1,134 @@
+"""Generate the exact two-sided block-grammar Lean certificate for Raw56 E1=1LB residual M42763.
+
+Untrusted Python discovers/serializes the finite abstraction; Lean's TwoSidedAutomata.check
+kernel-checks the emitted certificate. The frozen parameters were found by a broader
+block-compression search and independently reproduced with fastabstract.cpp.
+"""
+from collections import defaultdict
+from pathlib import Path
+import argparse, sys
+
+TABLE = "1RB0RB_1RC0LB_0RD1RF_1LD1LE_1RA1LB_---1RE"
+LEFT = (28, (3,), 4, 1)
+RIGHT = (20, (3,), 3, 1)
+EXPECTED = (3142, 103, 677)
+
+HERE = Path(__file__).resolve()
+AUTOMATA = HERE.parent.parent / "agent4-two-sided-automata"
+sys.path.insert(0, str(AUTOMATA))
+from emit_automata import emit
+
+def blockgram(params):
+    k, periods, c, m = params
+    def push(s, b):
+        w = str(int(b)) + s
+        changed = True
+        while changed:
+            changed = False
+            for i in range(len(w)):
+                for period in periods:
+                    end = i + period * (c + m)
+                    if end <= len(w) and w[i:i+period] * (c + m) == w[i:end]:
+                        w = w[:i] + w[i + m*period:]
+                        changed = True
+                        break
+                if changed:
+                    break
+        return w[:k].rstrip("0")
+    return push
+
+def abstract(p, pushL, pushR, limit=5000):
+    P = [pushL, pushR]
+    tab = [[""], [""]]
+    ids = [{"": 0}, {"": 0}]
+    D = [{}, {}]
+
+    def dfa(d, i, b):
+        key = (i, b)
+        if key in D[d]:
+            return D[d][key]
+        y = P[d](tab[d][i], b)
+        j = ids[d].get(y)
+        if j is None:
+            j = len(tab[d])
+            tab[d].append(y)
+            ids[d][y] = j
+        D[d][key] = j
+        return j
+
+    edges = [defaultdict(set), defaultdict(set)]
+    wait = [defaultdict(list), defaultdict(list)]
+    for e in edges:
+        e[0].add((0, 0))
+    seen = {(0, 0, 0, 0)}
+    todo = [(0, 0, 0, 0)]
+    failure = False
+
+    def add(x):
+        nonlocal failure
+        if x not in seen:
+            seen.add(x)
+            todo.append(x)
+            if p[2*x[0] + x[1]] == "---":
+                failure = True
+            if len(todo) >= limit:
+                raise RuntimeError("certificate state cap reached")
+
+    def pop(x, edge, pushed):
+        q, b, l, r = x
+        mv = p[2*q + b]
+        ns = ord(mv[2]) - 65
+        c, pre = edge
+        add((ns, c, pushed, pre) if mv[1] == "R" else (ns, c, pre, pushed))
+
+    def add_edge(d, j, b, pre):
+        edge = (b, pre)
+        if edge in edges[d][j]:
+            return
+        edges[d][j].add(edge)
+        for cfg, pushed in wait[d][j]:
+            pop(cfg, edge, pushed)
+
+    i = 0
+    while i < len(todo) and not failure:
+        cfg = todo[i]
+        i += 1
+        q, b, l, r = cfg
+        mv = p[2*q + b]
+        w = int(mv[0])
+        d = mv[1] == "L"
+        x = r if d else l
+        j = dfa(d, x, w)
+        add_edge(d, j, w, x)
+        z = l if d else r
+        wait[1-d][z].append((cfg, j))
+        for edge in tuple(edges[1-d][z]):
+            pop(cfg, edge, j)
+
+    return (not failure, len(todo), edges, seen, D, tab)
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+
+    raw = TABLE.replace("_", "")
+    p = [raw[i:i+3] for i in range(0, 36, 3)]
+    cert = abstract(p, blockgram(LEFT), blockgram(RIGHT))
+    got = (cert[1], len(cert[-1][0]), len(cert[-1][1]))
+    assert cert[0] and got == EXPECTED, (cert[0], got)
+
+    source = (
+        "import TwoSidedAutomata\n"
+        "set_option maxRecDepth 100000\n"
+        "set_option maxHeartbeats 0\n"
+        "namespace BB6.Agent4Raw56RootE11LB.M42763Block\n"
+        "open BB6Coverage\n"
+        + emit("42763", p, cert)
+        + "\nend BB6.Agent4Raw56RootE11LB.M42763Block\n"
+    )
+    Path(args.out).write_text(source)
+    print(f"M42763 certificate: joint={got[0]} left={got[1]} right={got[2]} bytes={len(source)}")
+
+if __name__ == "__main__":
+    main()
