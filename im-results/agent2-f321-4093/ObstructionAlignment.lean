@@ -53,10 +53,13 @@ theorem middleUnboundedSpine_identity (j : Nat) :
 
 private theorem four_pow_shift (m : Nat) :
     4 * 2^(10 + 2*m) = 2^(12 + 2*m) := by
-  rw [show 12 + 2*m = (10 + 2*m) + 2 by omega, Nat.pow_add]
-  have h2 : 2^2 = 4 := by decide
-  rw [h2]
-  ac_rfl
+  calc
+    4 * 2^(10 + 2*m) = 2^(10 + 2*m) * 2^2 := by
+      have h2 : 2^2 = 4 := by decide
+      rw [h2]
+      ac_rfl
+    _ = 2^((10 + 2*m) + 2) := (Nat.pow_add 2 (10 + 2*m) 2).symm
+    _ = 2^(12 + 2*m) := by congr 1 <;> omega
 
 theorem middleOdd_terminal_on_farThresholdSpine
     {n k a d A D : Nat}
