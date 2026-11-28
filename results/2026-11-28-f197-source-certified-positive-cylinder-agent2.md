@@ -2,7 +2,7 @@
 
 **28 November 2026.** This is an original-source Lean 4.36.0-rc2 theorem for a nontrivial infinite family of configurations of the six-state, two-symbol F197 machine
 `1RB0RE_1RC0LE_0RD---_0RE0RA_1LF0LB_1LA1LF`.
-It resolves the all-time nonhalting question for that family **without** imposing a bounded running time, periodicity of the full tape, or an artificially fixed right-hand tail. It does **not** by itself establish the theorem from the genuine blank tape, classify the whole Raw132 parent, or determine BB(6).
+It resolves the all-time nonhalting question for that family **without** imposing a bounded running time, periodicity of the full tape, or an artificially fixed right-hand tail. It does **not** by itself establish the theorem from the genuine blank tape, classify the whole Raw132 parent, or determine BB(6). A separate original-machine transport theorem now proves liveness of every physically compatible six-state completion of the partial F197 table from every configuration representing the recurrent cylinder; the only missing C1 row may be any of its **25** legal values.
 
 ## Exact mathematical assertion
 
@@ -31,6 +31,19 @@ The stronger `F197.Agent2Self.self_nonhalt` proves directly:
 ```
 
 where `START = HEAD ++ flat L 35` and `state` prepends the indicated `P` power with the exact right-blank boundary. This all-time conclusion is **not** inferred merely from a long finite run: it follows by indefinitely composing the proved positive, suffix-parametric return.
+
+## Robustness under all physical completions
+
+The source-certified cylinder liveness has been transported to the **original six-state machine semantics** of [CoverBridge.lean](../im-results/agent31-f197-macro/CoverBridge.lean). The Lean theorem [`F197.CoverBridge.original_cylinder_live`](../im-results/agent2-f197-sweep/F197CylinderCover.lean) states, without assuming that the C1 instruction is a halt:
+
+```lean
+∀ (m : BB6Coverage.Machine), compatible table m →
+  ∀ (c : BB6Coverage.Config) (l : F197.Tape), l 0 = true →
+  Related c (F197.Agent2Self.state 72 F197.Agent2Self.START l) →
+  ∀ t : Nat, BB6Coverage.run m t c ≠ none
+```
+
+Thus **every one of the 25 completed physical transition tables** extending the literal 11-entry F197 partial machine stays live forever once in the indicated state/tape cylinder. In particular, the result is insensitive to whether C1 is a halting transition or any of the 24 nonhalting write/direction/target choices. This is a *configuration-family result*, not yet a blank-start verdict for these completions. The exact original-source Lean 4.36.0-rc2 compilation [run 46100999285](https://github.com/FlareZ123/bb6/actions/runs/46100999285) accepted `original_cylinder_live` with axioms only `propext`, `Classical.choice`, and `Quot.sound`, no `sorryAx`. The proof uses the source-faithful `run_related` bisimulation for every compatible complete machine.
 
 ## Proof architecture and accepted evidence
 
