@@ -26,7 +26,7 @@ function rule(name,table,L0,R0,q,d,L1,R1,q1,d1,seq){
  body.push("  have h"+i+" : run "+M+" "+co+" ("+pre+") = some ("+post+") := by\n    simpa only [U, List.replicate_succ, List.replicate_zero, List.cons_append, List.append_assoc, List.append_nil, List.nil_append, Bool.false_eq_true, ite_false, ite_true, rep_cons, Szero, left_zero, right_zero] using "+lemma);costs.push(co);L=LL1;R=RR1;q=r;d=z;
  }
  let goal=cfg(q1,d1,parse(L1),parse(R1));if(cfg(q,d,L,R)!==goal)throw Error(name+" got "+cfg(q,d,L,R)+" expected "+goal);
- let vars=(seq.includes("^p")?" (p : Nat)":"")+([L0,R0].join(" ").includes("X")?" (X : List Sym)":"")+([L0,R0].join(" ").includes("Y")?" (Y : List Sym)":"");
+ let vars=([L0,R0,L1,R1,seq].join(" ").includes("^p")?" (p : Nat)":"")+([L0,R0].join(" ").includes("X")?" (X : List Sym)":"")+([L0,R0].join(" ").includes("Y")?" (Y : List Sym)":"");
  let sum=costs.join("+"),expr="h0";for(let i=1;i<costs.length;i++)expr="(join "+expr+" h"+i+")";
  return "theorem "+name+vars+" : run "+M+" ("+sum+") ("+start+") = some ("+goal+") := by\n"+body.join("\n")+"\n  exact "+expr+"\n";
 }
