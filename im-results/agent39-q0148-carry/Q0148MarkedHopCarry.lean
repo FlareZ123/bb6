@@ -49,8 +49,15 @@ theorem marker_phase (j : Nat) :
   have h := congrArg
       (fun z : List Bool => [true,true,false,true,false] ++ z)
       (stagger01 j)
-  have hj : j+2 = (j+1)+1 := by omega
-  simpa only [hj, rep, List.append_assoc] using h
+  have he : [true,true] ++ rep [false,true] (j+2) =
+      [true,true,false,true,false,true] ++ rep [false,true] j := by
+    rw [show j+2=(j+1)+1 by omega]
+    simp [rep,List.append_assoc]
+  calc
+    [true,true] ++ rep [false,true] (j+2) =
+      [true,true,false,true,false,true] ++ rep [false,true] j := he
+    _ = [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
+          simpa only [List.append_assoc] using h
 
 /-- The source right-continuation head prefix is a canonical left
     chunk word A^(n+2) M A^j followed by a dangling one bit.
@@ -103,11 +110,41 @@ theorem marked_hop_bitword (n j : Nat) (tail : List LeftChunk)
       (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++
         (carryFold .one tail).1) ++
       carryBits (carryFold .one tail).2 ++ L := by
-  have hcarry := carryFoldBits Carry.one tail
+  let f := carryFold .one tail
+  have hcarry : [true] ++ rightSubst tail =
+      inputBits f.1 ++ carryBits f.2 := by
+    simpa [f,carryBits] using carryFoldBits .one tail
   have hphase := marked_phase n j
-  simpa [rightSubst_append, rightSubst_aRun,
-    inputBits_append, input_aRun, chunkBits, carryBits,
-    hphase, hcarry, List.append_assoc]
+  have hp := congrArg
+    (fun z : List Bool =>
+      [true,false] ++ z ++ rightSubst tail ++ L) hphase
+  have hc := congrArg
+    (fun z : List Bool =>
+      [true,false] ++ rep [true,false] (n+2) ++
+        [true,true,false,true,false] ++ rep [true,false] j ++
+        z ++ L) hcarry
+  calc
+    [true,false,true] ++ rep [false,true] (n+1) ++
+      [false,true,true] ++ rightSubst (aRun (j+2) ++ tail) ++ L =
+      [true,false] ++
+        ([true] ++ rep [false,true] (n+1) ++
+          [false,true,true] ++ rep [false,true] (j+2)) ++
+        rightSubst tail ++ L := by
+          simp [rightSubst_append,rightSubst_aRun,
+            List.append_assoc]
+    _ = [true,false] ++
+        (rep [true,false] (n+2) ++ [true,true,false,true,false] ++
+          rep [true,false] j ++ [true]) ++
+        rightSubst tail ++ L := hp
+    _ = [true,false] ++ rep [true,false] (n+2) ++
+        [true,true,false,true,false] ++ rep [true,false] j ++
+          (inputBits f.1 ++ carryBits f.2) ++ L := by
+            simpa only [List.append_assoc] using hc
+    _ = [true,false] ++ inputBits
+        (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ f.1) ++
+          carryBits f.2 ++ L := by
+            simp [inputBits_append,input_aRun,chunkBits,
+              List.append_assoc]
 
 /-- Original open-table source theorem: the exact markedHopN execution
     rewrites A^(j+2) ++ tail into A^(n+2) M A^j ++ carryFold_U(tail),
@@ -128,7 +165,9 @@ theorem marked_hop_source (n j : Nat) (tail : List LeftChunk)
       [false] ++ R⟩ := by
   dsimp only
   have h := markedHopN (aRun (j+2) ++ tail) n L R
-  simpa [outputRightChunks_rightSeq, marked_hop_bitword] using h
+  have hb := marked_hop_bitword n j tail L
+  rw [hb] at h
+  simpa only [List.append_assoc] using h
 
 #print axioms stagger01
 #print axioms rightSubst_aRun
