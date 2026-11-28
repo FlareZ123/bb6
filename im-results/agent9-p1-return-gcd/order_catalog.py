@@ -45,7 +45,7 @@ def rows(n: int, max_h: int):
             if k is None:
                 continue
             b, length = window(n, h, k)
-            old_length = 2 * n + 2 * k + 7
+            old_length = n + 3 + 2 * k + b
             yield {
                 "h": h, "sign": sign, "K": k, "gcd_hK": math.gcd(h, k),
                 "B": b, "length": length,
