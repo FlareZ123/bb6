@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -19,6 +19,26 @@ on:
         description: Source-accepted Raw47Complete producer run for global Canonical41 consumption
         type: string
         default: ''
+      raw34_parent:
+        description: Exact partial Raw34 table for the parameterized six-hole frontier generator
+        type: string
+        default: '1RB---_1RC---_0RD0LA_1LC0LD_------_------'
+      raw34_name:
+        description: Lean module prefix for the generated Raw34 frontier
+        type: string
+        default: 'Raw34D1LD_C1LA'
+      raw34_cap:
+        description: Initial exact-simulation cap for the Raw34 frontier generator
+        type: number
+        default: 200
+      raw34_window:
+        description: Recurrence search window for the Raw34 frontier generator
+        type: number
+        default: 40
+      raw34_long_cap:
+        description: Extended exact-simulation cap for unresolved Raw34 leaves
+        type: number
+        default: 10000
 permissions:
   contents: read
   actions: read
@@ -1525,6 +1545,50 @@ jobs:
           path: /tmp/a50-raw34-causal-guard/
           if-no-files-found: warn
           retention-days: 30
+  raw34-six-plan:
+    if: inputs.mode == 'raw34-six-plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate an exact two-level 25-choice Raw34 frontier
+        env:
+          PARENT: ${{ inputs.raw34_parent }}
+          NAME: ${{ inputs.raw34_name }}
+          CAP: ${{ inputs.raw34_cap }}
+          WINDOW: ${{ inputs.raw34_window }}
+          LONG_CAP: ${{ inputs.raw34_long_cap }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-plan
+          W=/tmp/a50-raw34-six
+          mkdir -p "$W/generated"
+          g++ -O3 -std=c++17 "$D/far.cpp" -o "$W/far"
+          python "$D/generate_six.py" --parent "$PARENT" --name "$NAME" --far "$W/far" --output "$W/generated" --cap "$CAP" --window "$WINDOW" --long-cap "$LONG_CAP" --summary-only | tee "$W/generator.log"
+          python - "$W/generated/summary.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          flat=x["parent"].replace("_","")
+          holes=sum(flat[i:i+3]=="---" for i in range(0,36,3))
+          assert len(x["children"])==25
+          assert sum(x["mass"].values())==25**holes
+          residuals=[r for c in x["children"] for r in c["residuals"]]
+          residual_mass=sum(25**r.count(0) for r in residuals)
+          print("RAW34_SIX_FRONTIER",json.dumps({
+              "parent":x["parent"],"holes":holes,"weighted_bound":x["weighted_bound"],
+              "nodes":x["nodes"],"stats":x["stats"],"mass":x["mass"],
+              "residual_rows":len(residuals),"residual_mass":residual_mass,
+              "child_residual_rows":[len(c["residuals"]) for c in x["children"]]
+          },sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-six-plan-frontier
+          path: /tmp/a50-raw34-six/
+          if-no-files-found: error
+          retention-days: 30
+
   raw34-window3-audit:
     if: inputs.mode == 'raw34-window3-audit'
     runs-on: ubuntu-latest
