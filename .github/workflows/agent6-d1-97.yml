@@ -104,14 +104,17 @@ jobs:
           grep -F "'BB6.Agent6D1NineFour.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9four.log
           LEAN_PATH="$lp" lean -o "$map/D1EightFour.olean" im-results/agent6-raw139-d1-zeroRD/D1EightFour.lean | tee .tmp/d8four.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel96.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel96.lean | tee .tmp/d96.log
+          LEAN_PATH="$lp" lean -o "$map/D1SecondLevel96Bound.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel96Bound.lean | tee .tmp/d96bound.log
           grep -F "'BB6.Agent6D1SecondLevel97.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d97.log
           grep -F "'BB6.Agent6D1EightFour.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8four.log
           grep -F "'BB6.Agent6D1SecondLevel96.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d96.log
+          grep -F "'BB6.Agent6D1SecondLevel96Bound.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d96bound.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8five.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9four.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d97.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8four.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d96.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d96bound.log
       - uses: actions/upload-artifact@v4
         with:
           name: agent6-raw139-d1-96-frontier-checked
@@ -121,9 +124,11 @@ jobs:
             .tmp/d97.log
             .tmp/d8four.log
             .tmp/d96.log
+            .tmp/d96bound.log
             .tmp/map/a6-reductions/build/D1EightFive.olean
             .tmp/map/a6-reductions/build/D1NineFour.olean
             .tmp/map/a6-reductions/build/D1SecondLevel97.olean
             .tmp/map/a6-reductions/build/D1EightFour.olean
             .tmp/map/a6-reductions/build/D1SecondLevel96.olean
+            .tmp/map/a6-reductions/build/D1SecondLevel96Bound.olean
           retention-days: 14
