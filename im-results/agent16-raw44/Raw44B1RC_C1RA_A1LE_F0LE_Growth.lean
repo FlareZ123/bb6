@@ -1,0 +1,269 @@
+import SweepPumping
+set_option maxRecDepth 10000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent16Raw44C1RA_A1LE_F0LE
+open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent50Zipper
+
+/-!
+The C1=1RA, A1=1LE, E0=0LF, E1=0LA, F1=0LE Raw44 counter.
+F0 is unrestricted.  The F-head normal form has a block of n repeating
+1110 words to its left (nearest-head-first), followed by 1111, and the
+fixed right word 0101.  One full phase adds one 1110 word.
+The 20n+56 law is an original-machine exact finite path identity, and
+never_of_growth promotes it to all 25 F0 assignments.
+-/
+def table : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true  => some (some ⟨true,false,4⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true  => some (some ⟨false,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 2,true  => some (some ⟨true,true,0⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true  => some (some ⟨true,false,1⟩)
+  | 4,false => some (some ⟨false,false,5⟩)
+  | 4,true  => some (some ⟨false,false,0⟩)
+  | 5,true  => some (some ⟨false,false,4⟩)
+  | _,_ => none
+
+def ones (n : Nat) : List Bool := rep [true] n
+def U (n : Nat) : List Bool := rep [true,true,true,false] n
+def V (n : Nat) : List Bool := rep [false,true,false,false] n
+def W (n : Nat) : List Bool := rep [false,false,true,false] n
+def X (n : Nat) : List Bool := rep [false,true] n
+def Y (n : Nat) : List Bool := rep [true,false,true,false] n
+def Z (n : Nat) : List Bool := rep [true,true,false,true] n
+
+private theorem rep2 (n : Nat) :
+    rep [true,true] n = ones (2*n) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      rep [true,true] (n+1) = [true,true] ++ rep [true,true] n := by rfl
+      _ = [true,true] ++ ones (2*n) := by rw [ih]
+      _ = ones (2*(n+1)) := by
+        rw [show 2*(n+1)=2*n+2 by omega]
+        rfl
+
+private theorem rep4 (n : Nat) :
+    rep [true,true,true,true] n = ones (4*n) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      rep [true,true,true,true] (n+1) =
+          [true,true,true,true] ++ rep [true,true,true,true] n := by rfl
+      _ = [true,true,true,true] ++ ones (4*n) := by rw [ih]
+      _ = ones (4*(n+1)) := by
+        rw [show 4*(n+1)=4*n+4 by omega]
+        rfl
+
+private theorem rotateV (n : Nat) :
+    [false] ++ V n ++ [false,true,false,true] = W (n+1) ++ [true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      [false] ++ V (n+1) ++ [false,true,false,true] =
+        [false,false,true,false] ++ ([false] ++ V n ++ [false,true,false,true]) := by rfl
+      _ = [false,false,true,false] ++ (W (n+1) ++ [true]) := by rw [ih]
+      _ = W (n+2) ++ [true] := by rfl
+
+private theorem rotateX (n : Nat) :
+    X (2*n+5) ++ [true] =
+      [false,true,false] ++ Y (n+1) ++ [true,false,true,true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      X (2*(n+1)+5) ++ [true] =
+        [false,true,false,true] ++ (X (2*n+5) ++ [true]) := by
+          rw [show 2*(n+1)+5=2+(2*n+5) by omega]
+          rfl
+      _ = [false,true,false,true] ++
+          ([false,true,false] ++ Y (n+1) ++ [true,false,true,true]) := by rw [ih]
+      _ = [false,true,false] ++ Y (n+2) ++ [true,false,true,true] := by rfl
+
+private theorem rotateZ (n : Nat) :
+    [true] ++ Z (n+1) ++ [true,true,true] =
+      U (n+1) ++ [true,true,true,true] := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      [true] ++ Z (n+2) ++ [true,true,true] =
+        [true,true,true,false] ++ ([true] ++ Z (n+1) ++ [true,true,true]) := by rfl
+      _ = [true,true,true,false] ++ (U (n+1) ++ [true,true,true,true]) := by rw [ih]
+      _ = U (n+2) ++ [true,true,true,true] := by rfl
+
+private theorem fpacket (L R : List Bool) :
+    run0 table 4 ⟨5,[true,true,true,false] ++ L,R⟩ =
+      some ⟨5,L,[false,true,false,false] ++ R⟩ := by rfl
+
+private theorem ffinish (R : List Bool) :
+    run0 table 4 ⟨5,[true,true,true,true],R⟩ =
+      some ⟨0,[],[false,true,false,false] ++ R⟩ := by rfl
+
+private theorem afront3 (R : List Bool) :
+    run0 table 3 ⟨0,[],[false,true,false] ++ R⟩ =
+      some ⟨0,[false,true,true,true],R⟩ := by rfl
+
+private theorem apacket (L R : List Bool) :
+    run0 table 6 ⟨0,[false] ++ L,[false,false,true,false] ++ R⟩ =
+      some ⟨0,[false,true,true,true,true] ++ L,R⟩ := by rfl
+
+private theorem afinish3 (L : List Bool) :
+    run0 table 3 ⟨0,[false] ++ L,[true]⟩ =
+      some ⟨3,[false,false,false,true] ++ L,[]⟩ := by rfl
+
+private theorem dzero3 (L : List Bool) :
+    run0 table 3 ⟨3,[false,false,false] ++ L,[]⟩ =
+      some ⟨3,L,[true,true,true]⟩ := by rfl
+
+private theorem dturn5 (L : List Bool) :
+    run0 table 5 ⟨3,[true,true] ++ L,[true,true,true]⟩ =
+      some ⟨0,[false] ++ L,[false,true,true,true]⟩ := by rfl
+
+private theorem amiddle5 (L : List Bool) :
+    run0 table 5 ⟨0,[false] ++ L,[false,true,true,true]⟩ =
+      some ⟨0,[true,true] ++ L,[false,true,true]⟩ := by rfl
+
+private theorem astep2 (L R : List Bool) :
+    run0 table 2 ⟨0,[true,true] ++ L,R⟩ =
+      some ⟨0,L,[false,true] ++ R⟩ := by rfl
+
+private theorem apacket2 (L R : List Bool) :
+    run0 table 6 ⟨0,[false] ++ L,[true,false,true,false] ++ R⟩ =
+      some ⟨0,[false,true,true,false,true] ++ L,R⟩ := by rfl
+
+private theorem afinish10 (L : List Bool) :
+    run0 table 10 ⟨0,[false] ++ L,[true,false,true,true]⟩ =
+      some ⟨5,[true] ++ L,[false,true,false,true]⟩ := by rfl
+
+def phase (n : Nat) : Z0 :=
+  ⟨5,U n ++ [true,true,true,true],[false,true,false,true]⟩
+def leftA (n : Nat) : Z0 :=
+  ⟨0,[],V (n+1) ++ [false,true,false,true]⟩
+def rightD (n : Nat) : Z0 :=
+  ⟨3,[false,false,false] ++ ones (4*n+8),[]⟩
+def leftA2 (n : Nat) : Z0 :=
+  ⟨0,[],X (2*n+5) ++ [true]⟩
+
+/-- F sweeps left through n 1110 blocks, then crosses the final 1111. -/
+theorem stageF (n : Nat) :
+    run0 table (4*n+4) (phase n) = some (leftA n) := by
+  have h1 : run0 table (4*n) (phase n) =
+      some ⟨5,[true,true,true,true],V n ++ [false,true,false,true]⟩ := by
+    have H := sweepL table 5 [] [] [true,true,true,false] [false,true,false,false]
+      4 fpacket n [true,true,true,true] [false,true,false,true]
+    simpa only [phase,U,V,List.nil_append,List.append_assoc,
+      List.append_nil] using H
+  have h2 : run0 table 4
+      ⟨5,[true,true,true,true],V n ++ [false,true,false,true]⟩ =
+      some (leftA n) := by
+    simpa only [leftA,V,List.append_assoc] using
+      ffinish (V n ++ [false,true,false,true])
+  simpa only [show 4*n+4=4*n+4 by rfl] using join0 h1 h2
+
+/-- A traverses the 0100 word train rightward, filling it with ones. -/
+theorem stageA (n : Nat) :
+    run0 table (6*n+12) (leftA n) = some (rightD n) := by
+  have h1 : run0 table 3 (leftA n) =
+      some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by
+    have H := afront3 ([false] ++ V n ++ [false,true,false,true])
+    simpa only [leftA,V,rotateV,List.append_assoc,List.nil_append] using H
+  have h2 : run0 table (6*(n+1))
+      ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ =
+      some ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ := by
+    have H := sweepR table 0 [false] [] [false,false,true,false] [true,true,true,true]
+      6 apacket (n+1) [true,true,true] [true]
+    simpa only [W,List.cons_append,List.append_assoc,List.nil_append] using H
+  have h3 : run0 table 3
+      ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ =
+      some (rightD n) := by
+    have H := afinish3 (rep [true,true,true,true] (n+1) ++ [true,true,true])
+    simpa only [rightD,rep4,ones,List.append_assoc,
+      show 4*n+8=4*(n+1)+4 by omega,List.cons_append] using H
+  have H := join0 (join0 h1 h2) h3
+  have ht : (3+6*(n+1))+3=6*n+12 := by omega
+  simpa only [ht] using H
+
+/-- Rewind through the right blank and the uniform ones run, leaving
+the 01 word train at a new leftmost blank. -/
+theorem stageD (n : Nat) :
+    run0 table (4*n+21) (rightD n) = some (leftA2 n) := by
+  have h1 : run0 table 3 (rightD n) =
+      some ⟨3,ones (4*n+8),[true,true,true]⟩ := by
+    simpa only [rightD] using dzero3 (ones (4*n+8))
+  have h2 : run0 table 5 ⟨3,ones (4*n+8),[true,true,true]⟩ =
+      some ⟨0,[false] ++ ones (4*n+6),[false,true,true,true]⟩ := by
+    simpa only [ones,show 4*n+8=(4*n+6)+2 by omega,List.cons_append] using
+      dturn5 (ones (4*n+6))
+  have h3 : run0 table 5
+      ⟨0,[false] ++ ones (4*n+6),[false,true,true,true]⟩ =
+      some ⟨0,ones (4*n+8),[false,true,true]⟩ := by
+    simpa only [ones,List.cons_append] using amiddle5 (ones (4*n+6))
+  have h4 : run0 table (4*n+8)
+      ⟨0,ones (4*n+8),[false,true,true]⟩ =
+      some (leftA2 n) := by
+    have H := sweepL table 0 [] [] [true,true] [false,true]
+      2 astep2 (2*n+4) [] [false,true,true]
+    simpa only [leftA2,ones,rep2,X,
+      show 2*(2*n+4)=4*n+8 by omega,
+      show 2*(2*n+4)=4*n+8 by omega,
+      List.nil_append,List.append_assoc,rep_snoc] using H
+  have H := join0 (join0 (join0 h1 h2) h3) h4
+  have ht : ((3+5)+5)+(4*n+8)=4*n+21 := by omega
+  simpa only [ht] using H
+
+/-- A traverses the alternating word train and deposits a new 1110 block,
+returning to the right-end F entry without ever evaluating F0. -/
+theorem stageA2 (n : Nat) :
+    run0 table (6*n+19) (leftA2 n) = some (phase (n+1)) := by
+  have h1 : run0 table 3 (leftA2 n) =
+      some ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ := by
+    have H := afront3 (Y (n+1) ++ [true,false,true,true])
+    simpa only [leftA2,rotateX,List.append_assoc,List.nil_append] using H
+  have h2 : run0 table (6*(n+1))
+      ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ =
+      some ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ := by
+    have H := sweepR table 0 [false] [] [true,false,true,false] [true,true,false,true]
+      6 apacket2 (n+1) [true,true,true] [true,false,true,true]
+    simpa only [Y,Z,List.cons_append,List.append_assoc,List.nil_append] using H
+  have h3 : run0 table 10
+      ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ =
+      some (phase (n+1)) := by
+    have H := afinish10 (Z (n+1) ++ [true,true,true])
+    simpa only [phase,rotateZ,List.append_assoc] using H
+  have H := join0 (join0 h1 h2) h3
+  have ht : (3+6*(n+1))+10=6*n+19 := by omega
+  simpa only [ht] using H
+
+/-- Exact original-machine infinite phase recurrence. -/
+theorem growth (n : Nat) :
+    run0 table (20*n+56) (phase n) = some (phase (n+1)) := by
+  have H := join0 (join0 (join0 (stageF n) (stageA n)) (stageD n)) (stageA2 n)
+  have ht : (((4*n+4)+(6*n+12))+(4*n+21))+(6*n+19)=20*n+56 := by omega
+  simpa only [ht] using H
+
+theorem entry : run0 table 53 ⟨0,[],[]⟩ = some (phase 0) := by rfl
+
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table phase 53 (fun n => 20*n+56) entry
+    (fun n => by omega) growth m hm
+
+theorem literal_cover (bound : Nat) : Cover (DecidedBelow bound) table :=
+  Cover.leaf table (fun m hm => Or.inl (never m hm))
+
+#print axioms entry
+#print axioms stageF
+#print axioms stageA
+#print axioms stageD
+#print axioms stageA2
+#print axioms growth
+#print axioms never
+#print axioms literal_cover
+end BB6.Agent16Raw44C1RA_A1LE_F0LE
