@@ -42,7 +42,7 @@ jobs:
       matrix:
         sibling: [16, 17, 18, 19]
     env:
-      SIBLING: \${{ matrix.sibling }}
+      SIBLING: ${{ matrix.sibling }}
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean 4.36.0-rc2
@@ -55,7 +55,7 @@ jobs:
 
       - name: Extract exact source generators and original-source dependencies
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/raw11 /tmp/raw11-deps /tmp/raw11-output
@@ -89,8 +89,8 @@ jobs:
             test -f "Raw11Extra28M16Join.lean"
           else
             node generate-trace.cjs "$SIBLING"
-            test -f "FastRaw11M\${SIBLING}Join.lean"
-            test -f "FastRaw11M\${SIBLING}Manifest.json"
+            test -f "FastRaw11M${SIBLING}Join.lean"
+            test -f "FastRaw11M${SIBLING}Manifest.json"
           fi
           sha256sum generate.cjs generate-trace.cjs
 
@@ -110,9 +110,9 @@ jobs:
           else
             sed -i 's|export PATH=/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH|export PATH="$HOME/.elan/bin:$PATH"|' build-fast.sh
             sed -i 's|export LEAN_PATH=.:a47-raw11-root52|export LEAN_PATH="$RAW11_LEAN_PATH"|' build-fast.sh
-            bash build-fast.sh "$SIBLING" 2>&1 | tee "/tmp/raw11-output/child\${SIBLING}.log"
-            cat "logs/FastRaw11M\${SIBLING}Join.log"
-            grep -F "'BB6.Agent44FastM\${SIBLING}.cover' depends on axioms:" "logs/FastRaw11M\${SIBLING}Join.log"
+            bash build-fast.sh "$SIBLING" 2>&1 | tee "/tmp/raw11-output/child${SIBLING}.log"
+            cat "logs/FastRaw11M${SIBLING}Join.log"
+            grep -F "'BB6.Agent44FastM${SIBLING}.cover' depends on axioms:" "logs/FastRaw11M${SIBLING}Join.log"
           fi
           if grep -ER 'sorryAx|native_decide' /tmp/raw11-output/*.log /tmp/raw11/logs/*.log 2>/dev/null; then
             echo 'Unapproved axiom or oracle in compiled theorem' >&2
@@ -130,7 +130,7 @@ jobs:
             if [ "$SIBLING" = 16 ]; then
               tar -czf /tmp/raw11-output/child16-generated-source.tar.gz Raw11Extra28M16*.lean
             else
-              tar -czf "/tmp/raw11-output/child\${SIBLING}-generated-source.tar.gz" "FastRaw11M\${SIBLING}"*.lean
+              tar -czf "/tmp/raw11-output/child${SIBLING}-generated-source.tar.gz" "FastRaw11M${SIBLING}"*.lean
             fi
             if [ -d logs ]; then
               mkdir -p /tmp/raw11-output/leaf-logs
@@ -141,7 +141,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agent44-raw11-extra28-child-\${{ matrix.sibling }}
+          name: agent44-raw11-extra28-child-${{ matrix.sibling }}
           path: /tmp/raw11-output
           if-no-files-found: ignore
           retention-days: 30
