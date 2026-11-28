@@ -1,0 +1,38 @@
+name: Agent44 preflight TwoSidedAutomata row checker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download accepted dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+      - name: Kernel-check row composition theorem
+        run: |
+          set -euo pipefail
+          dep="$(find /tmp/base -type f -name TwoSidedAutomata.olean -print -quit)"
+          test -n "$dep"
+          export LEAN_PATH="$(dirname "$dep")"
+          lean -j1 -o /tmp/TwoSidedAutomataRows.olean             im-results/agent44-raw11-extra28/TwoSidedAutomataRows.lean             | tee /tmp/row-checker.log
+          grep -F "'BB6.Agent44TwoSidedRows.check_of_rows' depends on axioms:" /tmp/row-checker.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/row-checker.log; then exit 1; fi
