@@ -123,6 +123,13 @@ def run_direct(args):
             nm=f'v24bank{i}';known[tuple(record['machine'])]=nm
             mod=f'Box33D17V24Bank{int(i)%4}'
             known_specs[nm]=(mod,f'BB6.Agent13.{mod}.M{i}','')
+        for i in (1,3,32):
+            table=json.loads((HERE/'d17v24-full-residual.json').read_text())['machines'][str(i)]
+            nm=f'v24ternary{i}';known[tuple(table)]=nm
+            known_specs[nm]=('Box33D17V24Ternary','BB6.Agent13.Box33D17V24Ternary',f' .m{i}')
+        cert=json.loads((HERE/'d17v24-m16-periodic.json').read_text())['16']
+        known[tuple(cert['machine'])]='v24m16'
+        known_specs['v24m16']=('Box33D17V24M16','BB6.Agent13.Box33D17V24M16.M16','')
         for record in json.loads((HERE/'d17v24-full-residual.json').read_text())['late']:
             late_fixed[tuple(record['machine'])]=tuple(record['witness'])
     if (d,v)==(17,21):
