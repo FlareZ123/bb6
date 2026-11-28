@@ -137,10 +137,11 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/raw40-a1lc-1ra
-          python3 - <<'PY'
-          import glob,json,pathlib
+          python3 - "$GITHUB_WORKSPACE" <<'PY'
+          import json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])/'im-results/agent19-raw40-cut'
           codes=set()
-          for path in glob.glob('im-results/agent19-raw40-cut/a1lc-*.json'):
+          for path in root.glob('a1lc-*.json'):
               data=json.load(open(path))
               for row in data.get('far',[]):
                   codes.add(row['code'])
@@ -150,7 +151,7 @@ jobs:
           pathlib.Path('far-bank.txt').write_text(''.join(c+'\\n' for c in sorted(codes)))
           print('seed_far_codes',len(codes))
           PY
-          g++ -std=c++20 -O3 im-results/agent19-raw40-cut/farbank.cpp -o farbank
+          g++ -std=c++20 -O3 "$GITHUB_WORKSPACE/im-results/agent19-raw40-cut/farbank.cpp" -o farbank
           sed 's/_//g' open.txt | awk '{print NR-1, $0}' > far.in
           ./farbank 5 far-bank.txt < far.in > far5.txt 2> far5.log
           echo "far_certificates=$(wc -l < far5.txt)"
