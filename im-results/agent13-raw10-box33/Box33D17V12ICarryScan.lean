@@ -87,6 +87,51 @@ theorem carry_back_step (l r : Stream) :
     run 14 (carryResetB (word (bits "11111011") l) r) =
       some (carryResetB l (word (bits "10000000") r)) := by rfl
 
+
+/-- Uniform reverse sweep: every 11111011 left packet becomes one
+    10000000 right packet, without inspecting the remaining tails. -/
+theorem carry_back_pairs (k : Nat) (l r : Stream) :
+    run (14*k) (carryResetB (carryRepeat (bits "11111011") k l) r) =
+      some (carryResetB l (carryRepeat (bits "10000000") k r)) := by
+  induction k generalizing r with
+  | zero => rfl
+  | succ k ih =>
+    rw [show 14*(k+1)=14+14*k by omega, run_add]
+    change (run 14 (carryResetB
+      (word (bits "11111011") (carryRepeat (bits "11111011") k l)) r)).bind
+      (run (14*k)) = _
+    rw [carry_back_step,Option.bind_some,ih,
+      carry_repeat_snoc (bits "10000000") k r]
+
+/-- Exact arbitrarily-long two-direction carry for any positive number of
+    RP=01010010 pairs followed by the terminator S=1000.
+    The scan uses 10 transitions per pair; the retreat uses 14.
+    This is a whole-family primitive machine identity (for all tails),
+    independent of the still-open outer-phase reset and root closure. -/
+theorem carry_scan_and_retreat (k : Nat) (l r : Stream) :
+    run (24*(k+1)+18)
+      (carryC l (carryRepeat (bits "01010010") (k+1)
+        (word (bits "1000") r))) =
+      some (carryResetB l
+        (carryRepeat (bits "10000000") k (word (bits "0101") r))) := by
+  have scan := carry_pairs (k+1) l (word (bits "1000") r)
+  have terminal :=
+    carry_terminalS (carryRepeat (bits "11111011") (k+1) l) r
+  have turn :=
+    carry_turnR (carryRepeat (bits "11111011") k l) r
+  have back :=
+    carry_back_pairs k l (word (bits "0101") r)
+  have hn : 24*(k+1)+18=10*(k+1)+(18+(14+14*k)) := by omega
+  rw [hn,run_add,scan,Option.bind_some,run_add,terminal,
+      Option.bind_some,run_add]
+  change (run 14 (carryResetC
+    (word (bits "11111011") (carryRepeat (bits "11111011") k l)) r)).bind
+      (run (14*k)) = _
+  rw [turn,Option.bind_some,back]
+
+#print axioms carry_back_pairs
+#print axioms carry_scan_and_retreat
+
 #print axioms carry_terminalS
 #print axioms carry_turnR
 #print axioms carry_back_step
