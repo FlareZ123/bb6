@@ -31,7 +31,10 @@ def main():
     source, base, out = map(lambda p: Path(p).resolve(), sys.argv[1:])
     out.mkdir(parents=True, exist_ok=True)
     files = {p.stem:p for p in source.glob("*.lean")}
-    assert "Agent5Raw11Extra132" in files
+    parent_id = int(os.environ.get('RAW11_REPAIR_ID', '132'))
+    assert parent_id in (132,140)
+    target_parent = f'Agent5Raw11Extra{parent_id}'
+    assert target_parent in files
     raw_imports = {
         k:{m for line in p.read_text().splitlines() if line.startswith("import ")
            for m in line.split()[1:]}
@@ -102,11 +105,11 @@ def main():
             (out/"repair-receipt.json").write_text(
                 json.dumps(report,sort_keys=True,indent=2)+"\n")
     assert len(report) == len(files)
-    assert (out/"Agent5Raw11Extra132.olean").is_file()
+    assert (out/(target_parent+'.olean')).is_file()
     # Mathematical entry point is source-checked by the whole DAG.
-    top = (out/"Agent5Raw11Extra132.log").read_text()
-    assert "'BB6.Agent5Raw11Extra132.cover' depends on axioms:" in top
-    print("accepted 132 repaired complete parent",len(report),
+    top = (out/(target_parent+'.log')).read_text()
+    assert f"'BB6.{target_parent}.cover' depends on axioms:" in top
+    print(f"accepted {parent_id} repaired complete parent",len(report),
           "modules, original accepted modules reused",len(reused),flush=True)
 
 
