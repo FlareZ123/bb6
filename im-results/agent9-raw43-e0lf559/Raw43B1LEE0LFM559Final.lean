@@ -442,7 +442,7 @@ theorem phase_middle_first (n : Nat) :
       [true,false,false,true,true,false,false,true,true]
     have hr := rotate011 (K n)
       [false,false,true,true,false,false,true,true]
-    convert h using 1 <;> simp [hr, List.append_assoc]
+    simpa only [List.nil_append, List.append_assoc, hr] using h
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (K n) ++
@@ -490,8 +490,7 @@ theorem phase_middle_first (n : Nat) :
           [false,true,true] ++ rep [false,true,true] (K n+1) := by
       rw [hk]
       rfl
-    convert h using 1 <;>
-      simp [midraw, eTail, hrep, List.append_assoc]
+    simpa [midraw, eTail, hrep, List.append_assoc] using h
 
   have H := join0 h0 (join0 h1 (join0 h2 (join0 h3 (join0 h4 h5))))
   have hc :
@@ -633,16 +632,17 @@ theorem phase_p3_turn (n : Nat) :
 
 theorem p4turn_eq_p4 (n : Nat) : p4turn n = p4 n := by
   have h := alignOnesTurn (D n+1)
-  have hk : K n+2 = A n := by simp [K,A]; omega
-  have hb : D n+1 = B n := by simp [D,B]; omega
-  rw [hk, hb] at h
+  have hk : K n+2 = A n := by simp [K,A]
+  have hb : D n+1 = B n := by simp [D,B]
+  rw [hb] at h
   have hr := congrArg
     (fun x : List Bool =>
       [false,false,false,false,false,true,false,true,true,false] ++ x ++
         rep [false,true,true] (A n) ++ [false,false,true,true]) h
   unfold p4turn p4
   rw [hk, hb]
-  simpa [List.append_assoc] using congrArg (fun r : List Bool => (⟨4,[],r⟩ : Z0)) hr
+  simpa [List.append_assoc] using
+    congrArg (fun r : List Bool => (⟨4,[],r⟩ : Z0)) hr
 
 theorem phase_p2_to_p4 (n : Nat) :
     run0 table (224*n+276) (p2raw n) = some (p4 n) := by
@@ -686,7 +686,7 @@ theorem phase_final (n : Nat) :
       right3C (A n) (rep [true,false] (B n) ++ cTail)
       [true,false,false,true,true]
     have hr := rotateRightC n
-    convert h using 1 <;> simp [hr, List.append_assoc]
+    simpa only [List.nil_append, List.append_assoc, hr] using h
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (A n) ++
@@ -742,8 +742,14 @@ theorem phase_final (n : Nat) :
           rep [false,true,true] (A n+1) ++ [false,true]⟩ := by
     have hr := alignBeforeF (B n)
       (rep [false,true,true] (A n+1) ++ [false,true])
-    convert h5 using 1 <;>
-      simp [hr, eTail, List.append_assoc]
+    have hr' :
+        [false] ++ rep [true,true] (B n) ++ [true,true] ++
+          rep [false,true,true] (A n+1) ++ [false,true] =
+        [false,true,true] ++ rep [true,true] (B n) ++
+          rep [false,true,true] (A n+1) ++ [false,true] := by
+      simpa only [List.append_assoc] using hr
+    rw [hr'] at h5
+    simpa [eTail, List.append_assoc] using h5
 
   have h6 : run0 table 21
       ⟨4,[true,true,false,false,true,false,true,true,false,true],
