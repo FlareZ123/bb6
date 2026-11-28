@@ -152,7 +152,7 @@ def emit_subtree(t, p: tuple[int, ...], pexpr: str, ident: str, parts: list[str]
         children = []
         for i, child in enumerate(kids):
             cp = refine(p, s, i)
-            ce = f"refine {pexpr} {slot(s)} (some {mv(i)})"
+            ce = f"(refine {pexpr} {slot(s)} (some {mv(i)}))"
             children.append(emit_subtree(child, cp, ce, ident + f"_{i:02d}", parts,
                                          bank_count, open_seen, threshold))
         parts.append(combine_proof(name, pexpr, n, s, children))
@@ -225,7 +225,7 @@ def main() -> None:
         mod = f"Raw54OneRDBranch{i:02d}"
         bns = f"{NS}.Branch{i:02d}"
         p = refine(parent, s, i)
-        pexpr = f"refine {NS}.parent {slot(s)} (some {mv(i)})"
+        pexpr = f"(refine {NS}.parent {slot(s)} (some {mv(i)}))"
         parts = [
             "import Raw54OneRDBank\n",
             "set_option maxRecDepth 100000\nset_option maxHeartbeats 0\n",
