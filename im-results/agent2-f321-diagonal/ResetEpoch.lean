@@ -151,6 +151,27 @@ inductive ResetChain : Nat → Nat → Nat → Nat → Nat → Prop
       ResetChain n R c A e → ResetEpoch A e B f →
       ResetChain (n+1) R c B f
 
+theorem resetChain_end_positive {n R c A e : Nat}
+    (h : ResetChain n R c A e) (hc : 1 ≤ c) : 1 ≤ e := by
+  induction h with
+  | nil => exact hc
+  | step h he ih =>
+      rcases he with ⟨m,a,d,ho,hr⟩
+      have hs := resetMove_output_small hr
+      omega
+
+/-- A chain of n genuine reset epochs gains at least 7n in first counter. -/
+theorem resetChain_linear_growth {n R c A e : Nat}
+    (h : ResetChain n R c A e) (hc : 1 ≤ c) :
+    R + 7*n ≤ A := by
+  induction h with
+  | nil => omega
+  | @step n R c A e B f h he ih =>
+      have hih := ih hc
+      have hepos := resetChain_end_positive h hc
+      have hg := resetEpoch_gain7 he hepos
+      omega
+
 theorem resetChain_monotone {n R c A e : Nat}
     (h : ResetChain n R c A e) : R ≤ A := by
   induction h with
