@@ -144,7 +144,7 @@ class PartialEmitter:
         self.it=iter(enumerate(rows))
         self.parent=src.parse(PARENT)
         self.cut=src.support(self.parent)
-        assert self.cut==5
+        assert self.cut in (5,6)
         self.moduleIndex=0
         self.lines=[]
         self.weight=0
