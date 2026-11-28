@@ -113,6 +113,7 @@ theorem splitGap (n k : Nat) (L R : List Bool) :
   have h4 := merge (k+1) L ([true,true]++W (n+1)++[true,true,true]++R)
   simp only [List.append_assoc,List.cons_append,List.nil_append] at h1 h2 h3 h4
   have H12 := join0 h1 h2
+  rw [show n+3+1=n+4 by omega] at H12
   have H123 := join0 H12 (show run0 table (0+7) (A ([false,true]++O k++false::L) (W (n+4)++[true,true,true]++R)) = _ from by
     simpa only [O,W,rep,List.append_assoc,List.cons_append,List.nil_append] using h3)
   have H := join0 H123 (show run0 table (k+1+7) (A ([true]++O k++false::L) (W 1++[true,true,true]++W (n+1)++[true,true,true]++R)) = _ from by
