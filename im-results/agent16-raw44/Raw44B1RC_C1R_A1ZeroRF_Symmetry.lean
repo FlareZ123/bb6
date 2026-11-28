@@ -1,0 +1,51 @@
+import Raw44B1RC_C1R_A1ZeroRE_Growth
+import WeightedSymmetry
+import NormalizedExpansion
+
+set_option maxRecDepth 10000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent16Raw44B1RC_C1R_A1ZeroRF
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent16WeightedSymmetry
+
+/-!
+E/F symmetry of the alternating phase Raw44 1RA, A1=0RE counter.
+The E0 assignment is transported to an arbitrary F0 assignment.
+-/
+def table : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true  => some (some ⟨false,true,5⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true  => some (some ⟨false,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 2,true  => some (some ⟨true,true,0⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true  => some (some ⟨true,false,1⟩)
+  | 4,false => some (some ⟨false,true,3⟩)
+  | 4,true  => some (some ⟨false,true,5⟩)
+  | 5,true  => some (some ⟨false,true,4⟩)
+  | _,_ => none
+
+private def ef : StatePerm := swapStates (4 : Fin 6) 5
+
+theorem renamed_table :
+    renamePartial ef table = BB6.Agent16Raw44B1RC_C1R_A1ZeroRE.table := by
+  funext s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
+
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
+  have hc := rename_compatible ef hm
+  rw [renamed_table] at hc
+  have hn := BB6.Agent16Raw44B1RC_C1R_A1ZeroRE.never (renameTable ef m) hc
+  exact (renameNeverHalts_iff ef m (by decide)).mp hn
+
+theorem literal_cover (bound : Nat) : Cover (DecidedBelow bound) table :=
+  Cover.leaf table (fun m hm => Or.inl (never m hm))
+
+#print axioms renamed_table
+#print axioms never
+#print axioms literal_cover
+end BB6.Agent16Raw44B1RC_C1R_A1ZeroRF
