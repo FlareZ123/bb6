@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -554,9 +554,11 @@ jobs:
           retention-days: 7
 
   raw56_le_0lb:
-    if: inputs.child == 'raw56-le-0lb'
+    if: inputs.child == 'raw56-le-0lb' || inputs.child == 'raw56-le-1la'
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    env:
+      E0: ${{ inputs.child == 'raw56-le-1la' && '1LA' || '0LB' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install source-pinned Lean 4.36.0-rc2
@@ -569,39 +571,40 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: raw56-root-frontier-source-accepted
-          path: /tmp/raw56-le0lb-base
+          path: /tmp/raw56-le-base
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '45912699461'
-      - name: Reconstruct original-source 965-leaf E0=0LB Cover and compile closure
+      - name: Reconstruct all E0-family leaves and compile source closure
         run: |
           set -euo pipefail
           export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent1-raw56/le/prepare_le0lb.py /tmp/raw56-le0lb > /tmp/raw56-le0lb-prepare.log
-          python tools/lean_compile_closure.py --workdir /tmp/raw56-le0lb-closure --jobs 2 \
-            --precompiled-manifest /tmp/raw56-le0lb-base/a1-raw56-root-consumer/manifest.json \
-            --precompiled-dir /tmp/raw56-le0lb-base/a1-raw56-root-consumer \
-            --source-root /tmp/raw56-le0lb/0LBgen \
-            --manifest /tmp/raw56-le0lb-closure/manifest.json --label raw56-le-e0-0lb \
-            --theorem BB6.Agent1Raw56.LE0LB.all_quotient --weighted-bound 7014 \
-            --parent-table '1RB---_1RC---_0RD---_1LD1LE_0LB0LE_------' \
-            --artifact-name raw56-le0lb-source-accepted \
+          python im-results/agent1-raw56/le/prepare_le0lb.py /tmp/raw56-le-e0 "$E0" > /tmp/raw56-le-prepare.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw56-le-e0-closure --jobs 2 \
+            --precompiled-manifest /tmp/raw56-le-base/a1-raw56-root-consumer/manifest.json \
+            --precompiled-dir /tmp/raw56-le-base/a1-raw56-root-consumer \
+            --source-root "/tmp/raw56-le-e0/${E0}gen" \
+            --manifest /tmp/raw56-le-e0-closure/manifest.json --label "raw56-le-e0-${E0}" \
+            --theorem "BB6.Agent1Raw56.LE${E0}.all_quotient" --weighted-bound 7014 \
+            --parent-table "1RB---_1RC---_0RD---_1LD1LE_${E0}0LE_------" \
+            --artifact-name "raw56-le${E0}-source-accepted" \
             --provenance-input im-results/agent1-raw56/le/prepare_le0lb.py \
+            --provenance-input im-results/agent1-raw56/le/motif_spec.json \
             --provenance-input im-results/agent1-raw56/le/inventory-79.json.gz.b64 \
-            /tmp/raw56-le0lb/0LBgen/Raw56LE0LBAll.lean 2>&1 | tee /tmp/raw56-le0lb-compile.log
-          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le0lb-compile.log
-          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le0lb-compile.log --require BB6.Agent1Raw56.LE0LB.all_quotient
+            "/tmp/raw56-le-e0/${E0}gen/Raw56LE${E0}All.lean" 2>&1 | tee /tmp/raw56-le-compile.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le-compile.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le-compile.log --require "BB6.Agent1Raw56.LE${E0}.all_quotient"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: raw56-le0lb-source-accepted
+          name: ${{ inputs.child == 'raw56-le-1la' && 'raw56-le1LA-source-accepted' || 'raw56-le0LB-source-accepted' }}
           path: |
-            /tmp/raw56-le0lb-closure/**
-            /tmp/raw56-le0lb-prepare.log
-            /tmp/raw56-le0lb-compile.log
+            /tmp/raw56-le-e0-closure/**
+            /tmp/raw56-le-prepare.log
+            /tmp/raw56-le-compile.log
           if-no-files-found: error
           retention-days: 30
 
