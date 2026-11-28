@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-plan, raw34-compact]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact]
         default: late-parent
       base_run:
         type: string
@@ -1080,6 +1080,55 @@ jobs:
             /tmp/a40-raw34-halt8/closure.log
             /tmp/a40-raw34-halt8/manifest.json
             /tmp/a40-raw34-halt8/halting-volume.log
+          if-no-files-found: error
+          retention-days: 30
+
+
+  raw34-halt9:
+    if: inputs.mode == 'raw34-halt9'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check 958 additional exact-eight-step Raw34 halters
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-raw34-halt9
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent40Raw34Halt9New.all_sound \
+            --artifact-name raw34-halt9-source \
+            im-results/agent40-raw34-frontier/Raw34OtherD1Halt9New.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('count','checked','all_sound'):
+              full='BB6.Agent40Raw34Halt9New.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 958 new eight-step HALT cylinders source-certified WeightedBound 32')
+          PY
+          node im-results/agent40-raw34-frontier/audit_halt9_increment.mjs \
+            | tee "$W/halting-increment.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-halt9-source-and-volume
+          path: |
+            /tmp/a40-raw34-halt9/closure.log
+            /tmp/a40-raw34-halt9/manifest.json
+            /tmp/a40-raw34-halt9/halting-increment.log
           if-no-files-found: error
           retention-days: 30
 
