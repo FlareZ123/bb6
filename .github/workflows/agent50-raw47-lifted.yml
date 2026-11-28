@@ -1564,6 +1564,12 @@ jobs:
             --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
             --e-cycles-dir "$W/e" --missing-third-dir "$W/missing" \
             | tee "$W/ef-plus-missing-third-source-union.json"
+          node --max-old-space-size=6144 \
+            im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-e-cycles --include-missing-ef-third --include-f-growth \
+            --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
+            --e-cycles-dir "$W/e" --missing-third-dir "$W/missing" \
+            | tee "$W/ef-plus-missing-plus-growth-source-union.json"
           python - "$W" <<'PY'
           import json,sys,os
           W=sys.argv[1]
@@ -1580,7 +1586,12 @@ jobs:
           rem=int(extra['totalResidualD1not1RD'])
           assert extra['missingNonEFConjugateThirdPatterns']==168
           assert 0<=rem<=nxt
-          print('PASS: exact union of 19,714 F/E +168 old-bank missing sidecycle candidates')
+          grow=json.load(open(os.path.join(W,'ef-plus-missing-plus-growth-source-union.json')))
+          assert grow['fConjugateUnboundedGrowthPatterns']==2
+          rem2=int(grow['totalResidualD1not1RD'])
+          assert 0<=rem2<=rem
+          print('PASS: exact union of 19,714 F/E, 168 old-bank missing, and 2 unbounded growth-source candidates')
+          print('F-conjugate growth-pump new non-D1=1RD mass:',rem-rem2)
           print('New missing-depth3 physical gain beyond F/E cycle bank:',nxt-rem)
           print('Residual with all proposed sidecycles:',rem)
           print('F-cycle portfolio residual:',prior)
@@ -1595,6 +1606,7 @@ jobs:
             /tmp/a40-raw34-f-e-cycles-audit/f-source-physical-union.json
             /tmp/a40-raw34-f-e-cycles-audit/ef-source-physical-union.json
             /tmp/a40-raw34-f-e-cycles-audit/ef-plus-missing-third-source-union.json
+            /tmp/a40-raw34-f-e-cycles-audit/ef-plus-missing-plus-growth-source-union.json
             /tmp/a40-raw34-f-e-cycles-audit/missing-third-census.json
             /tmp/a40-raw34-f-e-cycles-audit/f3-census.json
             /tmp/a40-raw34-f-e-cycles-audit/f4-census.json
