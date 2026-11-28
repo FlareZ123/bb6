@@ -58,6 +58,62 @@ theorem checked1 : Auto.check p1 c1 = true := by decide
 theorem never1 (m : Machine) (hm : compatible p1 m) : NeverHalts m := Auto.check_never p1 c1 checked1 m hm
 #print axioms never1
 
+
+def p2 : PartialMachine := fun s => match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true => some (some ⟨false,false,2⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true => some (some ⟨false,true,0⟩)
+  | 2,false => some (some ⟨true,false,0⟩)
+  | 2,true => some (some ⟨false,false,3⟩)
+  | 3,false => some (some ⟨false,true,1⟩)
+  | 3,true => none
+  | 4,false => none
+  | 4,true => none
+  | 5,false => none
+  | 5,true => none
+  | _,_ => none
+
+def c2 : Auto.Cert := ⟨10,⟨0,(.lit []),(.periodic [true,false] [true,false,true,false,true,false] (.lit [true,true]))⟩,1,[.step,
+  .right [true] [false] [true,false,true,false,true,false] [true,false,true,false,true,false] (.lit [true]) (.lit [true,true]) 6,
+  .step,
+  .step,
+  .step,
+  .left [true,false,true,false] [] [true,false,true,false,true,false] [true,false,true,false,true,false] (.lit [true]) (.lit []) 6,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .right [true] [false,true,false,true,false] [true,false,true,false,true,false] [true,false,true,false,true,false] (.lit [true]) (.lit []) 6,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .left [false,true,false,true,false,true,false] [] [true,false,true,false,true,false] [false,true,false,true,false,true] (.lit [true]) (.lit [true]) 6,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step,
+  .step],24,32⟩
+theorem checked2 : Auto.check p2 c2 = true := by decide
+theorem never2 (m : Machine) (hm : compatible p2 m) : NeverHalts m := Auto.check_never p2 c2 checked2 m hm
+#print axioms never2
+
 end BB6Coverage.Agent31Pump.D3Affine
 
 namespace BB6Coverage.Agent31Pump.D3Counter
