@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, short150-pilot, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -893,6 +893,56 @@ jobs:
             /tmp/raw11-q0-frame150/
             /tmp/raw11-q0-frame150.log
           if-no-files-found: warn
+          retention-days: 30
+
+  short150-pilot:
+    if: inputs.mode == 'short150-pilot'
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Emit exact short q0-150 final-slot certificate
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-q0150-short-leaves.cjs /tmp/q0short "$ID"
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact ordinary first-hole proof
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py "/tmp/q0short/Raw11Q0150Short$ID.lean" \
+            --source-root /tmp/q0short --workdir /tmp/q0short-verified \
+            --manifest /tmp/q0short-verified/manifest.json --jobs 2 --lean lean \
+            --label "q0 150 standalone finite leaf $ID" \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-150-complete-frontier.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-q0150-short-leaves.cjs \
+            2>&1 | tee /tmp/q0short.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0short.log; then exit 1; fi
+          grep -F "BB6.Raw11Q0150Short$ID.safe' depends on axioms:" /tmp/q0short.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-150-short-${{ matrix.id }}
+          path: |
+            /tmp/q0short/
+            /tmp/q0short-verified/
+            /tmp/q0short.log
           retention-days: 30
 
   far-hard:
