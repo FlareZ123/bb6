@@ -34,11 +34,13 @@ theorem partial_close (solved : List Move)
       exact Nat.le_trans (hc k d hk hd) hb'
     · exact Or.inr ⟨e,he,hsolved,hchild⟩
 
-/-- First four live child audits launched on 28 Nov: 0RB, 1LA,
-    1RB, 1RC. The eight remaining siblings are an exact, decidable
-    residual roster, not an assertion that the four are already proved. -/
+/-- Four historically locally kernel-accepted C1 child families:
+    0LB (Round5), 1LB (Round4), 0RB (Round8), 1RC (Round6).
+    Their 8-child complement is an exact finite roster. The theorem
+    below states the proof interface explicitly without silently assuming
+    these old accepted artifacts were recompiled at today's revision. -/
 def firstFour : List Move :=
-  [⟨false,true,1⟩,⟨true,false,0⟩,⟨true,true,1⟩,⟨true,true,2⟩]
+  [⟨false,false,1⟩,⟨true,false,1⟩,⟨false,true,1⟩,⟨true,true,2⟩]
 
 def remainingEight : List (Move × Nat) :=
   bounds.filter fun e => decide (e.1 ∉ firstFour)
