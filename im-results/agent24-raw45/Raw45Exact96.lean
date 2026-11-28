@@ -14,9 +14,9 @@ theorem witness_fits :
     compatible BB6.Agent24Raw45FullChild.parent witness := by
   intro slot v hv
   rcases slot with ⟨q,b⟩
-  fin_cases q <;> cases b <;>
-    simp [BB6.Agent24Raw45FullChild.parent,witness] at hv ⊢
-  all_goals assumption
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
+    simp_all [BB6.Agent24Raw45FullChild.parent, witness]
 
 /-- An exact local weighted maximum: every compatible six-state
     completion scores at most 96, and a compatible machine scores 96. -/
@@ -36,7 +36,8 @@ theorem exact_weighted_96 :
 /-- The empty path from initial state A witnesses blank-entry delay zero,
     regardless of the unknown transitions of the completed machine. -/
 private theorem zero_delay_all (m : Machine) :
-    0 ∈ delays (zeroNext m) 0 := by decide
+    0 ∈ delays (zeroNext m) 0 := by
+  simp [delays, follow]
 
 /-- Every genuinely halting compatible completion stops within 96
     instructions, including its final halting transition. -/
