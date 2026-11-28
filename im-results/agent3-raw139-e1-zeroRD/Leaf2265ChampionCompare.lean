@@ -5,7 +5,7 @@ namespace BB6.Agent3Leaf2265ChampionCompare
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6Coverage.Agent48DirectRoot
+open BB6ChampionArithmetic
 
 /-!
 The decisive local threshold bridge, conditional only on the exact source
